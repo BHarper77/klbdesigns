@@ -1,43 +1,45 @@
 ---
 import Sidebar from "../components/Sidebar.astro"
-import { Image } from "astro:assets"
 import Layout from "../layouts/Layout.astro"
 
-const images = import.meta.glob("../assets/*.jpg")
+const images = await Astro.glob("../assets/*.jpg")
 ---
 
 <Layout title="klbdesigns">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-	<script type="module">
-		// @ts-ignore - can't resolve types
-		import Swiper from "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs"
-
-		new Swiper(".swiper", {
-			// Optional parameters
-			direction: "horizontal",
-			loop: true,
-			navigation: {
-				nextEl: ".swiper-button-next",
-				prevEl: ".swiper-button-prev",
-			},
-		})
-	</script>
-	<main class="grid grid-cols-[1fr 6.5fr] grid-rows-1 h-screen w-screen">
+	<main class="grid grid-rows-1 h-screen w-screen">
 		<Sidebar />
-		<div class="row-span-full overflow-hidden">
-			<div class="swiper">
-				<div class="swiper-wrapper">
-					{
-						Object.entries(images).map(([key]) => (
-							<div class="swiper-slide">
-								<Image src={images[key]!()} alt="" />
-							</div>
-						))
-					}
+		<div class="row-span-full">
+			<div id="default-carousel" class="relative w-full" data-carousel="slide">
+				<div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+					<div class="hidden duration-700 ease-in-out" data-carousel-item="active">
+						<img
+							src={images[0].default.src}
+							class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+							alt="..."
+						/>
+					</div>
+					<div class="hidden duration-700 ease-in-out" data-carousel-item>
+						<img
+							src={images[1].default.src}
+							class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+							alt="..."
+						/>
+					</div>
 				</div>
-
-				<div class="swiper-button-prev"></div>
-				<div class="swiper-button-next"></div>
+				<!-- {
+					Object.entries(images).map(([key], index) => (
+						<div
+							class="relative h-56 overflow-hidden rounded-lg md:h-96"
+							data-carousel-item={index === 0 ? "active" : undefined}
+						>
+							<Image
+								class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+								src={images[key]!()}
+								alt=""
+							/>
+						</div>
+					))
+				} -->
 			</div>
 		</div>
 	</main>
@@ -47,9 +49,8 @@ const images = import.meta.glob("../assets/*.jpg")
 			margin: 0;
 		}
 
-		.swiper-slide img {
-			max-height: 500px;
-			max-width: 500px;
+		main {
+			grid-template-columns: 1fr 6.5fr;
 		}
 	</style>
 </Layout>
