@@ -4,7 +4,7 @@ export default {
 	theme: {
 		extend: {},
 		fontFamily: {
-			serif: ["Source Serif 4", "serif"]
+			serif: ['Poppins', "sans-serif"]
 		},
 		colors: {
 			"main": "#5da399"
