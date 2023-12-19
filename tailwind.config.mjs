@@ -5,6 +5,9 @@ export default {
 		extend: {},
 		fontFamily: {
 			serif: ["Source Serif 4", "serif"]
+		},
+		colors: {
+			"main": "#5da399"
 		}
 	},
 	plugins: [],
