@@ -6,6 +6,56 @@ const images = await Astro.glob("../assets/*.jpg")
 ---
 
 <Layout title="klbdesigns">
+	<script>
+		import { Carousel } from "flowbite"
+
+		const items = [...document.querySelectorAll('[id*="carousel-item"]')].map((element, index) => ({
+			position: index,
+			el: element as HTMLElement,
+		}))
+
+		const carouselCaption = document.getElementById("carousel-caption") as HTMLElement
+		const carouselPrevious = document.getElementById("indicator-1") as HTMLElement
+		const carouselNext = document.getElementById("indicator-2") as HTMLElement
+
+		let currentCarouselIndex = 0
+		const min = items.at(0)!.position
+		const max = items.at(-1)!.position
+
+		carouselPrevious.addEventListener("click", () => {
+			if (currentCarouselIndex === min) {
+				currentCarouselIndex = max + 1
+			}
+
+			currentCarouselIndex = --currentCarouselIndex
+		})
+
+		carouselNext.addEventListener("click", () => {
+			if (currentCarouselIndex === max) {
+				currentCarouselIndex = min - 1
+			}
+
+			currentCarouselIndex = ++currentCarouselIndex
+		})
+
+		new Carousel(document.getElementById("default-carousel"), items, {
+			onChange: () => {
+				carouselCaption.innerText = currentCarouselIndex.toString()
+			},
+			indicators: {
+				items: [
+					{
+						position: 0,
+						el: carouselPrevious,
+					},
+					{
+						position: 1,
+						el: carouselNext,
+					},
+				],
+			},
+		})
+	</script>
 	<main class="grid grid-rows-1 h-screen w-screen">
 		<Sidebar />
 		<div class="row-span-full">
@@ -16,8 +66,12 @@ const images = await Astro.glob("../assets/*.jpg")
 			>
 				<div class="relative overflow-hidden h-3/4 w-3/4">
 					{
-						images.map((image) => (
-							<div class="hidden duration-1000 ease-in-out" data-carousel-item>
+						images.map((image, index) => (
+							<div
+								id={`carousel-item-${index}`}
+								class="hidden duration-1000 ease-in-out"
+								data-carousel-item
+							>
 								<img
 									class="absolute block h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
 									src={image.default.src}
@@ -29,7 +83,12 @@ const images = await Astro.glob("../assets/*.jpg")
 				</div>
 
 				<div class="flex flex-row items-center justify-center">
-					<button type="button" class="flex items-center justify-center p-4" data-carousel-prev>
+					<button
+						id="indicator-1"
+						type="button"
+						class="flex items-center justify-center p-4"
+						data-carousel-prev
+					>
 						<span class="inline-flex items-center justify-center w-10 h-10 rounded-full">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +109,12 @@ const images = await Astro.glob("../assets/*.jpg")
 						</span>
 					</button>
 
-					<button type="button" class="flex items-center justify-center p-4" data-carousel-next>
+					<button
+						id="indicator-2"
+						type="button"
+						class="flex items-center justify-center p-4"
+						data-carousel-next
+					>
 						<span class="inline-flex items-center justify-center w-10 h-10 rounded-full">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +136,7 @@ const images = await Astro.glob("../assets/*.jpg")
 					</button>
 				</div>
 
-				<div class="font-light">By Kirsty Baird</div>
+				<div id="carousel-caption" class="font-light">By Kirsty Baird</div>
 			</div>
 		</div>
 	</main>
