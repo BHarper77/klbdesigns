@@ -7,7 +7,8 @@ export default {
 			serif: ['Poppins', "sans-serif"]
 		},
 		colors: {
-			"main": "#5da399"
+			"main": "#5da399",
+			"links": "#3c3c3b"
 		}
 	},
 	plugins: [
