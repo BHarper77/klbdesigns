@@ -22,7 +22,9 @@ const images = await Astro.glob("../assets/*.jpg")
 		const min = items.at(0)!.position
 		const max = items.at(-1)!.position
 
+		// flowbite carousel event methods are broken so using custom event listeners
 		carouselPrevious.addEventListener("click", () => {
+			// handle case of pressing previous on first pic
 			if (currentCarouselIndex === min) {
 				currentCarouselIndex = max + 1
 			}
@@ -31,6 +33,7 @@ const images = await Astro.glob("../assets/*.jpg")
 		})
 
 		carouselNext.addEventListener("click", () => {
+			// handle case of pressing next on last pic
 			if (currentCarouselIndex === max) {
 				currentCarouselIndex = min - 1
 			}
