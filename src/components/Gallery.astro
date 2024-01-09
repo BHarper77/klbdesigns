@@ -3,10 +3,16 @@ type Props = {
 	filepath: string
 }
 
+type Image = {
+	default: {
+		src: string
+	}
+}
+
 const { filepath } = Astro.props
 
-// glob has to be statically analyzed, can't directly use variables
-const images = await (async (filepath) => {
+// glob has to be statically analyzed, can't use variables
+const images = (await (async (filepath) => {
 	switch (filepath) {
 		case "../assets/christmas2023/*.jpg":
 			return await Astro.glob("../assets/christmas2023/*.jpg")
@@ -17,26 +23,23 @@ const images = await (async (filepath) => {
 	}
 
 	throw new Error("Unreachable code")
-})(filepath)
+})(filepath)) as Image[]
 
-function splitArrayIntoFour(array: Record<string, any>[]) {
-	const length = array.length
-	const partSize = Math.ceil(length / 4)
+function splitImageArray(array: Image[]) {
+	const subArrays: Image[][] = Array.from({ length: 4 }, () => [])
 
-	const result = []
-
-	for (let i = 0; i < length; i += partSize) {
-		const part = array.slice(i, i + partSize)
-		result.push(part)
+	for (let i = 0; i < array.length; i++) {
+		const subArrayIndex = i % 4
+		subArrays[subArrayIndex]!.push(array[i]!)
 	}
 
-	return result
+	return subArrays
 }
 
-const imageArrays = splitArrayIntoFour(images)
+const imageArrays = splitImageArray(images)
 ---
 
-<div class="grid grid-cols-3 gap-4 p-16">
+<div class="grid grid-cols-4 gap-4 p-12">
 	<div class="grid">
 		{imageArrays[0]?.map((image) => <img class="h-auto max-w-full" src={image.default.src} alt="" />)}
 	</div>
@@ -45,5 +48,8 @@ const imageArrays = splitArrayIntoFour(images)
 	</div>
 	<div class="grid">
 		{imageArrays[2]?.map((image) => <img class="h-auto max-w-full" src={image.default.src} alt="" />)}
+	</div>
+	<div class="grid">
+		{imageArrays[3]?.map((image) => <img class="h-auto max-w-full" src={image.default.src} alt="" />)}
 	</div>
 </div>
