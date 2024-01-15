@@ -1,12 +1,48 @@
 ---
 import Carousel from "../components/Carousel.astro"
+import Gallery from "../components/Gallery.astro"
 import Sidebar from "../components/Sidebar.astro"
 import Layout from "../layouts/Layout.astro"
+
+const contentFilepath = "../assets/christmas2023/*.jpg"
 ---
 
 <Layout title="klbdesigns">
 	<main class="grid grid-rows-1 h-screen w-screen">
 		<Sidebar />
-		<Carousel filepath="../assets/christmas2023/*.jpg" />
+		<div id="carousel">
+			<Carousel filepath={contentFilepath} />
+		</div>
+		<div id="gallery">
+			<Gallery filepath={contentFilepath} />
+		</div>
+		<button onclick="swapElements()">click me</button>
+
+		<script is:inline>
+			function swapElements() {
+				const carousel = document.getElementById("carousel")
+				const gallery = document.getElementById("gallery")
+
+				if (!carousel || !gallery) {
+					console.error("Error swapping components. Could not retrieve components from DOM")
+					return
+				}
+
+				if (carousel.style.display == "none") {
+					carousel.style.display = "block"
+					gallery.style.display = "none"
+				} else {
+					carousel.style.display = "none"
+					gallery.style.display = "block"
+				}
+			}
+		</script>
 	</main>
 </Layout>
+
+<style>
+	/* default state is carousel showing */
+	#gallery {
+		display: none;
+	}
+</style>

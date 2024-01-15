@@ -25,31 +25,31 @@ const images = (await (async (filepath) => {
 	throw new Error("Unreachable code")
 })(filepath)) as Image[]
 
-function splitImageArray(array: Image[]) {
-	const subArrays: Image[][] = Array.from({ length: 4 }, () => [])
+function splitImageArray(array: Image[], subArrayCount: number) {
+	const subArrays: Image[][] = Array.from({ length: subArrayCount }, () => [])
 
 	for (let i = 0; i < array.length; i++) {
-		const subArrayIndex = i % 4
+		const subArrayIndex = i % subArrayCount
 		subArrays[subArrayIndex]!.push(array[i]!)
 	}
 
 	return subArrays
 }
 
-const imageArrays = splitImageArray(images)
+const imageArrays = splitImageArray(images, 4)
 ---
 
-<div class="grid grid-cols-4 gap-4 p-12">
-	<div class="grid">
-		{imageArrays[0]?.map((image) => <img class="h-auto max-w-full" src={image.default.src} alt="" />)}
+<div id="gallery" class="grid grid-cols-4 p-12 gap-4">
+	<div>
+		{imageArrays[0]?.map((image) => <img class="h-auto max-w-full pb-4" src={image.default.src} alt="" />)}
 	</div>
-	<div class="grid">
-		{imageArrays[1]?.map((image) => <img class="h-auto max-w-full" src={image.default.src} alt="" />)}
+	<div>
+		{imageArrays[1]?.map((image) => <img class="h-auto max-w-full pb-4" src={image.default.src} alt="" />)}
 	</div>
-	<div class="grid">
-		{imageArrays[2]?.map((image) => <img class="h-auto max-w-full" src={image.default.src} alt="" />)}
+	<div>
+		{imageArrays[2]?.map((image) => <img class="h-auto max-w-full pb-4" src={image.default.src} alt="" />)}
 	</div>
-	<div class="grid">
-		{imageArrays[3]?.map((image) => <img class="h-auto max-w-full" src={image.default.src} alt="" />)}
+	<div>
+		{imageArrays[3]?.map((image) => <img class="h-auto max-w-full pb-4" src={image.default.src} alt="" />)}
 	</div>
 </div>
