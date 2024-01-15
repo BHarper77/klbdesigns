@@ -8,7 +8,7 @@ const contentFilepath = "../assets/christmas2023/*.jpg"
 ---
 
 <Layout title="klbdesigns">
-	<main class="grid grid-rows-1 h-screen w-screen">
+	<main class="grid h-screen w-screen">
 		<Sidebar />
 		<div id="carousel">
 			<Carousel filepath={contentFilepath} />
@@ -16,13 +16,15 @@ const contentFilepath = "../assets/christmas2023/*.jpg"
 		<div id="gallery">
 			<Gallery filepath={contentFilepath} />
 		</div>
-		<button onclick="swapElements()">click me</button>
 
 		<script is:inline>
-			function swapElements() {
-				const carousel = document.getElementById("carousel")
-				const gallery = document.getElementById("gallery")
+			const carousel = document.getElementById("carousel")
+			const gallery = document.getElementById("gallery")
 
+			carousel.addEventListener("wheel", swapElements)
+			gallery.addEventListener("wheel", swapElements)
+
+			function swapElements() {
 				if (!carousel || !gallery) {
 					console.error("Error swapping components. Could not retrieve components from DOM")
 					return
