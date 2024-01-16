@@ -7,6 +7,24 @@
 				</h1>
 			</li>
 
+			<script is:inline>
+				function rotateSvg() {
+					const svg = document.getElementById("collections-dropdown-svg")
+
+					if (svg.classList.contains("rotate-svg")) {
+						svg.classList.remove("rotate-svg")
+					} else {
+						svg.classList.add("rotate-svg")
+					}
+				}
+			</script>
+
+			<style>
+				.rotate-svg {
+					transform: rotate(-90deg);
+				}
+			</style>
+
 			<!-- collections dropdown -->
 			<li class="pt-6">
 				<div class="group">
@@ -15,9 +33,11 @@
 						class="flex items-center justify-between w-full group-hover:text-links"
 						aria-controls="collections-dropdown"
 						data-collapse-toggle="collections-dropdown"
+						onclick="rotateSvg()"
 					>
 						<span class="align-self-start">collections</span>
 						<svg
+							id="collections-dropdown-svg"
 							class="w-3 h-3 align-self-end"
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
