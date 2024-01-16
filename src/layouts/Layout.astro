@@ -1,4 +1,6 @@
 ---
+import Sidebar from "../components/Sidebar.astro"
+
 interface Props {
 	title: string
 }
@@ -25,7 +27,8 @@ const { title } = Astro.props
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body>
+	<body class="grid grid-rows-1 grid-cols-[1fr_6.5fr] h-full w-full">
+		<Sidebar />
 		<slot />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
 	</body>

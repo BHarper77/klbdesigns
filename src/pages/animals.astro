@@ -1,12 +1,10 @@
 ---
-import Carousel from "../components/Carousel.astro"
-import Sidebar from "../components/Sidebar.astro"
+import ArtContent from "../components/ArtContent.astro"
 import Layout from "../layouts/Layout.astro"
+
+const contentFilepath = "../assets/animals/*.jpg"
 ---
 
 <Layout title="klbdesigns">
-	<main class="grid grid-rows-1 h-screen w-screen">
-		<Sidebar />
-		<Carousel filepath="../assets/animals/*.jpg" />
-	</main>
+	<ArtContent filepath={contentFilepath} />
 </Layout>
