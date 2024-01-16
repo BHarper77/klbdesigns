@@ -39,17 +39,33 @@ function splitImageArray(array: Image[], subArrayCount: number) {
 const imageArrays = splitImageArray(images, 4)
 ---
 
-<div id="gallery" class="grid grid-cols-4 p-12 gap-4">
+<div class="grid grid-cols-4 p-12 gap-4">
 	<div>
-		{imageArrays[0]?.map((image) => <img class="h-auto max-w-full pb-4" src={image.default.src} alt="" />)}
+		{
+			imageArrays[0]?.map((image) => (
+				<img onclick="swapElements()" class="h-auto max-w-full pb-4" src={image.default.src} alt="" />
+			))
+		}
 	</div>
 	<div>
-		{imageArrays[1]?.map((image) => <img class="h-auto max-w-full pb-4" src={image.default.src} alt="" />)}
+		{
+			imageArrays[1]?.map((image) => (
+				<img onclick="swapElements()" class="h-auto max-w-full pb-4" src={image.default.src} alt="" />
+			))
+		}
 	</div>
 	<div>
-		{imageArrays[2]?.map((image) => <img class="h-auto max-w-full pb-4" src={image.default.src} alt="" />)}
+		{
+			imageArrays[2]?.map((image) => (
+				<img onclick="swapElements()" class="h-auto max-w-full pb-4" src={image.default.src} alt="" />
+			))
+		}
 	</div>
 	<div>
-		{imageArrays[3]?.map((image) => <img class="h-auto max-w-full pb-4" src={image.default.src} alt="" />)}
+		{
+			imageArrays[3]?.map((image) => (
+				<img onclick="swapElements()" class="h-auto max-w-full pb-4" src={image.default.src} alt="" />
+			))
+		}
 	</div>
 </div>

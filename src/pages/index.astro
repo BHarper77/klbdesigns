@@ -8,7 +8,7 @@ const contentFilepath = "../assets/christmas2023/*.jpg"
 ---
 
 <Layout title="klbdesigns">
-	<main class="grid h-screen w-screen">
+	<main class="grid grid-rows-1 grid-cols-[1fr_6.5fr] h-full w-full">
 		<Sidebar />
 		<div id="carousel">
 			<Carousel filepath={contentFilepath} />
@@ -20,9 +20,6 @@ const contentFilepath = "../assets/christmas2023/*.jpg"
 		<script is:inline>
 			const carousel = document.getElementById("carousel")
 			const gallery = document.getElementById("gallery")
-
-			carousel.addEventListener("wheel", swapElements)
-			gallery.addEventListener("wheel", swapElements)
 
 			function swapElements() {
 				if (!carousel || !gallery) {

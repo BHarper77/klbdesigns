@@ -21,6 +21,7 @@ const images = await (async (filepath) => {
 ---
 
 <script>
+	// if I don't have this 2nd import commented then VSCode always adds a second import and breaks the file
 	// import { Carousel } from "flowbite"
 	import { Carousel } from "flowbite"
 
@@ -57,8 +58,9 @@ const images = await (async (filepath) => {
 	})
 
 	new Carousel(document.getElementById("default-carousel"), items, {
+		defaultPosition: 0,
 		onChange: () => {
-			carouselCaption.innerText = currentCarouselIndex.toString()
+			carouselCaption.innerText = `By Kirsty Baird - ${currentCarouselIndex.toString()}`
 		},
 		indicators: {
 			items: [
@@ -74,11 +76,26 @@ const images = await (async (filepath) => {
 		},
 	})
 </script>
+
 <div
 	id="default-carousel"
 	class="flex flex-col items-center justify-center relative w-full h-full"
 	data-carousel="static"
 >
+	<div class="self-end pr-96">
+		<button onclick="swapElements()">
+			<svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+				<path
+					stroke="currentColor"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
+			</svg>
+		</button>
+	</div>
+
+	<!-- images container -->
 	<div class="relative overflow-hidden h-3/4 w-3/4">
 		{
 			images.map((image, index) => (
@@ -93,6 +110,7 @@ const images = await (async (filepath) => {
 		}
 	</div>
 
+	<!-- navigation arrows -->
 	<div class="flex flex-row items-center justify-center">
 		<button id="indicator-1" type="button" class="flex items-center justify-center p-4" data-carousel-prev>
 			<span class="inline-flex items-center justify-center w-10 h-10 rounded-full">
