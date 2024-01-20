@@ -3,49 +3,27 @@ import Layout from "../layouts/Layout.astro"
 ---
 
 <Layout title="k.l.b designs - contact">
-	<style>
-		input {
-			width: 50%;
-			margin-top: 0.5rem;
-			margin-bottom: 0.5rem;
-			border-radius: 0.25rem;
-		}
-
-		input#message {
-			padding-bottom: 8rem;
-		}
-
-		button {
-			width: 50%;
-			border-radius: 0.25rem;
-		}
-	</style>
-
 	<div class="flex pt-8 pl-16">
 		<form class="h-full w-full">
 			<div class="grid gap-6 mb-6">
 				<div>
-					<label for="name" class="block text-sm">name</label>
-					<input type="text" id="name" class="border border-gray-300 text-sm block w-full" required />
+					<label for="name" class="block text-sm">Name</label>
+					<input type="text" id="name" class="my-2 w-1/2 text-sm block rounded" required />
 				</div>
 				<div>
-					<label for="email" class="block text-sm">email</label>
-					<input type="email" id="email" class="border border-gray-300 text-sm block w-full" required />
+					<label for="email" class="block text-sm">Email</label>
+					<input type="email" id="email" class="my-2 w-1/2 text-sm block rounded" required />
 				</div>
 				<div>
-					<label for="subject" class="block text-sm">subject</label>
-					<input type="text" id="subject" class="border border-gray-300 text-sm block w-full" required />
+					<label for="subject" class="block text-sm">Subject</label>
+					<input type="text" id="subject" class="my-2 w-1/2 text-sm block rounded" required />
 				</div>
 				<div>
-					<label for="message" class="block text-sm">message</label>
-					<input type="text" id="message" class="border border-gray-300 text-sm block w-full" required />
+					<label for="message" class="block text-sm">Message</label>
+					<input type="text" id="message" class="my-2 w-1/2 pb-32 text-sm block rounded" required />
 				</div>
 			</div>
-			<button
-				type="submit"
-				class="text-white bg-main focus:ring-4 focus:ring-links text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-				>send</button
-			>
+			<button type="submit" class="text-center text-white bg-main text-sm px-5 py-2.5 rounded w-1/2">Send</button>
 		</form>
 	</div>
 </Layout>

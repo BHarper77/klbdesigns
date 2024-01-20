@@ -8,7 +8,7 @@ export default {
 		},
 		colors: {
 			"main": "#5da399",
-			"links": "#3c3c3b"
+			"secondary": "#3c3c3b"
 		}
 	},
 	plugins: [
