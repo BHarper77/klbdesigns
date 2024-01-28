@@ -5,9 +5,9 @@ import Layout from "../layouts/Layout.astro"
 ---
 
 <Layout title="k.l.b designs - about">
-	<div class="flex flex-row pt-8 pl-16 pr-56 gap-x-12">
+	<div class="sm:flex sm:flex-row sm:pr-56 sm:gap-x-12 p-4 sm:pt-8 sm:pl-16">
 		<div>
-			<h1 class="text-2xl font-bold pb-4">Kirsty Baird</h1>
+			<h1 class="text-2xl font-bold sm:pb-4">Kirsty Baird</h1>
 			<h3 class="text-xl font-bold py-4">About</h3>
 			<p>
 				Recent graduate from <a href="https://www.dundee.ac.uk/djcad">Duncan of Jordanstone</a> (Dundee University)
@@ -29,7 +29,7 @@ import Layout from "../layouts/Layout.astro"
 				aliquam. Etiam eu tortor dui. Morbi scelerisque luctus arcu, eget pretium nunc dapibus at.
 			</p>
 		</div>
-		<div>
+		<div class="pt-4 sm:pt-0">
 			<Image src={AboutImage} height="3000" width="3000" alt="An image of the artist, Kirsty Baird" />
 		</div>
 	</div>

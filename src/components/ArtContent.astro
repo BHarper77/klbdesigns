@@ -1,5 +1,4 @@
 ---
-import Carousel from "../components/Carousel.astro"
 import Gallery from "../components/Gallery.astro"
 
 type Props = {
@@ -9,9 +8,9 @@ type Props = {
 const { filepath } = Astro.props
 ---
 
-<div id="carousel">
+<!-- <div id="carousel">
 	<Carousel filepath={filepath} />
-</div>
+</div> -->
 <div id="gallery">
 	<Gallery filepath={filepath} />
 </div>
