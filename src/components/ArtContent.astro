@@ -21,24 +21,23 @@ const { filepath } = Astro.props
 	const gallery = document.getElementById("gallery")
 
 	function swapElements() {
-		if (!carousel || !gallery) {
-			console.error("Error swapping components. Could not retrieve components from DOM")
-			return
-		}
-
-		if (carousel.style.display == "none") {
-			carousel.style.display = "block"
-			gallery.style.display = "none"
-		} else {
-			carousel.style.display = "none"
-			gallery.style.display = "block"
-		}
+		// if (!carousel || !gallery) {
+		// 	console.error("Error swapping components. Could not retrieve components from DOM")
+		// 	return
+		// }
+		// if (carousel.style.display == "none") {
+		// 	carousel.style.display = "block"
+		// 	gallery.style.display = "none"
+		// } else {
+		// 	carousel.style.display = "none"
+		// 	gallery.style.display = "block"
+		// }
 	}
 </script>
 
 <style>
 	/* default state is carousel showing */
-	#gallery {
+	#carousel {
 		display: none;
 	}
 </style>
