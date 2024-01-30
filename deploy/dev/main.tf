@@ -7,7 +7,7 @@ terraform {
   }
   backend "s3" {
     bucket = "klbdesigns-terraform"
-    key    = "terraform.tfstate"
+    key    = "terraform-dev.tfstate"
     region = "eu-west-1"
   }
 
