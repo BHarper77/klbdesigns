@@ -26,5 +26,5 @@ jobs:
         run: terraform fmt
       - name: Terraform validate
         run: terraform validate
-      - name: Terraform apply
-        run: terraform apply
+    #   - name: Terraform apply
+    #     run: terraform apply
