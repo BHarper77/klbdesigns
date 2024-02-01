@@ -3,8 +3,18 @@ import Layout from "../layouts/Layout.astro"
 ---
 
 <Layout title="k.l.b designs - contact">
+	<script>
+		const form = document.querySelector("#contact-form") as HTMLFormElement
+
+		form?.addEventListener("submit", async (event) => {
+			event.preventDefault()
+
+			const formData = new FormData(form)
+			console.log({ formData: Object.fromEntries(formData) })
+		})
+	</script>
 	<div class="flex justify-center p-4 sm:pt-8 sm:pl-16">
-		<form class="w-3/4 sm:h-full sm:w-full">
+		<form id="contact-form" class="w-3/4 sm:h-full sm:w-full">
 			<div class="grid gap-6 mb-6">
 				<div>
 					<label for="name" class="block text-sm">Name</label>
