@@ -1,17 +1,17 @@
-const apiKey = ''
-
 export async function handler(event) {
+	const { name, email, subject, message } = event.body
+
 	const response = await fetch('https://api.resend.com/emails', {
 		method: 'POST',
     	headers: {
       		'Content-Type': 'application/json',
-      		'Authorization': `Bearer ${apiKey}`,
+      		'Authorization': `Bearer ${process.env.API_KEY}`,
     	},
     	body: JSON.stringify({
-      		from: 'contact@klbdesigns.art',
+      		from: 'website@klbdesigns.art',
      		to: ["bradyharper11@googlemail.com"],
-      		subject: 'hello world',
-      		html: '<strong>it works!</strong>',
+      		subject,
+      		html: `<p>From:${name} - ${email}</p><p>${message}</p>`,
     	}),
   	})
 
