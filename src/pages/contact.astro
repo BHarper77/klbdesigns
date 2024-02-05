@@ -4,33 +4,76 @@ import Layout from "../layouts/Layout.astro"
 
 <Layout title="k.l.b designs - contact">
 	<script>
-		const form = document.querySelector("#contact-form") as HTMLFormElement
+		const form = document.getElementById("contact-form") as HTMLFormElement
+		const lambdaUrl = "https://gyyue7q6c64kcvizg4hzx3kupu0llagm.lambda-url.eu-west-1.on.aws/"
 
 		form?.addEventListener("submit", async (event) => {
 			event.preventDefault()
 
 			const formData = new FormData(form)
-			console.log({ formData: Object.fromEntries(formData) })
+			const { name, subject, email, message } = Object.fromEntries(formData)
+
+			const response = await fetch(lambdaUrl, {
+				method: "POST",
+				body: JSON.stringify({
+					name,
+					subject,
+					email,
+					message,
+				}),
+			})
+
+			if (!response.ok) {
+				console.error("Error sending email")
+				alert("Error sending email")
+			}
+
+			console.log({ response: await response.json() })
 		})
 	</script>
+
 	<div class="flex justify-center p-4 sm:pt-8 sm:pl-16">
 		<form id="contact-form" class="w-3/4 sm:h-full sm:w-full">
 			<div class="grid gap-6 mb-6">
 				<div>
 					<label for="name" class="block text-sm">Name</label>
-					<input type="text" id="name" class="my-2 w-full sm:w-1/2 text-sm block rounded" required />
+					<input
+						name="name"
+						type="text"
+						id="name"
+						class="my-2 w-full sm:w-1/2 text-sm block rounded"
+						required
+					/>
 				</div>
 				<div>
 					<label for="email" class="block text-sm">Email</label>
-					<input type="email" id="email" class="my-2 w-full sm:w-1/2 text-sm block rounded" required />
+					<input
+						name="email"
+						type="email"
+						id="email"
+						class="my-2 w-full sm:w-1/2 text-sm block rounded"
+						required
+					/>
 				</div>
 				<div>
 					<label for="subject" class="block text-sm">Subject</label>
-					<input type="text" id="subject" class="my-2 w-full sm:w-1/2 text-sm block rounded" required />
+					<input
+						name="subject"
+						type="text"
+						id="subject"
+						class="my-2 w-full sm:w-1/2 text-sm block rounded"
+						required
+					/>
 				</div>
 				<div>
 					<label for="message" class="block text-sm">Message</label>
-					<input type="text" id="message" class="my-2 w-full sm:w-1/2 pb-32 text-sm block rounded" required />
+					<input
+						name="message"
+						type="text"
+						id="message"
+						class="my-2 w-full sm:w-1/2 pb-32 text-sm block rounded"
+						required
+					/>
 				</div>
 			</div>
 			<button type="submit" class="text-center text-white bg-main text-sm px-5 py-2.5 rounded w-full sm:w-1/2"
