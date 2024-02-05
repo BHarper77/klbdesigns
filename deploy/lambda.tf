@@ -41,3 +41,14 @@ data "archive_file" "email_service" {
   source_file = "../lambda/index.js"
   output_path = local.lambda_zip
 }
+
+resource "aws_lambda_function_url" "email_service" {
+  function_name      = aws_lambda_function.email_service.function_name
+  authorization_type = "AWS_IAM"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["klbdesigns.art", "localhost"]
+    allow_methods     = ["POST"]
+  }
+}
