@@ -21,10 +21,15 @@ jobs:
         run: npm ci
       - name: Build application
         run: npm run build
+      - name: Build Lambda
+        run: tsc lambda/index.ts
       - uses: hashicorp/setup-terraform@main
       - name: Terraform fmt
         run: terraform fmt
+        working-directory: deploy
       - name: Terraform validate
         run: terraform validate
+        working-directory: deploy
     #   - name: Terraform apply
-    #     run: terraform apply
+    #     run: terraform apply -var="resend_api_key=${{ secrets.RESEND_API_KEY }}"
+    #     working-directory: deploy

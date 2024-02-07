@@ -1,7 +1,3 @@
-locals {
-  s3_origin_id = "klbdesigns"
-}
-
 resource "aws_cloudfront_origin_access_control" "klbdesigns" {
   name                              = "klbdesigns"
   origin_access_control_origin_type = "s3"
@@ -10,10 +6,12 @@ resource "aws_cloudfront_origin_access_control" "klbdesigns" {
 }
 
 resource "aws_cloudfront_distribution" "klbdesigns" {
+  aliases = ["klbdesigns.art"]
+
   origin {
     domain_name              = aws_s3_bucket.klbdesigns.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.klbdesigns.id
-    origin_id                = local.s3_origin_id
+    origin_id                = "klbdesigns"
   }
 
   enabled             = true
@@ -21,9 +19,9 @@ resource "aws_cloudfront_distribution" "klbdesigns" {
   default_root_object = "index.html"
 
   default_cache_behavior {
-    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.s3_origin_id
+    allowed_methods  = ["GET", ]
+    cached_methods   = ["GET", ]
+    target_origin_id = "klbdesigns"
 
     forwarded_values {
       query_string = false
@@ -47,6 +45,8 @@ resource "aws_cloudfront_distribution" "klbdesigns" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = "arn:aws:acm:us-east-1:592367451035:certificate/861a34b1-bfcb-446f-add5-edf40771e171"
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 }

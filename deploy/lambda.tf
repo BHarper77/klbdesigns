@@ -13,7 +13,7 @@ resource "aws_lambda_function" "email_service" {
 
   environment {
     variables = {
-      API_KEY = "bar"
+      API_KEY = var.resend_api_key
     }
   }
 }

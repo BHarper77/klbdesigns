@@ -1,5 +1,7 @@
-export async function handler(event) {
-	const { name, email, subject, message } = event.body
+import type { APIGatewayProxyEventV2 } from "aws-lambda"
+
+export async function handler(event: APIGatewayProxyEventV2) {
+	const { name, email, subject, message } = JSON.parse(event.body ?? "")
 
 	const response = await fetch('https://api.resend.com/emails', {
 		method: 'POST',
