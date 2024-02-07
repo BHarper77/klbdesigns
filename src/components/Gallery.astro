@@ -11,15 +11,17 @@ type Image = {
 
 const { filepath } = Astro.props
 
+console.log({ filepath })
+
 // glob has to be statically analyzed, can't use variables
 const images = (await (async (filepath) => {
 	switch (filepath) {
-		case "../assets/christmas2023/*.jpg":
-			return await Astro.glob("../assets/christmas2023/*.jpg")
+		case "../assets/christmas2023/*.webp":
+			return await Astro.glob("../assets/christmas2023/*.webp")
 		case "../assets/textiles/*.jpg":
 			return await Astro.glob("../assets/textiles/*.jpg")
-		case "../assets/animals/*.jpg":
-			return await Astro.glob("../assets/animals/*.jpg")
+		case "../assets/animals/*.webp":
+			return await Astro.glob("../assets/animals/*.webp")
 	}
 
 	throw new Error("Unreachable code")
