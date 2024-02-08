@@ -5,9 +5,6 @@ resource "aws_cloudfront_origin_access_control" "klbdesigns" {
   signing_protocol                  = "sigv4"
 }
 
-resource "aws_cloudfront_origin_access_identity" "klbdesigns" {
-}
-
 resource "aws_cloudfront_distribution" "klbdesigns" {
   aliases = ["klbdesigns.art"]
 
@@ -15,9 +12,6 @@ resource "aws_cloudfront_distribution" "klbdesigns" {
     domain_name              = aws_s3_bucket.klbdesigns.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.klbdesigns.id
     origin_id                = "klbdesigns"
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.klbdesigns.cloudfront_access_identity_path
-    }
   }
 
   enabled             = true

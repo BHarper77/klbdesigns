@@ -11,6 +11,14 @@ resource "aws_iam_role_policy" "klbdesigns_invoke_lambda" {
 
 data "aws_iam_policy_document" "klbdesigns_invoke_lambda" {
   statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["s3.amazonaws.com"]
+    }
+  }
+  statement {
     actions   = ["lambda:InvokeFunctionUrl"]
     resources = [aws_lambda_function.email_service.id]
   }
