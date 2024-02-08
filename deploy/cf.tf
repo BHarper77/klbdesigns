@@ -19,8 +19,8 @@ resource "aws_cloudfront_distribution" "klbdesigns" {
   default_root_object = "index.html"
 
   default_cache_behavior {
-    allowed_methods  = ["GET", ]
-    cached_methods   = ["GET", ]
+    allowed_methods  = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
     target_origin_id = "klbdesigns"
 
     forwarded_values {
