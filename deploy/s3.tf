@@ -21,11 +21,11 @@ data "aws_iam_policy_document" "klbdesigns" {
       "s3:GetObject"
     ]
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.klbdesigns.id}/*",
+      "${aws_s3_bucket.klbdesigns.id}/*",
     ]
     principals {
-      type        = "*"
-      identifiers = ["*"]
+      type        = "AWS"
+      identifiers = [aws_cloudfront_origin_access_identity.klbdesigns.iam_arn]
     }
   }
 }

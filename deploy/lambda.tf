@@ -48,7 +48,7 @@ resource "aws_lambda_function_url" "email_service" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["*"]
+    allow_origins     = ["https://klbdesigns.art"]
     allow_methods     = ["POST"]
   }
 }
