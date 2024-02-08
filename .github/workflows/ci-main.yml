@@ -24,6 +24,9 @@ jobs:
       - name: Build Lambda
         run: tsc lambda/index.ts
       - uses: hashicorp/setup-terraform@main
+      - name: Terraform init
+        run: terraform init
+        working-directory: deploy
       - name: Terraform fmt
         run: terraform fmt
         working-directory: deploy
