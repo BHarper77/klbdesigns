@@ -8,6 +8,10 @@ resource "aws_s3_bucket_website_configuration" "klbdesigns" {
   index_document {
     suffix = "index.html"
   }
+
+  error_document {
+    key = "index.html"
+  }
 }
 
 resource "aws_s3_bucket_policy" "klbdesigns" {
@@ -25,7 +29,7 @@ data "aws_iam_policy_document" "klbdesigns" {
     ]
     principals {
       type        = "*"
-      identifiers = "*"
+      identifiers = ["*"]
     }
     condition {
       test     = "StringEquals"
