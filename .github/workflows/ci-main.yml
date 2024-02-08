@@ -30,6 +30,6 @@ jobs:
       - name: Terraform validate
         run: terraform validate
         working-directory: deploy
-    #   - name: Terraform apply
-    #     run: terraform apply -var="resend_api_key=${{ secrets.RESEND_API_KEY }}"
-    #     working-directory: deploy
+      - name: Terraform apply
+        run: terraform apply -var="resend_api_key=${{ secrets.RESEND_API_KEY }}"
+        working-directory: deploy
