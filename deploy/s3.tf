@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "klbdesigns" {
       "s3:GetObject"
     ]
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.klbdesigns.id}/*",
+      "${aws_s3_bucket.klbdesigns.arn}/*",
     ]
     principals {
       type        = "Service"

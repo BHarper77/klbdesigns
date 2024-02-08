@@ -18,24 +18,6 @@ resource "aws_lambda_function" "email_service" {
   }
 }
 
-resource "aws_iam_role" "email_service" {
-  name               = local.lambda_name
-  assume_role_policy = data.aws_iam_policy_document.email_service.json
-}
-
-data "aws_iam_policy_document" "email_service" {
-  statement {
-    effect = "Allow"
-
-    principals {
-      type        = "Service"
-      identifiers = ["lambda.amazonaws.com"]
-    }
-
-    actions = ["sts:AssumeRole"]
-  }
-}
-
 data "archive_file" "email_service" {
   type        = "zip"
   source_file = "../lambda/index.js"
@@ -53,7 +35,7 @@ resource "aws_lambda_function_url" "email_service" {
   }
 }
 
-resource "aws_lambda_permission" "allow_s3" {
+resource "aws_lambda_permission" "allow_s3_invoke" {
   statement_id  = "AllowInvokeFromS3"
   action        = "lambda:InvokeFunctionUrl"
   function_name = aws_lambda_function.email_service.function_name
