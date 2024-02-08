@@ -34,5 +34,5 @@ jobs:
         run: terraform validate
         working-directory: deploy
       - name: Terraform apply
-        run: terraform apply -var="resend_api_key=${{ secrets.RESEND_API_KEY }}"
+        run: terraform apply -var="resend_api_key=${{ secrets.RESEND_API_KEY }}" -auto-approve
         working-directory: deploy
