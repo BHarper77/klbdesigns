@@ -24,8 +24,8 @@ data "aws_iam_policy_document" "klbdesigns" {
       "arn:aws:s3:::${aws_s3_bucket.klbdesigns.id}/*",
     ]
     principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_distribution.klbdesigns.arn]
+      type        = "*"
+      identifiers = "*"
     }
     condition {
       test     = "StringEquals"
