@@ -30,12 +30,12 @@ data "aws_iam_policy_document" "klbdesigns" {
   }
 }
 
-resource "aws_s3_object" "klbdesigns_dev" {
-  for_each = fileset("../../dist/", "**")
-  bucket   = aws_s3_bucket.klbdesigns_dev.id
+resource "aws_s3_object" "klbdesigns" {
+  for_each = fileset("../dist/", "**")
+  bucket   = aws_s3_bucket.klbdesigns.id
   key      = each.value
-  source   = "../../dist/${each.value}"
-  etag     = filemd5("../../dist/${each.value}")
+  source   = "../dist/${each.value}"
+  etag     = filemd5("../dist/${each.value}")
   #   set correct content types for svgs and HTML files
   content_type = (
     length(regexall("\\.svg", each.value)) > 0 ? "image/svg+xml" :
