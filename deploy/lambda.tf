@@ -52,3 +52,11 @@ resource "aws_lambda_function_url" "email_service" {
     allow_methods     = ["POST"]
   }
 }
+
+resource "aws_lambda_permission" "allow_s3" {
+  statement_id  = "AllowInvokeFromS3"
+  action        = "lambda:InvokeFunctionUrl"
+  function_name = aws_lambda_function.email_service.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = aws_s3_bucket.klbdesigns.arn
+}
