@@ -19,6 +19,11 @@ resource "aws_cloudfront_distribution" "klbdesigns" {
   default_root_object = "index.html"
 
   default_cache_behavior {
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.redirect.arn
+    }
+
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "klbdesigns"
@@ -49,4 +54,11 @@ resource "aws_cloudfront_distribution" "klbdesigns" {
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
+}
+
+resource "aws_cloudfront_function" "redirect" {
+  name    = "redirect"
+  runtime = "cloudfront-js-2.0"
+  publish = true
+  code    = file("../cloudfront/redirect.js")
 }

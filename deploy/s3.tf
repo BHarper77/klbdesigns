@@ -25,11 +25,11 @@ data "aws_iam_policy_document" "klbdesigns" {
       "s3:GetObject"
     ]
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.klbdesigns.id}/*",
+      "arn:aws:s3:::${aws_s3_bucket.klbdesigns.id}/*/**",
     ]
     principals {
-      type        = "*"
-      identifiers = ["*"]
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
     }
     condition {
       test     = "StringEquals"
