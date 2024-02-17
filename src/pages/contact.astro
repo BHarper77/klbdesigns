@@ -32,53 +32,57 @@ import Layout from "../layouts/Layout.astro"
 		// })
 	</script>
 
-	<div class="flex justify-center p-4 sm:pt-8 sm:pl-16">
-		<form id="contact-form" class="w-3/4 sm:h-full sm:w-full" action="mailto:kirstybaird8@gmail.com">
-			<div class="grid gap-6 mb-6">
-				<div>
-					<label for="name" class="block text-sm">Name</label>
-					<input
-						name="name"
-						type="text"
-						id="name"
-						class="my-2 w-full sm:w-1/2 text-sm block rounded"
-						required
-					/>
+	<div class="flex flex-col p-4 sm:pt-8 sm:pl-16">
+		<h3 class="text-xl font-bold py-4">Contact</h3>
+		<p class="pb-4">Commisions, general inquiries and orders - kirstybaird8@gmail.com</p>
+		<div>
+			<form id="contact-form" class="w-3/4 sm:h-full sm:w-full" action="mailto:kirstybaird8@gmail.com">
+				<div class="grid gap-6 mb-6">
+					<div>
+						<label for="name" class="block text-sm">Name</label>
+						<input
+							name="name"
+							type="text"
+							id="name"
+							class="my-2 w-full sm:w-1/2 text-sm block rounded"
+							required
+						/>
+					</div>
+					<div>
+						<label for="email" class="block text-sm">Email</label>
+						<input
+							name="email"
+							type="email"
+							id="email"
+							class="my-2 w-full sm:w-1/2 text-sm block rounded"
+							required
+						/>
+					</div>
+					<div>
+						<label for="subject" class="block text-sm">Subject</label>
+						<input
+							name="subject"
+							type="text"
+							id="subject"
+							class="my-2 w-full sm:w-1/2 text-sm block rounded"
+							required
+						/>
+					</div>
+					<div>
+						<label for="body" class="block text-sm">Message</label>
+						<input
+							name="body"
+							type="text"
+							id="body"
+							class="my-2 w-full sm:w-1/2 pb-32 text-sm block rounded"
+							required
+						/>
+					</div>
 				</div>
-				<div>
-					<label for="email" class="block text-sm">Email</label>
-					<input
-						name="email"
-						type="email"
-						id="email"
-						class="my-2 w-full sm:w-1/2 text-sm block rounded"
-						required
-					/>
-				</div>
-				<div>
-					<label for="subject" class="block text-sm">Subject</label>
-					<input
-						name="subject"
-						type="text"
-						id="subject"
-						class="my-2 w-full sm:w-1/2 text-sm block rounded"
-						required
-					/>
-				</div>
-				<div>
-					<label for="body" class="block text-sm">Message</label>
-					<input
-						name="body"
-						type="text"
-						id="body"
-						class="my-2 w-full sm:w-1/2 pb-32 text-sm block rounded"
-						required
-					/>
-				</div>
-			</div>
-			<button type="submit" class="text-center text-white bg-main text-sm px-5 py-2.5 rounded w-full sm:w-1/2"
-				>Send</button
-			>
-		</form>
+				<button type="submit" class="text-center text-white bg-main text-sm px-5 py-2.5 rounded w-full sm:w-1/2"
+					>Send</button
+				>
+			</form>
+		</div>
 	</div>
 </Layout>
