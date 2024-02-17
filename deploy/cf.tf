@@ -60,5 +60,5 @@ resource "aws_cloudfront_function" "redirect" {
   name    = "redirect"
   runtime = "cloudfront-js-2.0"
   publish = true
-  code    = file("../cloudfront/redirect.js")
+  code    = file("../functions/cloudfront.js")
 }

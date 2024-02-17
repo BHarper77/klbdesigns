@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "email_service" {
 
 data "archive_file" "email_service" {
   type        = "zip"
-  source_file = "../lambda/index.js"
+  source_file = "../functions/lambda.js"
   output_path = local.lambda_zip
 }
 

@@ -22,7 +22,7 @@ jobs:
       - name: Build application
         run: npm run build
       - name: Build Lambda
-        run: tsc lambda/index.ts
+        run: tsc functions/lambda.ts
       - uses: hashicorp/setup-terraform@main
       - name: Terraform init
         run: terraform init
