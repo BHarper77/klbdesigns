@@ -4,36 +4,36 @@ import Layout from "../layouts/Layout.astro"
 
 <Layout title="k.l.b designs - contact">
 	<script>
-		const form = document.getElementById("contact-form") as HTMLFormElement
-		const lambdaUrl = "https://gyyue7q6c64kcvizg4hzx3kupu0llagm.lambda-url.eu-west-1.on.aws/"
+		// const form = document.getElementById("contact-form") as HTMLFormElement
+		// const lambdaUrl = "https://gyyue7q6c64kcvizg4hzx3kupu0llagm.lambda-url.eu-west-1.on.aws/"
 
-		form?.addEventListener("submit", async (event) => {
-			event.preventDefault()
+		// form?.addEventListener("submit", async (event) => {
+		// 	event.preventDefault()
 
-			const formData = new FormData(form)
-			const { name, subject, email, message } = Object.fromEntries(formData)
+		// 	const formData = new FormData(form)
+		// 	const { name, subject, email, message } = Object.fromEntries(formData)
 
-			const response = await fetch(lambdaUrl, {
-				method: "POST",
-				body: JSON.stringify({
-					name,
-					subject,
-					email,
-					message,
-				}),
-			})
+		// 	const response = await fetch(lambdaUrl, {
+		// 		method: "POST",
+		// 		body: JSON.stringify({
+		// 			name,
+		// 			subject,
+		// 			email,
+		// 			message,
+		// 		}),
+		// 	})
 
-			if (!response.ok) {
-				console.error("Error sending email")
-				alert("Error sending email")
-			}
+		// 	if (!response.ok) {
+		// 		console.error("Error sending email")
+		// 		alert("Error sending email")
+		// 	}
 
-			console.log({ response: await response.json() })
-		})
+		// 	console.log({ response: await response.json() })
+		// })
 	</script>
 
 	<div class="flex justify-center p-4 sm:pt-8 sm:pl-16">
-		<form id="contact-form" class="w-3/4 sm:h-full sm:w-full">
+		<form id="contact-form" class="w-3/4 sm:h-full sm:w-full" action="mailto:kirstybaird8@gmail.com">
 			<div class="grid gap-6 mb-6">
 				<div>
 					<label for="name" class="block text-sm">Name</label>
@@ -66,11 +66,11 @@ import Layout from "../layouts/Layout.astro"
 					/>
 				</div>
 				<div>
-					<label for="message" class="block text-sm">Message</label>
+					<label for="body" class="block text-sm">Message</label>
 					<input
-						name="message"
+						name="body"
 						type="text"
-						id="message"
+						id="body"
 						class="my-2 w-full sm:w-1/2 pb-32 text-sm block rounded"
 						required
 					/>
