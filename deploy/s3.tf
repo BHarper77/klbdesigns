@@ -20,12 +20,31 @@ resource "aws_s3_bucket_policy" "klbdesigns" {
 }
 
 data "aws_iam_policy_document" "klbdesigns" {
+  #   enable access to nested docs
   statement {
     actions = [
       "s3:GetObject"
     ]
     resources = [
       "arn:aws:s3:::${aws_s3_bucket.klbdesigns.id}/*/**",
+    ]
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceArn"
+      values   = [aws_cloudfront_distribution.klbdesigns.arn]
+    }
+  }
+  #   enable access to index document
+  statement {
+    actions = [
+      "s3:GetObject"
+    ]
+    resources = [
+      "arn:aws:s3:::${aws_s3_bucket.klbdesigns.id}/*",
     ]
     principals {
       type        = "Service"
