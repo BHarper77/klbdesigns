@@ -1,97 +1,170 @@
----
-type Props = {
-	filepath: string
-}
-
-type Image = {
-	default: {
-		src: string
+<script>
+	type Response = {
+		sys: {
+			type: string
+		}
+		total: number
+		skip: number
+		limit: number
+		items: Array<{
+			metadata: {
+				tags: Array<{
+					sys: {
+						type: string
+						linkType: string
+						id: string
+					}
+				}>
+			}
+			sys: {
+				space: {
+					sys: {
+						type: string
+						linkType: string
+						id: string
+					}
+				}
+				id: string
+				type: string
+				createdAt: string
+				updatedAt: string
+				environment: {
+					sys: {
+						id: string
+						type: string
+						linkType: string
+					}
+				}
+				revision: number
+				contentType: {
+					sys: {
+						type: string
+						linkType: string
+						id: string
+					}
+				}
+				locale: string
+			}
+			fields: {
+				media: {
+					sys: {
+						type: string
+						linkType: string
+						id: string
+					}
+				}
+				alt: string
+			}
+		}>
+		includes: {
+			Asset: Array<{
+				metadata: {
+					tags: Array<any>
+				}
+				sys: {
+					space: {
+						sys: {
+							type: string
+							linkType: string
+							id: string
+						}
+					}
+					id: string
+					type: string
+					createdAt: string
+					updatedAt: string
+					environment: {
+						sys: {
+							id: string
+							type: string
+							linkType: string
+						}
+					}
+					revision: number
+					locale: string
+				}
+				fields: {
+					title: string
+					file: {
+						url: string
+						details: {
+							size: number
+							image: {
+								width: number
+								height: number
+							}
+						}
+						fileName: string
+						contentType: string
+					}
+				}
+			}>
+		}
 	}
-}
 
-const { filepath } = Astro.props
-
-// glob has to be statically analyzed, can't use variables
-const images = (await (async (filepath) => {
-	switch (filepath) {
-		case "../assets/index/*.webp":
-			return await Astro.glob("../assets/index/*.webp")
-		case "../assets/christmas2023/*.webp":
-			return await Astro.glob("../assets/christmas2023/*.webp")
-		case "../assets/textiles/*.jpg":
-			return await Astro.glob("../assets/textiles/*.jpg")
-		case "../assets/animals/*.webp":
-			return await Astro.glob("../assets/animals/*.webp")
+	type Image = {
+		default: {
+			src: string
+			alt: string
+		}
 	}
 
-	throw new Error("Unreachable code")
-})(filepath)) as Image[]
+	const spaceId = ""
+	const accessToken = ""
+	const env = "master"
+	const query = "metadata.tags.sys.id[all]=christmas2023"
 
-function splitImageArray(array: Image[], subArrayCount: number) {
-	const subArrays: Image[][] = Array.from({ length: subArrayCount }, () => [])
+	const url = `https://cdn.contentful.com/spaces/${spaceId}/environments/${env}/entries?
+	access_token=${accessToken}&
+	${query}`
 
-	for (let i = 0; i < array.length; i++) {
-		const subArrayIndex = i % subArrayCount
-		subArrays[subArrayIndex]!.push(array[i]!)
+	const contentfulResponse = (await fetch(url, {
+		method: "GET",
+		redirect: "follow",
+	}).then(async (response) => await response.json())) as Response
+
+	const remoteImages = contentfulResponse.items.map((item, index) => {
+		const asset = contentfulResponse.includes.Asset[index]
+		return {
+			default: {
+				alt: item.fields.alt,
+				src: asset?.fields.file.url ?? "",
+			},
+		}
+	})
+
+	console.log({ remoteImages })
+
+	function splitImageArray(array: Image[], subArrayCount: number) {
+		const subArrays: Image[][] = Array.from({ length: subArrayCount }, () => [])
+
+		for (let i = 0; i < array.length; i++) {
+			const subArrayIndex = i % subArrayCount
+			subArrays[subArrayIndex]!.push(array[i]!)
+		}
+
+		return subArrays
 	}
 
-	return subArrays
-}
+	const imageArrays = splitImageArray(remoteImages, 4)
 
-const imageArrays = splitImageArray(images, 4)
----
+	// create element for each image
+	const container = document.getElementById("container")
 
-<div class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4 z-50">
-	<div>
-		{
-			imageArrays[0]?.map((image) => (
-				<img
-					onclick="swapElements();"
-					class="h-auto max-w-full pb-4"
-					src={image.default.src}
-					alt=""
-					loading="lazy"
-				/>
-			))
-		}
-	</div>
-	<div>
-		{
-			imageArrays[1]?.map((image) => (
-				<img
-					onclick="swapElements();"
-					class="h-auto max-w-full pb-4"
-					src={image.default.src}
-					alt=""
-					loading="lazy"
-				/>
-			))
-		}
-	</div>
-	<div>
-		{
-			imageArrays[2]?.map((image) => (
-				<img
-					onclick="swapElements();"
-					class="h-auto max-w-full pb-4"
-					src={image.default.src}
-					alt=""
-					loading="lazy"
-				/>
-			))
-		}
-	</div>
-	<div>
-		{
-			imageArrays[3]?.map((image) => (
-				<img
-					onclick="swapElements();"
-					class="h-auto max-w-full pb-4"
-					src={image.default.src}
-					alt=""
-					loading="lazy"
-				/>
-			))
-		}
-	</div>
-</div>
+	imageArrays.forEach((imageColumn) => {
+		const imageContainer = document.createElement("div")
+		container?.appendChild(imageContainer)
+
+		imageColumn.forEach((image) => {
+			const imageEl = document.createElement("img")
+			imageEl.className = "h-auto max-w-full pb-4"
+			imageEl.src = image.default.src
+			imageEl.alt = image.default.alt
+			imageEl.loading = "lazy"
+
+			imageContainer.appendChild(imageEl)
+		})
+	})
+</script>
+
+<div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4 z-50"></div>
