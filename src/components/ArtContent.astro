@@ -2,41 +2,12 @@
 import Gallery from "../components/Gallery.astro"
 
 type Props = {
-	filepath: string
+	tag: string
 }
 
-const { filepath } = Astro.props
+const { tag } = Astro.props
 ---
 
-<!-- <div id="carousel">
-	<Carousel filepath={filepath} />
-</div> -->
 <div id="gallery">
-	<Gallery filepath={filepath} />
+	<Gallery tag={tag} />
 </div>
-
-<script is:inline>
-	const carousel = document.getElementById("carousel")
-	const gallery = document.getElementById("gallery")
-
-	function swapElements() {
-		// if (!carousel || !gallery) {
-		// 	console.error("Error swapping components. Could not retrieve components from DOM")
-		// 	return
-		// }
-		// if (carousel.style.display == "none") {
-		// 	carousel.style.display = "block"
-		// 	gallery.style.display = "none"
-		// } else {
-		// 	carousel.style.display = "none"
-		// 	gallery.style.display = "block"
-		// }
-	}
-</script>
-
-<style>
-	/* default state is carousel showing */
-	#carousel {
-		display: none;
-	}
-</style>

@@ -1,170 +1,79 @@
-<script>
-	type Response = {
-		sys: {
-			type: string
-		}
-		total: number
-		skip: number
-		limit: number
-		items: Array<{
-			metadata: {
-				tags: Array<{
-					sys: {
-						type: string
-						linkType: string
-						id: string
-					}
-				}>
-			}
-			sys: {
-				space: {
-					sys: {
-						type: string
-						linkType: string
-						id: string
-					}
-				}
-				id: string
-				type: string
-				createdAt: string
-				updatedAt: string
-				environment: {
-					sys: {
-						id: string
-						type: string
-						linkType: string
-					}
-				}
-				revision: number
-				contentType: {
-					sys: {
-						type: string
-						linkType: string
-						id: string
-					}
-				}
-				locale: string
-			}
-			fields: {
-				media: {
-					sys: {
-						type: string
-						linkType: string
-						id: string
-					}
-				}
-				alt: string
-			}
-		}>
-		includes: {
-			Asset: Array<{
-				metadata: {
-					tags: Array<any>
-				}
-				sys: {
-					space: {
-						sys: {
-							type: string
-							linkType: string
-							id: string
-						}
-					}
-					id: string
-					type: string
-					createdAt: string
-					updatedAt: string
-					environment: {
-						sys: {
-							id: string
-							type: string
-							linkType: string
-						}
-					}
-					revision: number
-					locale: string
-				}
-				fields: {
-					title: string
-					file: {
-						url: string
-						details: {
-							size: number
-							image: {
-								width: number
-								height: number
-							}
-						}
-						fileName: string
-						contentType: string
-					}
-				}
-			}>
-		}
+---
+import type { ContentfulResponse } from "../types/Contentful"
+import { throwError } from "../utils/Helpers"
+
+type Props = {
+	tag: string
+}
+
+const { tag } = Astro.props
+
+const spaceId = import.meta.env.SPACE_ID
+const accessToken = import.meta.env.ACCESS_TOKEN
+
+const url = `https://cdn.contentful.com/spaces/${spaceId}/environments/master/entries?
+		access_token=${accessToken}&
+		metadata.tags.sys.id[all]=${tag}`
+
+const contentfulResponse = (await fetch(url, {
+	method: "GET",
+	redirect: "follow",
+}).then(async (response) => await response.json())) as ContentfulResponse
+
+const remoteImages = contentfulResponse.items.map((item, index) => {
+	const asset = contentfulResponse.includes.Asset[index] ?? throwError("Error finding corresponding asset object")
+	return {
+		alt: item.fields.alt,
+		src: asset.fields.file.url,
+	}
+})
+
+type Image = {
+	src: string
+	alt: string
+}
+
+function splitImageArray(array: Image[], subArrayCount: number) {
+	const subArrays: Image[][] = Array.from({ length: subArrayCount }, () => [])
+
+	for (let i = 0; i < array.length; i++) {
+		const subArrayIndex = i % subArrayCount
+		subArrays[subArrayIndex]!.push(array[i]!)
 	}
 
-	type Image = {
-		default: {
-			src: string
-			alt: string
+	return subArrays
+}
+
+const imageArrays = splitImageArray(remoteImages, 4)
+---
+
+<div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4 z-50">
+	<div>
+		{
+			imageArrays[0]?.map((image) => (
+				<img class="h-auto max-w-full pb-4" src={image.src} alt={image.alt} loading="lazy" />
+			))
 		}
-	}
-
-	const spaceId = ""
-	const accessToken = ""
-	const env = "master"
-	const query = "metadata.tags.sys.id[all]=christmas2023"
-
-	const url = `https://cdn.contentful.com/spaces/${spaceId}/environments/${env}/entries?
-	access_token=${accessToken}&
-	${query}`
-
-	const contentfulResponse = (await fetch(url, {
-		method: "GET",
-		redirect: "follow",
-	}).then(async (response) => await response.json())) as Response
-
-	const remoteImages = contentfulResponse.items.map((item, index) => {
-		const asset = contentfulResponse.includes.Asset[index]
-		return {
-			default: {
-				alt: item.fields.alt,
-				src: asset?.fields.file.url ?? "",
-			},
+	</div>
+	<div>
+		{
+			imageArrays[1]?.map((image) => (
+				<img class="h-auto max-w-full pb-4" src={image.src} alt={image.alt} loading="lazy" />
+			))
 		}
-	})
-
-	console.log({ remoteImages })
-
-	function splitImageArray(array: Image[], subArrayCount: number) {
-		const subArrays: Image[][] = Array.from({ length: subArrayCount }, () => [])
-
-		for (let i = 0; i < array.length; i++) {
-			const subArrayIndex = i % subArrayCount
-			subArrays[subArrayIndex]!.push(array[i]!)
+	</div>
+	<div>
+		{
+			imageArrays[2]?.map((image) => (
+				<img class="h-auto max-w-full pb-4" src={image.src} alt={image.alt} loading="lazy" />
+			))
 		}
-
-		return subArrays
-	}
-
-	const imageArrays = splitImageArray(remoteImages, 4)
-
-	// create element for each image
-	const container = document.getElementById("container")
-
-	imageArrays.forEach((imageColumn) => {
-		const imageContainer = document.createElement("div")
-		container?.appendChild(imageContainer)
-
-		imageColumn.forEach((image) => {
-			const imageEl = document.createElement("img")
-			imageEl.className = "h-auto max-w-full pb-4"
-			imageEl.src = image.default.src
-			imageEl.alt = image.default.alt
-			imageEl.loading = "lazy"
-
-			imageContainer.appendChild(imageEl)
-		})
-	})
-</script>
-
-<div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4 z-50"></div>
+	</div>
+	<div>
+		{
+			imageArrays[3]?.map((image) => (
+				<img class="h-auto max-w-full pb-4" src={image.src} alt={image.alt} loading="lazy" />
+			))
+		}
+	</div>
+</div>
