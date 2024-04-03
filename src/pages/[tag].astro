@@ -1,0 +1,21 @@
+---
+import Gallery from "../components/Gallery.astro"
+import Layout from "../layouts/Layout.astro"
+import { getTags } from "../utils/contentful/api"
+
+export async function getStaticPaths() {
+	// make request to contentful for tags
+	const params = (await getTags()).map((tag) => ({
+		params: {
+			...tag,
+		},
+	}))
+	return params
+}
+
+const { name, tag } = Astro.params
+---
+
+<Layout title=`klbdesigns - ${name}`>
+	<Gallery tag={tag} />
+</Layout>

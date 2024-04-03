@@ -1,6 +1,6 @@
 ---
-import type { ContentfulResponse } from "../types/Contentful"
-import { throwError } from "../utils/Helpers"
+import { queryTags } from "../utils/contentful/api"
+import { throwError } from "../utils/helpers"
 
 type Props = {
 	tag: string
@@ -8,20 +8,10 @@ type Props = {
 
 const { tag } = Astro.props
 
-const spaceId = import.meta.env.SPACE_ID
-const accessToken = import.meta.env.ACCESS_TOKEN
+const tags = await queryTags(`metadata.tags.sys.id[all]=${tag}`)
 
-const url = `https://cdn.contentful.com/spaces/${spaceId}/environments/master/entries?
-		access_token=${accessToken}&
-		metadata.tags.sys.id[all]=${tag}`
-
-const contentfulResponse = (await fetch(url, {
-	method: "GET",
-	redirect: "follow",
-}).then(async (response) => await response.json())) as ContentfulResponse
-
-const remoteImages = contentfulResponse.items.map((item, index) => {
-	const asset = contentfulResponse.includes.Asset[index] ?? throwError("Error finding corresponding asset object")
+const remoteImages = tags.items.map((item, index) => {
+	const asset = tags.includes.Asset[index] ?? throwError("Error finding corresponding asset object")
 	return {
 		alt: item.fields.alt,
 		src: asset.fields.file.url,

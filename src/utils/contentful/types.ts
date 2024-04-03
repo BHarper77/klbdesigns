@@ -1,4 +1,4 @@
-export type ContentfulResponse = {
+export type TagsQueryResponse = {
 	sys: {
 		type: string
 	}
@@ -99,4 +99,52 @@ export type ContentfulResponse = {
 			}
 		}>
 	}
+}
+
+export type TagsResponse = {
+	sys: {
+	  type: string
+	}
+	total: number
+	skip: number
+	limit: number
+	items: Array<{
+	  sys: {
+		space: {
+		  sys: {
+			type: string
+			linkType: string
+			id: string
+		  }
+		}
+		id: string
+		type: string
+		createdAt: string
+		updatedAt: string
+		environment: {
+		  sys: {
+			id: string
+			type: string
+			linkType: string
+		  }
+		}
+		createdBy: {
+		  sys: {
+			type: string
+			linkType: string
+			id: string
+		  }
+		}
+		updatedBy: {
+		  sys: {
+			type: string
+			linkType: string
+			id: string
+		  }
+		}
+		version: number
+		visibility: string
+	  }
+	  name: string
+	}>
 }
