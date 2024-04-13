@@ -71,6 +71,6 @@ resource "null_resource" "invalidation" {
   }
 
   provisioner "local-exec" {
-    command = "aws cloudfront create-invalidation --distribution-id ${data.aws_cloudfront_distribution.klbdesigns.id} --paths '/*'"
+    command = "aws cloudfront create-invalidation --distribution-id ${aws_cloudfront_distribution.klbdesigns.id} --paths '/*'"
   }
 }
