@@ -1,0 +1,25 @@
+---
+import Gallery from "../components/Gallery.astro"
+import Layout from "../layouts/Layout.astro"
+import { getTags } from "../utils/contentful/api"
+
+export async function getStaticPaths() {
+	const params = (await getTags()).map((tag) => ({
+		params: {
+			tag: tag.tag,
+		},
+		props: {
+			name: tag.name,
+		},
+	}))
+
+	return params
+}
+
+const { tag } = Astro.params
+const { name } = Astro.props
+---
+
+<Layout title={`k.l.b designs - ${name}`}>
+	<Gallery tag={tag} />
+</Layout>
