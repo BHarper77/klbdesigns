@@ -6,15 +6,20 @@ import { getTags } from "../utils/contentful/api"
 export async function getStaticPaths() {
 	const params = (await getTags()).map((tag) => ({
 		params: {
-			...tag,
+			tag: tag.tag,
+		},
+		props: {
+			name: tag.name,
 		},
 	}))
+
 	return params
 }
 
-const { name, tag } = Astro.params
+const { tag } = Astro.params
+const { name } = Astro.props
 ---
 
-<Layout title=`k.l.b designs - ${name}`>
+<Layout title={`k.l.b designs - ${name}`}>
 	<Gallery tag={tag} />
 </Layout>
