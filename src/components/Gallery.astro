@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets"
 import { queryTags } from "../utils/contentful/api"
 import { throwError } from "../utils/helpers"
 
@@ -22,14 +23,11 @@ const images = tags.items.map((item) => {
 		alt: item.fields.alt,
 		src: asset.fields.file.url,
 		height: asset.fields.file.details.image.height,
+		width: asset.fields.file.details.image.width,
 	}
 })
 
-type Image = {
-	src: string
-	alt: string
-	height: number
-}
+type Image = (typeof images)[number]
 
 const columns = Array.from({ length: 4 }, () => ({ height: 0, images: [] as Image[] }))
 
@@ -49,10 +47,16 @@ const imageArrays = columns.map((column) => column.images)
 		imageArrays.map((images) => (
 			<div>
 				{images.map((image) => (
-					<img class="h-auto max-w-full pb-4" src={image.src} alt={image.alt} loading="lazy" />
+					<Image
+						src={image.src}
+						alt={image.alt}
+						width={image.width}
+						height={image.height}
+						class="h-auto max-w-full pb-4"
+						loading="lazy"
+					/>
 				))}
 			</div>
 		))
 	}
 </div>
-../utils/helperstest ../utils/helpers
