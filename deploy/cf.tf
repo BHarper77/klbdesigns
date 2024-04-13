@@ -62,3 +62,15 @@ resource "aws_cloudfront_function" "redirect" {
   publish = true
   code    = file("../functions/cloudfront.js")
 }
+
+resource "null_resource" "invalidation" {
+  depends_on = [aws_cloudfront_distribution.klbdesigns, aws_s3_bucket.klbdesigns]
+
+  triggers = {
+    always_trigger = "${timestamp()}"
+  }
+
+  provisioner "local-exec" {
+    command = "aws cloudfront create-invalidation --distribution-id ${data.aws_cloudfront_distribution.klbdesigns.id} --paths '/*'"
+  }
+}
