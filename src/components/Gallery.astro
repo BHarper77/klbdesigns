@@ -10,60 +10,48 @@ const { tag } = Astro.props
 
 const tags = await queryTags(`metadata.tags.sys.id[all]=${tag}`)
 
-const remoteImages = tags.items.map((item, index) => {
-	const asset = tags.includes.Asset[index] ?? throwError("Error finding corresponding asset object")
+const images = tags.items.map((item) => {
+	// response returns alt and media metadata in different arrays
+	// match via media ID
+	const itemId = item.fields.media.sys.id
+	const asset =
+		tags.includes.Asset.find((asset) => asset.sys.id === itemId) ??
+		throwError(`Couldn't find corresponding asset for item ${itemId}`)
+
 	return {
 		alt: item.fields.alt,
 		src: asset.fields.file.url,
+		height: asset.fields.file.details.image.height,
 	}
 })
 
 type Image = {
 	src: string
 	alt: string
+	height: number
 }
 
-function splitImageArray(array: Image[], subArrayCount: number) {
-	const subArrays: Image[][] = Array.from({ length: subArrayCount }, () => [])
+const columns = Array.from({ length: 4 }, () => ({ height: 0, images: [] as Image[] }))
 
-	for (let i = 0; i < array.length; i++) {
-		const subArrayIndex = i % subArrayCount
-		subArrays[subArrayIndex]!.push(array[i]!)
-	}
+for (const image of images) {
+	// get column with lowest total height
+	const targetColumn = columns.sort((a, b) => a.height - b.height)[0] ?? throwError("Error getting target column")
 
-	return subArrays
+	targetColumn.images.push(image)
+	targetColumn.height += image.height
 }
 
-const imageArrays = splitImageArray(remoteImages, 4)
+const imageArrays = columns.map((column) => column.images)
 ---
 
 <div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4 z-50">
-	<div>
-		{
-			imageArrays[0]?.map((image) => (
-				<img class="h-auto max-w-full pb-4" src={image.src} alt={image.alt} loading="lazy" />
-			))
-		}
-	</div>
-	<div>
-		{
-			imageArrays[1]?.map((image) => (
-				<img class="h-auto max-w-full pb-4" src={image.src} alt={image.alt} loading="lazy" />
-			))
-		}
-	</div>
-	<div>
-		{
-			imageArrays[2]?.map((image) => (
-				<img class="h-auto max-w-full pb-4" src={image.src} alt={image.alt} loading="lazy" />
-			))
-		}
-	</div>
-	<div>
-		{
-			imageArrays[3]?.map((image) => (
-				<img class="h-auto max-w-full pb-4" src={image.src} alt={image.alt} loading="lazy" />
-			))
-		}
-	</div>
+	{
+		imageArrays.map((images) => (
+			<div>
+				{images.map((image) => (
+					<img class="h-auto max-w-full pb-4" src={image.src} alt={image.alt} loading="lazy" />
+				))}
+			</div>
+		))
+	}
 </div>
