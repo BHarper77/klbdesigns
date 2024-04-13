@@ -6,7 +6,7 @@ on:
       - main
   repository_dispatch:
     types: [publish-event]
-
+    
 jobs:
   deploy:
     runs-on: ubuntu-latest
