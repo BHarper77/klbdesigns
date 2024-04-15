@@ -40,11 +40,12 @@ for (const image of images) {
 }
 
 const imageArrays = columns.map((column) => column.images)
+const sortedImageArrays = imageArrays.sort((a, b) => b.length - a.length)
 ---
 
 <div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4 z-50">
 	{
-		imageArrays.map((images) => (
+		sortedImageArrays.map((images) => (
 			<div>
 				{images.map((image) => (
 					<Image
