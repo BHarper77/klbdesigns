@@ -15,11 +15,18 @@ export async function getTags() {
 	const parsedTags = tags.items
 		.map(item => ({
 			name: item.name,
-			tag: item.name.replace(/\s/, "")
+			tag: toCamelCase(item.name)
 		}))
 		.filter(item => item.name !== "featured")
 
 	return parsedTags
+}
+
+/** Convert tags to camelCase for API request */
+function toCamelCase(string: string) {
+    return string
+        .toLowerCase()
+        .replace(/[^a-zA-Z0-9]+(.)/g, (_, chr) => chr.toUpperCase())
 }
 
 export async function queryTags(query: string) {
