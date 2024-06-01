@@ -1,5 +1,7 @@
 ---
 import { getTags } from "../utils/contentful/api"
+import Etsy from "./svgs/Etsy.astro"
+import Instagram from "./svgs/Instagram.astro"
 
 const collections = await getTags()
 ---
@@ -110,30 +112,9 @@ const collections = await getTags()
 			<!-- social media links -->
 			<div class="absolute bottom-4 flex gap-2">
 				<li>
-					<a href="https://www.instagram.com/k.l.b_designs/?hl=en" target="_blank"
-						><svg
-							class="hover:fill-secondary"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="white"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								fill-rule="evenodd"
-								clip-rule="evenodd"
-								d="M12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17C14.7614 17 17 14.7614 17 12C17 9.23858 14.7614 7 12 7ZM9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12Z"
-							></path>
-							<path
-								d="M18 5C17.4477 5 17 5.44772 17 6C17 6.55228 17.4477 7 18 7C18.5523 7 19 6.55228 19 6C19 5.44772 18.5523 5 18 5Z"
-							></path>
-							<path
-								fill-rule="evenodd"
-								clip-rule="evenodd"
-								d="M5 1C2.79086 1 1 2.79086 1 5V19C1 21.2091 2.79086 23 5 23H19C21.2091 23 23 21.2091 23 19V5C23 2.79086 21.2091 1 19 1H5ZM19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z"
-							></path>
-						</svg></a
-					>
+					<a href="https://www.instagram.com/k.l.b_designs/?hl=en" target="_blank">
+						<Instagram classList="fill-white hover:fill-secondary" width={24} height={24} />
+					</a>
 				</li>
 				<li>
 					<a href="https://www.linkedin.com/in/kirsty-baird-60b03123b/" target="_blank"
@@ -151,20 +132,9 @@ const collections = await getTags()
 					>
 				</li>
 				<li>
-					<a href="https://www.etsy.com/uk/shop/KLBDesignsGoods" target="_blank"
-						><svg
-							class="hover:fill-secondary"
-							fill="white"
-							width="23"
-							height="23"
-							viewBox="0 0 32 32"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<path
-								d="M11.417 3.26c0-0.432 0.047-0.693 0.786-0.693h9.953c1.734 0 2.698 1.479 3.391 4.255l0.557 2.224h1.693c0.307-6.307 0.573-9.047 0.573-9.047s-4.26 0.479-6.786 0.479h-12.729l-6.818-0.219v1.828l2.297 0.432c1.615 0.323 2 0.661 2.135 2.141 0 0 0.146 4.365 0.146 11.521 0 7.182-0.12 11.479-0.12 11.479 0 1.302-0.521 1.781-2.12 2.099l-2.297 0.443v1.797l6.839-0.219h11.401c2.583 0 8.521 0.219 8.521 0.219 0.141-1.563 1-8.641 1.141-9.417h-1.599l-1.714 3.88c-1.339 3.036-3.302 3.255-5.479 3.255h-6.542c-2.172 0-3.219-0.849-3.219-2.729v-9.922c0 0 4.823 0 6.385 0.125 1.214 0.089 1.948 0.438 2.344 2.13l0.521 2.26h1.88l-0.12-5.703 0.255-5.74h-1.854l-0.599 2.521c-0.375 1.656-0.641 1.958-2.339 2.135-2.219 0.224-6.422 0.182-6.422 0.182v-11.714h-0.063z"
-							></path>
-						</svg></a
-					>
+					<a href="https://www.etsy.com/uk/shop/KLBDesignsGoods" target="_blank">
+						<Etsy classList="fill-white hover:fill-secondary" width={24} height={24} />
+					</a>
 				</li>
 			</div>
 		</ul>

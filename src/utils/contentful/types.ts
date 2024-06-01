@@ -1,3 +1,16 @@
+type WebsiteContentModel = {
+	media: {
+		sys: {
+			type: string
+			linkType: string
+			id: string
+		}
+	}
+	alt: string
+	instagramUrl?: string
+	etsyUrl?: string
+}
+
 export type TagsQueryResponse = {
 	sys: {
 		type: string
@@ -44,16 +57,7 @@ export type TagsQueryResponse = {
 			}
 			locale: string
 		}
-		fields: {
-			media: {
-				sys: {
-					type: string
-					linkType: string
-					id: string
-				}
-			}
-			alt: string
-		}
+		fields: WebsiteContentModel
 	}>
 	includes: {
 		Asset: Array<{

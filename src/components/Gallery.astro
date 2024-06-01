@@ -2,6 +2,8 @@
 import { Image } from "astro:assets"
 import { queryTags } from "../utils/contentful/api"
 import { throwError } from "../utils/helpers"
+import Etsy from "./svgs/Etsy.astro"
+import Instagram from "./svgs/Instagram.astro"
 
 type Props = {
 	tag: string
@@ -24,6 +26,8 @@ const images = tags.items.map((item) => {
 		src: asset.fields.file.url,
 		height: asset.fields.file.details.image.height,
 		width: asset.fields.file.details.image.width,
+		instagramUrl: item.fields.instagramUrl,
+		etsyUrl: item.fields.etsyUrl,
 	}
 })
 
@@ -48,14 +52,29 @@ const sortedImageArrays = imageArrays.sort((a, b) => b.length - a.length)
 		sortedImageArrays.map((images) => (
 			<div>
 				{images.map((image) => (
-					<Image
-						src={image.src}
-						alt={image.alt}
-						width={image.width}
-						height={image.height}
-						class="h-auto max-w-full pb-4"
-						loading="lazy"
-					/>
+					// relative block to display svg links on top of image
+					<div class="inline-block relative group mb-2">
+						<Image
+							src={image.src}
+							alt={image.alt}
+							width={image.width}
+							height={image.height}
+							class="h-auto max-w-full"
+							loading="lazy"
+						/>
+						<div class="flex absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-200">
+							{image.etsyUrl && (
+								<a href={image.etsyUrl} target="_blank">
+									<Etsy classList="fill-secondary mr-2" width={24} height={24} />
+								</a>
+							)}
+							{image.instagramUrl && (
+								<a href={image.instagramUrl} target="_blank">
+									<Instagram classList="fill-secondary" width={24} height={24} />
+								</a>
+							)}
+						</div>
+					</div>
 				))}
 			</div>
 		))
