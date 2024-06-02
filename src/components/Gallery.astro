@@ -45,6 +45,8 @@ for (const image of images) {
 
 const imageArrays = columns.map((column) => column.images)
 const sortedImageArrays = imageArrays.sort((a, b) => b.length - a.length)
+
+const svgSize = 30
 ---
 
 <div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4 z-50">
@@ -59,18 +61,22 @@ const sortedImageArrays = imageArrays.sort((a, b) => b.length - a.length)
 							alt={image.alt}
 							width={image.width}
 							height={image.height}
-							class="h-auto max-w-full"
+							class={
+								image.etsyUrl || image.instagramUrl
+									? "group-hover:shadow-xl transition-shadow ease-in-out duration-200"
+									: undefined
+							}
 							loading="lazy"
 						/>
 						<div class="flex absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-200">
 							{image.etsyUrl && (
 								<a href={image.etsyUrl} target="_blank">
-									<Etsy classList="fill-secondary mr-2" width={24} height={24} />
+									<Etsy classList="fill-white mr-1" width={svgSize} height={svgSize} />
 								</a>
 							)}
 							{image.instagramUrl && (
 								<a href={image.instagramUrl} target="_blank">
-									<Instagram classList="fill-secondary" width={24} height={24} />
+									<Instagram classList="fill-white" width={svgSize} height={svgSize} />
 								</a>
 							)}
 						</div>
