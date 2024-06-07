@@ -14,7 +14,7 @@
 				}
 				;((p = t.createElement("script")).type = "text/javascript"),
 					(p.async = !0),
-					(p.src = s.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") + "/static/array.js"),
+					(p.src = s.api_host + "/static/array.js"),
 					(r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r)
 				var u = e
 				for (
@@ -42,6 +42,8 @@
 	})(document, window.posthog || [])
 	posthog.init("phc_mc91mm3BCWDQaR2R7NLWp3vXBF8rXf5xVMqy3XaHa4l", {
 		api_host: "https://eu.i.posthog.com",
-		person_profiles: "always", // or 'always' to create profiles for anonymous users as well
+		person_profiles: "always",
 	})
+
+	posthog.capture("my event", { property: "value" })
 </script>
