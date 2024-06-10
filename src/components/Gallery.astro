@@ -48,7 +48,7 @@ const sortedImageArrays = imageArrays.sort((a, b) => b.length - a.length)
 
 const svgSize = 30
 
-function transition(prop: string) {
+function transition<T extends string>(prop: T): `transition-${T} ease-in-out duration-200` {
 	return `transition-${prop} ease-in-out duration-200`
 }
 
