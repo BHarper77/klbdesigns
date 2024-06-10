@@ -47,6 +47,12 @@ const imageArrays = columns.map((column) => column.images)
 const sortedImageArrays = imageArrays.sort((a, b) => b.length - a.length)
 
 const svgSize = 30
+
+function transition(prop: string) {
+	return `transition-${prop} ease-in-out duration-200`
+}
+
+const svgClassList = "fill-white z-20"
 ---
 
 <div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4 z-50">
@@ -55,28 +61,28 @@ const svgSize = 30
 			<div>
 				{images.map((image) => (
 					// relative block to display svg links on top of image
-					<div class="inline-block relative group mb-2">
+					<div class="inline-block relative group">
 						<Image
 							src={image.src}
 							alt={image.alt}
 							width={image.width}
 							height={image.height}
 							class={
-								image.etsyUrl || image.instagramUrl
-									? "group-hover:shadow-xl transition-shadow ease-in-out duration-200"
-									: undefined
+								(image.etsyUrl || image.instagramUrl) && `group-hover:shadow-xl ${transition("shadow")}`
 							}
 							loading="lazy"
 						/>
-						<div class="flex absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-200">
+						<div
+							class={`flex absolute bottom-0 w-full p-1 z-10 opacity-0 group-hover:opacity-100 ${transition("opacity")} group-hover:backdrop-blur-sm ${transition("blur")}`}
+						>
 							{image.etsyUrl && (
 								<a href={image.etsyUrl} target="_blank">
-									<Etsy classList="fill-white mr-1" width={svgSize} height={svgSize} />
+									<Etsy classList={svgClassList} width={svgSize} height={svgSize} />
 								</a>
 							)}
 							{image.instagramUrl && (
 								<a href={image.instagramUrl} target="_blank">
-									<Instagram classList="fill-white" width={svgSize} height={svgSize} />
+									<Instagram classList={svgClassList} width={svgSize} height={svgSize} />
 								</a>
 							)}
 						</div>
