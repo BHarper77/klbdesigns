@@ -55,6 +55,39 @@ function transition<T extends string>(prop: T): `transition-${T} ease-in-out dur
 const svgClassList = "fill-white z-20"
 ---
 
+<style>
+	/* can't add multiple custom transitions with tailwind */
+	#image-overlay {
+		transition:
+			/* delay visibility so opacity can transition */
+			visibility 0.3s,
+			opacity 0.3s;
+	}
+</style>
+
+<script>
+	const imageOverlay = document.getElementById("image-overlay")
+	const enlargedImage = document.getElementById("enlarged-image") as HTMLImageElement
+
+	if (!imageOverlay || !enlargedImage) {
+		console.error("Error enlarging image")
+	}
+
+	document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl) => {
+		imageEl.addEventListener("click", () => {
+			enlargedImage.src = imageEl.src
+			imageOverlay!.style.visibility = "visible"
+			imageOverlay!.style.opacity = "1"
+		})
+	})
+
+	// Close the overlay when clicked
+	imageOverlay!.addEventListener("click", () => {
+		imageOverlay!.style.visibility = "hidden"
+		imageOverlay!.style.opacity = "0"
+	})
+</script>
+
 <div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4 z-50">
 	{
 		sortedImageArrays.map((images) => (
@@ -63,6 +96,7 @@ const svgClassList = "fill-white z-20"
 					// relative block to display svg links on top of image
 					<div class="inline-block relative group">
 						<Image
+							id="image"
 							src={image.src}
 							alt={image.alt}
 							width={image.width}
@@ -91,4 +125,11 @@ const svgClassList = "fill-white z-20"
 			</div>
 		))
 	}
+</div>
+
+<div
+	id="image-overlay"
+	class="fixed top-0 left-0 w-full h-full bg-gray-900/50 z-50 flex justify-center items-center invisible opacity-0"
+>
+	<img id="enlarged-image" class="max-w-[90%] max-h-[90%]" />
 </div>
