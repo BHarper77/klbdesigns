@@ -43,8 +43,7 @@ for (const image of images) {
 	targetColumn.height += image.height
 }
 
-const imageArrays = columns.map((column) => column.images)
-const sortedImageArrays = imageArrays.sort((a, b) => b.length - a.length)
+const imageArrays = columns.map((column) => column.images).sort((a, b) => b.length - a.length)
 
 const svgSize = 30
 
@@ -61,7 +60,8 @@ const svgClassList = "fill-white z-20"
 		transition:
 			/* delay visibility so opacity can transition */
 			visibility 0.3s,
-			opacity 0.3s;
+			opacity 0.3s,
+			blur 0.3s;
 	}
 </style>
 
@@ -69,22 +69,31 @@ const svgClassList = "fill-white z-20"
 	;(() => {
 		const imageOverlay = document.getElementById("image-overlay")
 		const enlargedImage = document.getElementById("enlarged-image") as HTMLImageElement
+		const caption = document.getElementById("caption")
 
-		if (!imageOverlay || !enlargedImage) {
+		if (!imageOverlay || !enlargedImage || !caption) {
 			console.error("Error enlarging image")
 			return
 		}
 
 		document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl) => {
 			imageEl.addEventListener("click", () => {
+				// update attrributes
 				enlargedImage.src = imageEl.src
+				caption.textContent = imageEl.alt
+
+				// make visible
 				imageOverlay.style.visibility = "visible"
 				imageOverlay.style.opacity = "1"
 			})
 		})
 
-		// Close the overlay when clicked
-		imageOverlay.addEventListener("click", () => {
+		imageOverlay.addEventListener("click", (event) => {
+			// only remove the overlay if click isn't on image
+			if (event.target === enlargedImage || event.target === caption) {
+				return
+			}
+
 			imageOverlay.style.visibility = "hidden"
 			imageOverlay.style.opacity = "0"
 		})
@@ -93,7 +102,7 @@ const svgClassList = "fill-white z-20"
 
 <div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4 z-50">
 	{
-		sortedImageArrays.map((images) => (
+		imageArrays.map((images) => (
 			<div>
 				{images.map((image) => (
 					// relative block to display svg links on top of image
@@ -105,7 +114,8 @@ const svgClassList = "fill-white z-20"
 							width={image.width}
 							height={image.height}
 							class={
-								(image.etsyUrl || image.instagramUrl) && `group-hover:shadow-xl ${transition("shadow")}`
+								(image.etsyUrl || image.instagramUrl) &&
+								`group-hover:shadow-xl ${transition("shadow")} ${image.etsyUrl ? "etsy" : undefined} ${image.instagramUrl ? "instagram" : undefined}`
 							}
 							loading="lazy"
 						/>
@@ -113,12 +123,12 @@ const svgClassList = "fill-white z-20"
 							class={`flex absolute bottom-0 w-full p-1 z-10 opacity-0 group-hover:opacity-100 ${transition("opacity")} group-hover:backdrop-blur-sm ${transition("blur")}`}
 						>
 							{image.etsyUrl && (
-								<a href={image.etsyUrl} target="_blank">
+								<a href={image.etsyUrl} id="etsy-url" target="_blank">
 									<Etsy classList={svgClassList} width={svgSize} height={svgSize} />
 								</a>
 							)}
 							{image.instagramUrl && (
-								<a href={image.instagramUrl} target="_blank">
+								<a href={image.instagramUrl} id="instagram-url" target="_blank">
 									<Instagram classList={svgClassList} width={svgSize} height={svgSize} />
 								</a>
 							)}
@@ -130,9 +140,10 @@ const svgClassList = "fill-white z-20"
 	}
 </div>
 
-<div
+<figure
 	id="image-overlay"
-	class="fixed top-0 left-0 w-full h-full bg-gray-900/50 z-50 flex justify-center items-center invisible opacity-0"
+	class="fixed top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-gray-900/50 z-50 invisible opacity-0 backdrop-blur-lg"
 >
-	<img id="enlarged-image" class="max-w-[90%] max-h-[90%]" />
-</div>
+	<img id="enlarged-image" class="max-w-[70%] max-h-[70%]" />
+	<figcaption id="caption" class="text-white"></figcaption>
+</figure>
