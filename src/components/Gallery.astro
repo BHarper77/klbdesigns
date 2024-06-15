@@ -79,7 +79,7 @@ function transition<T extends string>(prop: T): `transition-${T} ease-in-out dur
 	return `transition-${prop} ease-in-out duration-200`
 }
 
-const svgClassList = "fill-white z-20"
+const svgClassList = "fill-white z-10"
 ---
 
 <style>
@@ -128,7 +128,6 @@ const svgClassList = "fill-white z-20"
 			imageEl.addEventListener("click", () => {
 				/** Offset for centering text caption, increment by SVG size if image has Etsy or Insta links */
 				let offset = 0
-				console.log({ hasEtsy: hasEtsy != null, hasInsta: hasInsta != null })
 
 				if (hasEtsy) {
 					overlayEtsy.style.display = "block"
@@ -172,7 +171,7 @@ const svgClassList = "fill-white z-20"
 </script>
 
 <!-- main gallery -->
-<div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4 z-50">
+<div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4">
 	{
 		imageArrays.map((images) => (
 			<div>
@@ -193,7 +192,7 @@ const svgClassList = "fill-white z-20"
 							about={`Uploaded on the ${image.friendlyDate}`}
 						/>
 						<div
-							class={`flex absolute bottom-0 w-full p-1 z-10 opacity-0 group-hover:opacity-100 ${transition("opacity")} group-hover:backdrop-blur-sm ${transition("blur")}`}
+							class={`flex absolute bottom-0 w-full p-1 opacity-0 group-hover:opacity-100 ${transition("opacity")} group-hover:backdrop-blur-sm ${transition("blur")}`}
 						>
 							{image.etsyUrl && (
 								<a href={image.etsyUrl} id="etsy-url" target="_blank">
