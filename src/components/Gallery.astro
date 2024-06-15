@@ -213,9 +213,10 @@ const svgClassList = "fill-white z-10"
 </div>
 
 <!-- image overlay -->
+<!-- need z index 50 to be above sidebar -->
 <div
 	id="overlay-container"
-	class="fixed top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-gray-900/50 z-50 invisible opacity-0 backdrop-blur-lg"
+	class="fixed top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-gray-900/50 sm:z-20 md:z-50 invisible opacity-0 backdrop-blur-lg"
 >
 	<div class="max-w-[80%] max-h-[80%] mb-20" id="overlay-image-container">
 		<p id="overlay-uploaded" class="text-white pb-1 text-right italic text-sm"></p>
