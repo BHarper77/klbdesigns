@@ -54,7 +54,7 @@ const images = tags.items.map((item) => {
 		width: asset.fields.file.details.image.width,
 		instagramUrl: item.fields.instagramUrl,
 		etsyUrl: item.fields.etsyUrl,
-		friendlyDate: `${day}${nth} ${monthYear}`,
+		friendlyDate: `${day}${nth} of ${monthYear}`,
 	}
 })
 
@@ -74,6 +74,7 @@ const imageArrays = columns.map((column) => column.images).sort((a, b) => b.leng
 
 const svgSize = 30
 
+/** Helper function for returning default Tailwind transition classes */
 function transition<T extends string>(prop: T): `transition-${T} ease-in-out duration-200` {
 	return `transition-${prop} ease-in-out duration-200`
 }
@@ -95,35 +96,36 @@ const svgClassList = "fill-white z-20"
 <script>
 	;(() => {
 		const overlayContainer = document.getElementById("overlay-container")
-		const overlayImage = document.getElementById("overlay-image") as HTMLImageElement | null
-		const caption = overlayContainer?.querySelector<HTMLElement>("#caption")
-		const overlayCaption = document.getElementById("overlay-caption")
-		const overlayEtsy = document.getElementById("overlay-etsy") as HTMLAnchorElement | null
-		const overlayInsta = document.getElementById("overlay-instagram") as HTMLAnchorElement | null
-		const etsySvg = overlayEtsy?.querySelector<SVGElement>("svg")
-		const instaSvg = overlayInsta?.querySelector<SVGElement>("svg")
-		const overlayUploaded = overlayContainer?.querySelector<HTMLParagraphElement>("#overlay-uploaded")
+
+		if (!overlayContainer) {
+			console.error("Error finding overlay container")
+			return
+		}
+
+		const overlayUploaded = overlayContainer.querySelector<HTMLParagraphElement>("#overlay-uploaded")
+		const overlayImage = overlayContainer.querySelector<HTMLImageElement>("#overlay-image")
+		const overlayCaptionContainer = overlayContainer.querySelector("#overlay-caption-container")
+		const overlayCaption = overlayContainer.querySelector<HTMLElement>("#caption")
+		const [overlayEtsy, overlayInsta] = [...overlayContainer.querySelectorAll<HTMLAnchorElement>("a")]
 
 		if (
-			!overlayContainer ||
+			!overlayUploaded ||
 			!overlayImage ||
-			!caption ||
+			!overlayCaptionContainer ||
 			!overlayCaption ||
 			!overlayEtsy ||
-			!overlayInsta ||
-			!overlayUploaded
+			!overlayInsta
 		) {
 			console.error("Error enlarging image")
 			return
 		}
 
 		document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl) => {
-			const hasEtsy = imageEl.parentElement?.querySelector<HTMLAnchorElement>("#etsy-url")
-			const hasInstagram = imageEl.parentElement?.querySelector<HTMLAnchorElement>("#instagram-url")
-			const uploadedDate = imageEl.getAttribute("about")
+			const [hasEtsy, hasInsta] = [...imageEl.parentElement!.querySelectorAll<HTMLAnchorElement>("a")]
+			const about = imageEl.getAttribute("about")
 
 			imageEl.addEventListener("click", () => {
-				// offset for centering text caption, increment if etsy or insta svgs appear
+				/** Offset for centering text caption, increment by SVG size if image has Etsy or Insta links */
 				let offset = 0
 
 				if (hasEtsy) {
@@ -132,17 +134,18 @@ const svgClassList = "fill-white z-20"
 					offset += 30
 				}
 
-				if (hasInstagram) {
+				if (hasInsta) {
 					overlayInsta.style.display = "block"
-					overlayInsta.href = hasInstagram.href
+					overlayInsta.href = hasInsta.href
 					offset += 30
 				}
 
 				// update attrributes
 				overlayImage.src = imageEl.src
-				caption.textContent = imageEl.alt
-				caption.style.paddingRight = `${offset.toString()}px`
-				overlayUploaded.textContent = `Uploaded on the ${uploadedDate}`
+				// disable captions for now, need more meaningful captions first
+				// overlayCaption.textContent = imageEl.alt
+				overlayCaption.style.paddingRight = `${offset.toString()}px`
+				overlayUploaded.textContent = about
 
 				// make visible
 				overlayContainer.style.visibility = "visible"
@@ -152,12 +155,9 @@ const svgClassList = "fill-white z-20"
 
 		overlayContainer.addEventListener("click", (event) => {
 			// only remove the overlay if click isn't on image or caption
-			if (
-				event.target === overlayImage ||
-				event.target === caption ||
-				event.target === etsySvg ||
-				event.target === instaSvg
-			) {
+			const imageContainer = document.getElementById("overlay-image-container")
+
+			if (imageContainer?.contains(event.target as Node)) {
 				return
 			}
 
@@ -185,7 +185,7 @@ const svgClassList = "fill-white z-20"
 								`group-hover:shadow-xl ${transition("shadow")} ${image.etsyUrl ? "etsy" : undefined} ${image.instagramUrl ? "instagram" : undefined}`
 							}
 							loading="lazy"
-							about={image.friendlyDate}
+							about={`Uploaded on the ${image.friendlyDate}`}
 						/>
 						<div
 							class={`flex absolute bottom-0 w-full p-1 z-10 opacity-0 group-hover:opacity-100 ${transition("opacity")} group-hover:backdrop-blur-sm ${transition("blur")}`}
@@ -196,7 +196,7 @@ const svgClassList = "fill-white z-20"
 								</a>
 							)}
 							{image.instagramUrl && (
-								<a href={image.instagramUrl} id="instagram-url" target="_blank">
+								<a href={image.instagramUrl} id="insta-url" target="_blank">
 									<Instagram classList={svgClassList} width={svgSize} height={svgSize} />
 								</a>
 							)}
@@ -212,10 +212,10 @@ const svgClassList = "fill-white z-20"
 	id="overlay-container"
 	class="fixed top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-gray-900/50 z-50 invisible opacity-0 backdrop-blur-lg"
 >
-	<div class="max-w-[80%] max-h-[80%] mb-20">
+	<div class="max-w-[80%] max-h-[80%] mb-20" id="overlay-image-container">
 		<p id="overlay-uploaded" class="text-white pb-1 text-right italic text-sm"></p>
 		<img id="overlay-image" class="h-full w-full" />
-		<div id="overlay-caption" class="flex w-full pt-1">
+		<div id="overlay-caption-container" class="flex w-full pt-1">
 			<a id="overlay-etsy" class="hidden" target="_blank">
 				<Etsy classList="fill-white" width={svgSize} height={svgSize} />
 			</a>
