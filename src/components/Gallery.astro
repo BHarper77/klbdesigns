@@ -121,12 +121,14 @@ const svgClassList = "fill-white z-20"
 		}
 
 		document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl) => {
-			const [hasEtsy, hasInsta] = [...imageEl.parentElement!.querySelectorAll<HTMLAnchorElement>("a")]
+			const hasEtsy = imageEl.parentElement?.querySelector<HTMLAnchorElement>("#etsy-url")
+			const hasInsta = imageEl.parentElement?.querySelector<HTMLAnchorElement>("#insta-url")
 			const about = imageEl.getAttribute("about")
 
 			imageEl.addEventListener("click", () => {
 				/** Offset for centering text caption, increment by SVG size if image has Etsy or Insta links */
 				let offset = 0
+				console.log({ hasEtsy: hasEtsy != null, hasInsta: hasInsta != null })
 
 				if (hasEtsy) {
 					overlayEtsy.style.display = "block"
@@ -161,6 +163,8 @@ const svgClassList = "fill-white z-20"
 				return
 			}
 
+			overlayEtsy.style.display = "none"
+			overlayInsta.style.display = "none"
 			overlayContainer.style.visibility = "hidden"
 			overlayContainer.style.opacity = "0"
 		})
@@ -221,7 +225,7 @@ const svgClassList = "fill-white z-20"
 			<a id="overlay-etsy" class="hidden" target="_blank">
 				<Etsy classList="fill-white" width={svgSize} height={svgSize} />
 			</a>
-			<a id="overlay-instagram" class="hidden" target="_blank">
+			<a id="overlay-insta" class="hidden" target="_blank">
 				<Instagram classList="fill-white" width={svgSize} height={svgSize} />
 			</a>
 			<p class="text-white place-self-center w-full text-center inline-block" id="caption"></p>
