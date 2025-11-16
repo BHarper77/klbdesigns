@@ -1,48 +1,50 @@
-import { accessToken, baseUrl } from "./consts"
-import type { TagsQueryResponse, TagsResponse } from "./types"
+import { accessToken, baseUrl } from "./consts";
+import type { TagsQueryResponse, TagsResponse } from "./types";
 
 export async function getTags() {
-	const response = await fetch(`${baseUrl}/tags?access_token=${accessToken}`, {
-		method: "GET",
-		redirect: "follow",
-	})
+  const response = await fetch(`${baseUrl}/tags?access_token=${accessToken}`, {
+    method: "GET",
+    redirect: "follow",
+  });
 
-	if (!response.ok) {
-		throw new Error(`Error requesting tags. Status code: ${response.status}`)
-	}
+  if (!response.ok) {
+    throw new Error(`Error requesting tags. Status code: ${response.status}`);
+  }
 
-	const tags = (await response.json()) as TagsResponse
-	const parsedTags = tags.items
-		.map(item => ({
-			name: item.name,
-			tag: toCamelCase(item.name)
-		}))
-		.filter(item => item.name !== "featured")
+  const tags = (await response.json()) as TagsResponse;
+  const parsedTags = tags.items
+    .map((item) => ({
+      name: item.name,
+      tag: toCamelCase(item.name),
+    }))
+    .filter((item) => item.name !== "featured");
 
-	return parsedTags
+  return parsedTags;
 }
 
-/** Convert tags to camelCase for API request */
+/** Convert tags to `camelCase` for API request, and ensure first character is lower case */
 function toCamelCase(string: string) {
-    return string
-        .toLowerCase()
-        .replace(/[^a-zA-Z0-9]+(.)/g, (_, chr) => chr.toUpperCase())
+  const camelCase = string
+    .toLowerCase()
+    .replace(/[^a-zA-Z0-9]+(.)/g, (_, chr) => chr.toUpperCase());
+
+  return camelCase.charAt(0).toLowerCase() + camelCase.slice(1);
 }
 
 export async function queryTags(query: string) {
-	const url = `${baseUrl}/entries?
+  const url = `${baseUrl}/entries?
 		access_token=${accessToken}&
-		${query}`
+		${query}`;
 
-	const response = await fetch(url, {
-		method: "GET",
-		redirect: "follow",
-	})
+  const response = await fetch(url, {
+    method: "GET",
+    redirect: "follow",
+  });
 
-	if (!response.ok) {
-		throw new Error(`Error querying tags. Status code: ${response.status}`)
-	}
+  if (!response.ok) {
+    throw new Error(`Error querying tags. Status code: ${response.status}`);
+  }
 
-	const tags = (await response.json()) as TagsQueryResponse
-	return tags
+  const tags = (await response.json()) as TagsQueryResponse;
+  return tags;
 }
