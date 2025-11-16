@@ -6,7 +6,7 @@ on:
       - main
   repository_dispatch:
     types: [publish-event]
-    
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -26,8 +26,6 @@ jobs:
         run: npm ci
       - name: Build application
         run: npm run build
-      - name: Build Lambda
-        run: tsc functions/lambda.ts
       - uses: hashicorp/setup-terraform@main
       - name: Terraform init
         run: terraform init
@@ -39,5 +37,5 @@ jobs:
         run: terraform validate
         working-directory: deploy
       - name: Terraform apply
-        run: terraform apply -var="resend_api_key=${{ secrets.RESEND_API_KEY }}" -auto-approve
+        run: terraform apply -auto-approve
         working-directory: deploy
