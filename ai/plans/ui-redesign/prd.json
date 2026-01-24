@@ -287,5 +287,28 @@
       "Verify Collections dropdown shows counts"
     ],
     "passes": true
+  },
+  {
+    "category": "Testing",
+    "description": "Use the Playwright MCP server to test that the re-design has been implemented correctly. Ensure that it meets all the specified requirements in the PRD and visually appears as intended.",
+    "steps_to_verify": [
+      "Set up the Playwright MCP server with the latest build of the redesigned UI",
+      "Run automated tests to verify each feature and design element specified in the PRD",
+      "Manually review key pages (sidebar, gallery, lightbox) to ensure visual fidelity",
+      "For any discrepancies or issues found, add a new item to the PRD to fix"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Bug Fix - Gallery",
+    "description": "Fix critical bug where gallery images are not rendering in the main grid. Images are present in the DOM but not visible. Only small thumbnails appear at bottom left of viewport.",
+    "steps_to_verify": [
+      "Navigate to the gallery page (localhost:4322/)",
+      "Verify all 42 images display in a 3-column masonry grid",
+      "Images should be visible, not just present in DOM",
+      "Check for CSS conflicts or z-index issues preventing image visibility",
+      "Test with different browsers if needed"
+    ],
+    "passes": false
   }
 ]

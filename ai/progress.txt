@@ -137,3 +137,23 @@
 - Files modified: src/components/Sidebar.astro
 - Files created: src/components/svgs/Palette.astro
 
+## 2026-01-24: Testing - Playwright UI Verification
+- Used Playwright MCP server to test redesigned UI at http://localhost:4322/
+- Verified features working correctly:
+  ✓ Sidebar branding: Palette icon and "FINE ART" tagline present
+  ✓ Gallery navigation link appears first
+  ✓ Horizontal separator between nav links and Collections
+  ✓ Collections dropdown shows "All Works" first with piece counts (2, 0, 9, 4, 10, 8, 7)
+  ✓ Copyright footer displays "© 2026 k.l.b designs"
+  ✓ Page header shows "All Works" title and "42pieces" count
+- CRITICAL BUG DISCOVERED: Gallery images not rendering in main grid
+  - Images present in DOM but not visible
+  - Only small thumbnails visible at bottom left of viewport
+  - Appears to be a CSS/layout issue preventing image visibility
+  - Added new PRD item "Bug Fix - Gallery" to track this issue
+- Updated PRD:
+  - Marked "Testing" category as passes: true (testing completed)
+  - Added new PRD item for gallery image rendering bug with passes: false
+- Screenshots captured: gallery-page-full.png, collections-dropdown.png, gallery-scrolled.png
+- Files modified: ai/plans/ui-redesign/prd.json
+
