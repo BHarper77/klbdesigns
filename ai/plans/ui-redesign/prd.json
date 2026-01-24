@@ -7,7 +7,7 @@
       "Verify a palette SVG icon appears to the left of 'k.l.b designs' in the sidebar",
       "Icon should be white and approximately 24-32px in size"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Sidebar - Branding",
@@ -18,7 +18,7 @@
       "Text should be smaller font size and lighter weight than the brand name",
       "Text should be white/light colored"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Sidebar - Navigation",
@@ -50,7 +50,7 @@
       "When on the main gallery, 'All Works' should have a highlighted background (darker teal)",
       "Clicking 'All Works' navigates to the main gallery page"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Sidebar - Collections",
@@ -72,7 +72,7 @@
       "Text should be small, muted/light colored",
       "Year should be dynamic or use current year"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Gallery - Header",

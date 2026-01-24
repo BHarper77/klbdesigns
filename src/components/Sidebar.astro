@@ -3,6 +3,7 @@ import { getTags } from "../utils/contentful/api"
 import Etsy from "./svgs/Etsy.astro"
 import Instagram from "./svgs/Instagram.astro"
 import LinkedIn from "./svgs/LinkedIn.astro"
+import Palette from "./svgs/Palette.astro"
 
 const collections = await getTags()
 ---
@@ -28,7 +29,8 @@ const collections = await getTags()
 				d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
 			></path>
 		</svg>
-		<h1 class="pl-4 text-xl hover:text-secondary">k.l.b designs</h1>
+		<Palette classList="fill-white ml-4" width={24} height={24} />
+		<h1 class="pl-2 text-xl hover:text-secondary">k.l.b designs</h1>
 	</button>
 </div>
 
@@ -39,9 +41,15 @@ const collections = await getTags()
 	<nav class="bg-main p-4 sm:p-8 whitespace-nowrap h-full">
 		<ul class="list-none font-light text-white">
 			<li>
-				<h1 class="text-3xl hover:text-secondary">
-					<a href="/.">k.l.b designs</a>
-				</h1>
+				<div class="flex items-center gap-2">
+					<Palette classList="fill-white" width={28} height={28} />
+					<div>
+						<h1 class="text-3xl hover:text-secondary">
+							<a href="/.">k.l.b designs</a>
+						</h1>
+						<p class="text-xs text-white/70 font-light tracking-widest">FINE ART</p>
+					</div>
+				</div>
 			</li>
 
 			<!-- Main navigation links -->
@@ -108,6 +116,11 @@ const collections = await getTags()
 					</button>
 				</div>
 				<ul id="collections-dropdown" class="hidden pl-5">
+					<li class="pt-2">
+						<a href="/" class="flex justify-between items-center hover:text-secondary">
+							<span>All Works</span>
+						</a>
+					</li>
 					{
 						collections.map((collection) => (
 							<li class="pt-2">
@@ -122,7 +135,7 @@ const collections = await getTags()
 			</li>
 
 			<!-- social media links -->
-			<div class="absolute bottom-4 flex gap-2">
+			<div class="absolute bottom-14 flex gap-2">
 				<li>
 					<a href="https://www.instagram.com/k.l.b_designs/?hl=en" target="_blank">
 						<Instagram classList="fill-white hover:fill-secondary" width={30} height={30} />
@@ -138,6 +151,11 @@ const collections = await getTags()
 						<Etsy classList="fill-white hover:fill-secondary" width={30} height={30} />
 					</a>
 				</li>
+			</div>
+
+			<!-- copyright -->
+			<div class="absolute bottom-4 text-xs text-white/60">
+				<p>© {new Date().getFullYear()} k.l.b designs</p>
 			</div>
 		</ul>
 	</nav>
