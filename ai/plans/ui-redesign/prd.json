@@ -244,7 +244,7 @@
       "Verify each collection object includes an 'itemCount' or 'count' property",
       "Count reflects actual number of items tagged with that collection"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Styling",

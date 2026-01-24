@@ -55,3 +55,12 @@
 - Reorganized social link icons (Etsy/Instagram) with proper z-indexing
 - Overlay uses `pointer-events-none` to allow clicks to pass through to image
 - Files modified: src/components/Gallery.astro
+
+## 2026-01-24: API - Collection Item Counts Added
+- Updated getTags() function in api.ts to return collection item counts
+- Each collection now includes an `itemCount` property with the actual count
+- Added new exported type `CollectionWithCount` with name, tag, and itemCount
+- Implementation uses Contentful API with `limit=0` to efficiently get total counts
+- Counts are fetched in parallel for all tags using Promise.all
+- Function now explicitly typed to return `Promise<CollectionWithCount[]>`
+- Files modified: src/utils/contentful/api.ts
