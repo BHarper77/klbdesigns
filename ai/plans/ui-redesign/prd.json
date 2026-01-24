@@ -204,7 +204,7 @@
       "Verify title is fetched and available in Gallery component",
       "Title displays correctly in hover overlay and lightbox"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Data Model",

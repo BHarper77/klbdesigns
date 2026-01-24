@@ -7,6 +7,7 @@ type WebsiteContentModel = {
 		}
 	}
 	alt: string
+	title?: string
 	instagramUrl?: string
 	etsyUrl?: string
 }
