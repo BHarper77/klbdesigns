@@ -310,5 +310,48 @@
       "Test with different browsers if needed"
     ],
     "passes": true
+  },
+  {
+    "category": "UI",
+    "description": "Add a slight zoom when hovering over gallery images to enhance interactivity.",
+    "steps_to_verify": [
+      "Navigate to the gallery page",
+      "Hover over any gallery image",
+      "Verify the image slightly zooms in (scale up to 1.05)",
+      "Zoom effect should be smooth and revert when hover ends"
+    ],
+    "passes": false
+  },
+  {
+    "category": "UI",
+    "description": "Add a small animation to the Collections dropdown icon when clicked.",
+    "steps_to_verify": [
+      "Navigate to the sidebar",
+      "Click on the Collections dropdown icon",
+      "Verify the icon animates smoothly (e.g., rotates or changes color)",
+      "Animation should reset when dropdown is closed"
+    ],
+    "passes": false
+  },
+  {
+    "category": "UI",
+    "description": "Add a small animation when clicking on a gallery image to open the lightbox to improve the smoothness of the user experience.",
+    "steps_to_verify": [
+      "Navigate to the gallery page",
+      "Click on any gallery image",
+      "Verify a smooth animation occurs as the lightbox opens (e.g., fade-in or zoom effect)",
+      "Animation should enhance user experience without causing delays"
+    ],
+    "passes": false
+  },
+  {
+    "category": "UI",
+    "description": "Change all font on the site to Poppins by default",
+    "steps_to_verify": [
+      "Navigate to any page on the site",
+      "Verify all text uses Poppins font",
+      "Check headings, body text, and navigation links for consistency"
+    ],
+    "passes": false
   }
 ]
