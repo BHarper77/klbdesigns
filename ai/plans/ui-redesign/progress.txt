@@ -23,6 +23,18 @@
 - Note: Contentful content type must have corresponding fields for data to appear
 - Files modified: src/utils/contentful/types.ts, src/components/Gallery.astro
 
+## 2026-01-24: Gallery - Header Added
+- Added page title section above the gallery grid displaying collection name and piece count
+- Updated Gallery.astro component:
+  - Added optional `collectionName` prop
+  - Added header section with serif font title (font-serif text-3xl/4xl)
+  - Displays dynamic piece count below title in gray text
+  - Handles singular/plural "piece/pieces" correctly
+- Updated index.astro to pass collectionName="All Works"
+- Updated [tag].astro to pass the collection name from props
+- Title uses Playfair Display serif font for visual hierarchy
+- Files modified: src/components/Gallery.astro, src/pages/index.astro, src/pages/[tag].astro
+
 ## 2026-01-24: Styling - Tailwind Config Updated for Shadows and Overlays
 - Added custom boxShadow utilities in tailwind.config.mjs:
   - `shadow-card`: subtle shadow for gallery image cards (0 2px 8px rgba(0,0,0,0.08))
@@ -35,3 +47,113 @@
 - Added full gray color scale (50-900) for text hierarchy and UI elements
 - Added white and black colors for explicit color usage
 - Files modified: tailwind.config.mjs
+
+## 2026-01-24: Gallery Layout and Image Card Styling
+- Changed gallery grid from 4 columns to 3 columns on desktop (lg breakpoint)
+  - Updated grid class from `sm:grid-cols-4` to `sm:grid-cols-2 lg:grid-cols-3`
+  - Updated column array creation from 4 to 3 columns for masonry distribution
+- Added rounded corners to all gallery images using `rounded-lg` class (~8px radius)
+- Added subtle card shadow effect using custom `shadow-card` class
+- Added hover shadow enhancement with `hover:shadow-card-hover`
+- Added margin-bottom (`mb-4`) to image containers for proper spacing
+- Files modified: src/components/Gallery.astro
+
+## 2026-01-24: Gallery - Hover Overlay with Title and Medium
+- Added hover overlay to gallery images showing artwork title and medium
+- Overlay uses gradient from transparent to dark (`from-black/70 via-black/20 to-transparent`)
+- Title displayed in serif font (Playfair Display) with larger text and drop shadow
+- Medium displayed in smaller, semi-transparent white text below title
+- Overlay fades in smoothly on hover using existing transition utility
+- Reorganized social link icons (Etsy/Instagram) with proper z-indexing
+- Overlay uses `pointer-events-none` to allow clicks to pass through to image
+- Files modified: src/components/Gallery.astro
+
+## 2026-01-24: API - Collection Item Counts Added
+- Updated getTags() function in api.ts to return collection item counts
+- Each collection now includes an `itemCount` property with the actual count
+- Added new exported type `CollectionWithCount` with name, tag, and itemCount
+- Implementation uses Contentful API with `limit=0` to efficiently get total counts
+- Counts are fetched in parallel for all tags using Promise.all
+- Function now explicitly typed to return `Promise<CollectionWithCount[]>`
+- Files modified: src/utils/contentful/api.ts
+
+## 2026-01-24: Lightbox Complete Redesign
+- Redesigned lightbox layout with image on left and white details panel on right
+- Details panel includes:
+  - Artwork title in large serif font (Playfair Display)
+  - Category/collection name in gray text
+  - Metadata section with Medium, Dimensions, Year (label left, value right)
+  - Social links (Etsy/Instagram) with hover color change
+- Added navigation features:
+  - Close button (X) in top-right corner with circular background
+  - Left/right arrow buttons on sides for previous/next navigation
+  - Image counter at bottom center showing "current / total" position
+  - Arrows wrap around (last→first, first→last)
+- Added keyboard accessibility:
+  - Enter/Space on gallery images opens lightbox
+  - Left/Right arrow keys navigate between images
+  - Escape key closes lightbox
+  - Gallery images now have tabindex="0" and role="button"
+- Added data attributes to gallery images for metadata access:
+  - data-title, data-medium, data-dimensions, data-year, data-category
+- Background maintains blurred and dimmed appearance (backdrop-blur-lg)
+- Metadata fields hide gracefully when empty
+- Prevents body scroll when lightbox is open
+- Files modified: src/components/Gallery.astro
+
+## 2026-01-24: Sidebar Navigation - Gallery Link and Separator Added
+- Added 'Gallery' as first navigation link in sidebar, linking to home page (/)
+- Reorganized navigation order: Gallery, About, Contact (all above separator)
+- Added horizontal separator line between main nav links and Collections dropdown
+- Separator uses semi-transparent white border (border-white/30) for subtle appearance
+- Adjusted spacing: main nav uses pt-6 for first item, pt-2 for subsequent items
+- Collections dropdown now starts with pt-2 after separator for balanced spacing
+- Files modified: src/components/Sidebar.astro
+
+## 2026-01-24: Sidebar - Collection Piece Counts Added
+- Added piece counts next to each collection name in Collections dropdown
+- Counts display on right side of collection links, right-aligned
+- Implemented using flex layout with justify-between on anchor tags
+- Count styling uses muted white color (text-white/60) and smaller font (text-sm)
+- Leverages existing itemCount property from getTags() API (already implemented)
+- Counts automatically reflect actual number of items in each collection
+- Files modified: src/components/Sidebar.astro
+
+## 2026-01-24: Sidebar - Complete Branding Update
+- Created Palette.astro SVG component with art palette icon (24x24 viewbox)
+- Added palette icon next to 'k.l.b designs' brand name in both mobile header and desktop sidebar
+- Icon is white fill with 28px size in sidebar, 24px in mobile header
+- Added 'FINE ART' tagline below brand name in desktop sidebar
+  - Uses smaller font size (text-xs), light weight, and tracking-widest for letter spacing
+  - Styled with white/70 opacity for subtle, elegant appearance
+- Added 'All Works' as first option in Collections dropdown
+  - Links to home page (/) to show all artwork
+  - Appears before collection-specific links
+- Added copyright footer at bottom of sidebar
+  - Dynamic year using JavaScript Date object: `© {new Date().getFullYear()} k.l.b designs`
+  - Positioned with absolute positioning at bottom-4
+  - Small text (text-xs) with muted white color (text-white/60)
+  - Social media icons moved to bottom-14 to make room for copyright
+- Files modified: src/components/Sidebar.astro
+- Files created: src/components/svgs/Palette.astro
+
+## 2026-01-24: Testing - Playwright UI Verification
+- Used Playwright MCP server to test redesigned UI at http://localhost:4322/
+- Verified features working correctly:
+  ✓ Sidebar branding: Palette icon and "FINE ART" tagline present
+  ✓ Gallery navigation link appears first
+  ✓ Horizontal separator between nav links and Collections
+  ✓ Collections dropdown shows "All Works" first with piece counts (2, 0, 9, 4, 10, 8, 7)
+  ✓ Copyright footer displays "© 2026 k.l.b designs"
+  ✓ Page header shows "All Works" title and "42pieces" count
+- CRITICAL BUG DISCOVERED: Gallery images not rendering in main grid
+  - Images present in DOM but not visible
+  - Only small thumbnails visible at bottom left of viewport
+  - Appears to be a CSS/layout issue preventing image visibility
+  - Added new PRD item "Bug Fix - Gallery" to track this issue
+- Updated PRD:
+  - Marked "Testing" category as passes: true (testing completed)
+  - Added new PRD item for gallery image rendering bug with passes: false
+- Screenshots captured: gallery-page-full.png, collections-dropdown.png, gallery-scrolled.png
+- Files modified: ai/plans/ui-redesign/prd.json
+

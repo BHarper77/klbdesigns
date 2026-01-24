@@ -10,4 +10,4 @@ Work in the current repo. Use these files as your source of truth:
    Use this to leave a note for the next person working in the codebase.
 5. Make a git commit of that feature.
 ONLY WORK ON A SINGLE FEATURE.
-If, while implementing the feature, you notice the PRD is complete: push the commits to remote, create a PR (with relevant title and description) and output <promise>COMPLETE</promise>.
+If, while implementing the feature, you notice the PRD is complete, output <promise>COMPLETE</promise>.

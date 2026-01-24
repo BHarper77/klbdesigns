@@ -303,7 +303,7 @@
     "category": "Bug Fix - Gallery",
     "description": "Fix critical bug where gallery images are not rendering in the main grid. Images are present in the DOM but not visible. Only small thumbnails appear at bottom left of viewport.",
     "steps_to_verify": [
-      "Navigate to the gallery page (localhost:4322/)",
+      "Navigate to the gallery page (localhost:4321/)",
       "Verify all 42 images display in a 3-column masonry grid",
       "Images should be visible, not just present in DOM",
       "Check for CSS conflicts or z-index issues preventing image visibility",
