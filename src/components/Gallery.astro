@@ -107,70 +107,216 @@ const svgClassList = "fill-white z-10"
 			return
 		}
 
-		const overlayUploaded = overlayContainer.querySelector<HTMLParagraphElement>("#overlay-uploaded")
-		const overlayImage = overlayContainer.querySelector<HTMLImageElement>("#overlay-image")
-		const overlayCaptionContainer = overlayContainer.querySelector("#overlay-caption-container")
-		const overlayCaption = overlayContainer.querySelector<HTMLElement>("#caption")
-		const [overlayEtsy, overlayInsta] = [...overlayContainer.querySelectorAll<HTMLAnchorElement>("a")]
+		// Store validated container reference
+		const container = overlayContainer
 
+		// Lightbox elements - use non-null assertion after validation
+		const overlayImage = overlayContainer.querySelector<HTMLImageElement>("#overlay-image")!
+		const overlayTitle = overlayContainer.querySelector<HTMLElement>("#overlay-title")!
+		const overlayCategory = overlayContainer.querySelector<HTMLElement>("#overlay-category")!
+		const overlayMedium = overlayContainer.querySelector<HTMLElement>("#overlay-medium")!
+		const overlayDimensions = overlayContainer.querySelector<HTMLElement>("#overlay-dimensions")!
+		const overlayYear = overlayContainer.querySelector<HTMLElement>("#overlay-year")!
+		const metaMedium = overlayContainer.querySelector<HTMLElement>("#meta-medium")!
+		const metaDimensions = overlayContainer.querySelector<HTMLElement>("#meta-dimensions")!
+		const metaYear = overlayContainer.querySelector<HTMLElement>("#meta-year")!
+		const overlayEtsy = overlayContainer.querySelector<HTMLAnchorElement>("#overlay-etsy")!
+		const overlayInsta = overlayContainer.querySelector<HTMLAnchorElement>("#overlay-insta")!
+		const closeBtn = overlayContainer.querySelector<HTMLButtonElement>("#lightbox-close")!
+		const prevBtn = overlayContainer.querySelector<HTMLButtonElement>("#lightbox-prev")!
+		const nextBtn = overlayContainer.querySelector<HTMLButtonElement>("#lightbox-next")!
+		const counterCurrent = overlayContainer.querySelector<HTMLElement>("#counter-current")!
+		const counterTotal = overlayContainer.querySelector<HTMLElement>("#counter-total")!
+
+		// Validate all elements exist
 		if (
-			!overlayUploaded ||
 			!overlayImage ||
-			!overlayCaptionContainer ||
-			!overlayCaption ||
+			!overlayTitle ||
+			!overlayCategory ||
+			!overlayMedium ||
+			!overlayDimensions ||
+			!overlayYear ||
+			!metaMedium ||
+			!metaDimensions ||
+			!metaYear ||
 			!overlayEtsy ||
-			!overlayInsta
+			!overlayInsta ||
+			!closeBtn ||
+			!prevBtn ||
+			!nextBtn ||
+			!counterCurrent ||
+			!counterTotal
 		) {
-			console.error("Error enlarging image")
+			console.error("Error finding lightbox elements")
 			return
 		}
+
+		// Collect all gallery images with their data
+		interface ImageData {
+			src: string
+			title: string
+			medium: string
+			dimensions: string
+			year: string
+			category: string
+			etsyUrl: string
+			instaUrl: string
+		}
+
+		const galleryImages: ImageData[] = []
+		let currentIndex = 0
 
 		document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl) => {
 			const hasEtsy = imageEl.parentElement?.querySelector<HTMLAnchorElement>("#etsy-url")
 			const hasInsta = imageEl.parentElement?.querySelector<HTMLAnchorElement>("#insta-url")
-			const about = imageEl.getAttribute("about")
 
-			imageEl.addEventListener("click", () => {
-				/** Offset for centering text caption, increment by SVG size if image has Etsy or Insta links */
-				let offset = 0
-
-				if (hasEtsy) {
-					overlayEtsy.style.display = "block"
-					overlayEtsy.href = hasEtsy.href
-					offset += 30
-				}
-
-				if (hasInsta) {
-					overlayInsta.style.display = "block"
-					overlayInsta.href = hasInsta.href
-					offset += 30
-				}
-
-				// update attrributes
-				overlayImage.src = imageEl.src
-				// disable captions for now, need more meaningful captions first
-				// overlayCaption.textContent = imageEl.alt
-				overlayCaption.style.paddingRight = `${offset.toString()}px`
-				overlayUploaded.textContent = about
-
-				// make visible
-				overlayContainer.style.visibility = "visible"
-				overlayContainer.style.opacity = "1"
+			galleryImages.push({
+				src: imageEl.src,
+				title: imageEl.dataset.title || "",
+				medium: imageEl.dataset.medium || "",
+				dimensions: imageEl.dataset.dimensions || "",
+				year: imageEl.dataset.year || "",
+				category: imageEl.dataset.category || "",
+				etsyUrl: hasEtsy?.href || "",
+				instaUrl: hasInsta?.href || "",
 			})
 		})
 
-		overlayContainer.addEventListener("click", (event) => {
-			// only remove the overlay if click isn't on image or caption
-			const imageContainer = document.getElementById("overlay-image-container")
+		function showImage(index: number) {
+			if (index < 0 || index >= galleryImages.length) return
 
-			if (imageContainer?.contains(event.target as Node)) {
-				return
+			currentIndex = index
+			const image = galleryImages[index]!
+
+			// Update image
+			overlayImage.src = image.src
+
+			// Update title and category
+			overlayTitle.textContent = image.title || "Untitled"
+			overlayCategory.textContent = image.category || ""
+
+			// Update metadata (hide if empty)
+			if (image.medium) {
+				overlayMedium.textContent = image.medium
+				metaMedium.style.display = "flex"
+			} else {
+				metaMedium.style.display = "none"
 			}
 
-			overlayEtsy.style.display = "none"
-			overlayInsta.style.display = "none"
-			overlayContainer.style.visibility = "hidden"
-			overlayContainer.style.opacity = "0"
+			if (image.dimensions) {
+				overlayDimensions.textContent = image.dimensions
+				metaDimensions.style.display = "flex"
+			} else {
+				metaDimensions.style.display = "none"
+			}
+
+			if (image.year) {
+				overlayYear.textContent = image.year
+				metaYear.style.display = "flex"
+			} else {
+				metaYear.style.display = "none"
+			}
+
+			// Update social links
+			if (image.etsyUrl) {
+				overlayEtsy.href = image.etsyUrl
+				overlayEtsy.style.display = "block"
+			} else {
+				overlayEtsy.style.display = "none"
+			}
+
+			if (image.instaUrl) {
+				overlayInsta.href = image.instaUrl
+				overlayInsta.style.display = "block"
+			} else {
+				overlayInsta.style.display = "none"
+			}
+
+			// Update counter
+			counterCurrent.textContent = (index + 1).toString()
+			counterTotal.textContent = galleryImages.length.toString()
+		}
+
+		function openLightbox(index: number) {
+			showImage(index)
+			container.style.visibility = "visible"
+			container.style.opacity = "1"
+			document.body.style.overflow = "hidden"
+			closeBtn.focus()
+		}
+
+		function closeLightbox() {
+			container.style.visibility = "hidden"
+			container.style.opacity = "0"
+			document.body.style.overflow = ""
+		}
+
+		function showPrev() {
+			const newIndex = currentIndex > 0 ? currentIndex - 1 : galleryImages.length - 1
+			showImage(newIndex)
+		}
+
+		function showNext() {
+			const newIndex = currentIndex < galleryImages.length - 1 ? currentIndex + 1 : 0
+			showImage(newIndex)
+		}
+
+		// Click handlers for gallery images
+		document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl, index) => {
+			imageEl.addEventListener("click", () => openLightbox(index))
+		})
+
+		// Close button
+		closeBtn.addEventListener("click", closeLightbox)
+
+		// Navigation buttons
+		prevBtn.addEventListener("click", (e) => {
+			e.stopPropagation()
+			showPrev()
+		})
+
+		nextBtn.addEventListener("click", (e) => {
+			e.stopPropagation()
+			showNext()
+		})
+
+		// Click outside to close
+		container.addEventListener("click", (event) => {
+			const imageContainer = document.getElementById("overlay-image-container")
+			const isNavButton = (event.target as Element).closest("#lightbox-prev, #lightbox-next, #lightbox-close")
+
+			if (!imageContainer?.contains(event.target as Node) && !isNavButton) {
+				closeLightbox()
+			}
+		})
+
+		// Keyboard navigation
+		document.addEventListener("keydown", (event) => {
+			if (container.style.visibility !== "visible") return
+
+			switch (event.key) {
+				case "Escape":
+					closeLightbox()
+					break
+				case "ArrowLeft":
+					showPrev()
+					break
+				case "ArrowRight":
+					showNext()
+					break
+			}
+		})
+
+		// Make gallery images focusable and keyboard accessible
+		document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl, index) => {
+			imageEl.setAttribute("tabindex", "0")
+			imageEl.setAttribute("role", "button")
+			imageEl.addEventListener("keydown", (e) => {
+				if (e.key === "Enter" || e.key === " ") {
+					e.preventDefault()
+					openLightbox(index)
+				}
+			})
 		})
 	})()
 </script>
@@ -204,6 +350,11 @@ const svgClassList = "fill-white z-10"
 							class={`rounded-lg shadow-card hover:shadow-card-hover ${transition("shadow")} ${image.etsyUrl ? "etsy" : ""} ${image.instagramUrl ? "instagram" : ""}`}
 							loading="lazy"
 							about={`Uploaded on the ${image.friendlyDate}`}
+							data-title={image.title || ""}
+							data-medium={image.medium || ""}
+							data-dimensions={image.dimensions || ""}
+							data-year={image.year?.toString() || ""}
+							data-category={collectionName || ""}
 						/>
 						{/* Hover overlay with gradient, title, and medium */}
 					<div
@@ -244,23 +395,90 @@ const svgClassList = "fill-white z-10"
 	}
 </div>
 
-<!-- image overlay -->
+<!-- image overlay / lightbox -->
 <!-- need z index 50 to be above mobile and desktop sidebars -->
 <div
 	id="overlay-container"
-	class="fixed top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-gray-900/50 z-50 invisible opacity-0 backdrop-blur-lg"
+	class="fixed inset-0 flex justify-center items-center bg-gray-900/70 z-50 invisible opacity-0 backdrop-blur-lg"
 >
-	<div class="max-w-[80%] max-h-[80%] mb-20" id="overlay-image-container">
-		<p id="overlay-uploaded" class="text-white pb-1 text-right italic text-sm"></p>
-		<img id="overlay-image" class="h-full w-full" />
-		<div id="overlay-caption-container" class="flex w-full pt-1">
-			<a id="overlay-etsy" class="hidden" target="_blank">
-				<Etsy classList="fill-white" width={svgSize} height={svgSize} />
-			</a>
-			<a id="overlay-insta" class="hidden" target="_blank">
-				<Instagram classList="fill-white" width={svgSize} height={svgSize} />
-			</a>
-			<p class="text-white place-self-center w-full text-center inline-block" id="caption"></p>
+	<!-- Close button -->
+	<button
+		id="lightbox-close"
+		class="absolute top-4 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
+		aria-label="Close lightbox"
+	>
+		<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+		</svg>
+	</button>
+
+	<!-- Previous arrow -->
+	<button
+		id="lightbox-prev"
+		class="absolute left-4 top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
+		aria-label="Previous image"
+	>
+		<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+		</svg>
+	</button>
+
+	<!-- Next arrow -->
+	<button
+		id="lightbox-next"
+		class="absolute right-4 top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
+		aria-label="Next image"
+	>
+		<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+		</svg>
+	</button>
+
+	<!-- Image counter -->
+	<div id="lightbox-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-sm z-50">
+		<span id="counter-current">1</span> / <span id="counter-total">1</span>
+	</div>
+
+	<!-- Main lightbox content: image left, details right -->
+	<div id="overlay-image-container" class="flex flex-col lg:flex-row max-w-[90%] lg:max-w-[85%] max-h-[85%] mx-16">
+		<!-- Image section -->
+		<div class="flex-shrink-0 flex items-center justify-center lg:max-w-[65%]">
+			<img id="overlay-image" class="max-h-[70vh] lg:max-h-[80vh] w-auto object-contain rounded-lg shadow-2xl" />
+		</div>
+
+		<!-- Details panel -->
+		<div id="details-panel" class="bg-white rounded-lg p-6 lg:ml-6 mt-4 lg:mt-0 lg:min-w-[280px] lg:max-w-[320px] flex flex-col overflow-y-auto max-h-[30vh] lg:max-h-[80vh]">
+			<!-- Title -->
+			<h2 id="overlay-title" class="font-serif text-2xl text-gray-800 mb-1"></h2>
+			
+			<!-- Category/Collection -->
+			<p id="overlay-category" class="text-gray-500 text-sm mb-4"></p>
+
+			<!-- Metadata section -->
+			<div class="border-t border-gray-200 pt-4 mt-auto space-y-3">
+				<div id="meta-medium" class="flex justify-between">
+					<span class="text-gray-500 text-sm">Medium</span>
+					<span id="overlay-medium" class="text-gray-800 text-sm font-medium"></span>
+				</div>
+				<div id="meta-dimensions" class="flex justify-between">
+					<span class="text-gray-500 text-sm">Dimensions</span>
+					<span id="overlay-dimensions" class="text-gray-800 text-sm font-medium"></span>
+				</div>
+				<div id="meta-year" class="flex justify-between">
+					<span class="text-gray-500 text-sm">Year</span>
+					<span id="overlay-year" class="text-gray-800 text-sm font-medium"></span>
+				</div>
+			</div>
+
+			<!-- Social links -->
+			<div class="flex gap-3 mt-4 pt-4 border-t border-gray-200">
+				<a id="overlay-etsy" class="hidden" target="_blank">
+					<Etsy classList="fill-gray-600 hover:fill-main transition-colors" width={svgSize} height={svgSize} />
+				</a>
+				<a id="overlay-insta" class="hidden" target="_blank">
+					<Instagram classList="fill-gray-600 hover:fill-main transition-colors" width={svgSize} height={svgSize} />
+				</a>
+			</div>
 		</div>
 	</div>
 </div>

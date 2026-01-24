@@ -138,7 +138,7 @@
       "Verify a white details panel appears on the right side",
       "Background should be blurred and dimmed"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Lightbox - Details Panel",
@@ -148,7 +148,7 @@
       "Verify artwork title appears at top of details panel in large serif font",
       "Verify category/collection name appears below title in gray text"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Lightbox - Details Panel",
@@ -160,7 +160,7 @@
       "Verify 'Year' label with value appears (e.g., '2024')",
       "Labels should be left-aligned, values right-aligned"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Lightbox - Navigation",
@@ -172,7 +172,7 @@
       "Clicking arrows navigates to previous/next image",
       "Arrows should have circular background and be positioned outside image area"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Lightbox - Navigation",
@@ -183,7 +183,7 @@
       "Counter should update when navigating between images",
       "Text should be white and centered"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Lightbox - Close Button",
@@ -194,7 +194,7 @@
       "Clicking X closes the lightbox",
       "Icon should be white and clearly visible"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Data Model",
@@ -275,7 +275,7 @@
       "Use Escape key to close lightbox",
       "Focus is trapped within lightbox when open"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Mobile",

@@ -76,3 +76,27 @@
 - Counts are fetched in parallel for all tags using Promise.all
 - Function now explicitly typed to return `Promise<CollectionWithCount[]>`
 - Files modified: src/utils/contentful/api.ts
+
+## 2026-01-24: Lightbox Complete Redesign
+- Redesigned lightbox layout with image on left and white details panel on right
+- Details panel includes:
+  - Artwork title in large serif font (Playfair Display)
+  - Category/collection name in gray text
+  - Metadata section with Medium, Dimensions, Year (label left, value right)
+  - Social links (Etsy/Instagram) with hover color change
+- Added navigation features:
+  - Close button (X) in top-right corner with circular background
+  - Left/right arrow buttons on sides for previous/next navigation
+  - Image counter at bottom center showing "current / total" position
+  - Arrows wrap around (last→first, first→last)
+- Added keyboard accessibility:
+  - Enter/Space on gallery images opens lightbox
+  - Left/Right arrow keys navigate between images
+  - Escape key closes lightbox
+  - Gallery images now have tabindex="0" and role="button"
+- Added data attributes to gallery images for metadata access:
+  - data-title, data-medium, data-dimensions, data-year, data-category
+- Background maintains blurred and dimmed appearance (backdrop-blur-lg)
+- Metadata fields hide gracefully when empty
+- Prevents body scroll when lightbox is open
+- Files modified: src/components/Gallery.astro
