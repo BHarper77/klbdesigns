@@ -331,7 +331,7 @@
       "Verify the icon animates smoothly (e.g., rotates or changes color)",
       "Animation should reset when dropdown is closed"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "UI",

@@ -209,3 +209,20 @@
   - pnpm astro check: 0 errors, 0 warnings, 0 hints
   - pnpm build: Successful build with 10 pages
 - Files modified: src/components/Gallery.astro, ai/plans/ui-redesign/prd.json
+
+
+## 2026-01-24: UI - Collections Dropdown Icon Animation
+- Added smooth CSS transition animation to Collections dropdown icon
+- Implementation:
+  - Added 'transition: transform 300ms ease-in-out' to #collections-dropdown-svg in inline styles
+  - Icon now smoothly rotates -90 degrees when dropdown is clicked
+  - Animation uses ease-in-out timing function for natural motion
+  - Animation automatically reverses when dropdown is closed
+- Existing rotate-svg class and rotateSvg() JavaScript function already handled rotation logic
+- Only needed to add CSS transition property to make rotation smooth instead of instant
+- Enhances UI feedback and makes dropdown interaction feel more polished
+- Verification:
+  - pnpm astro check: 0 errors, 0 warnings, 0 hints
+  - pnpm build: Successful build with 10 pages
+- Files modified: src/components/Sidebar.astro, ai/plans/ui-redesign/prd.json
+
