@@ -109,3 +109,12 @@
 - Adjusted spacing: main nav uses pt-6 for first item, pt-2 for subsequent items
 - Collections dropdown now starts with pt-2 after separator for balanced spacing
 - Files modified: src/components/Sidebar.astro
+
+## 2026-01-24: Sidebar - Collection Piece Counts Added
+- Added piece counts next to each collection name in Collections dropdown
+- Counts display on right side of collection links, right-aligned
+- Implemented using flex layout with justify-between on anchor tags
+- Count styling uses muted white color (text-white/60) and smaller font (text-sm)
+- Leverages existing itemCount property from getTags() API (already implemented)
+- Counts automatically reflect actual number of items in each collection
+- Files modified: src/components/Sidebar.astro

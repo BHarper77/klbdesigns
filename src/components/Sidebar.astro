@@ -111,8 +111,9 @@ const collections = await getTags()
 					{
 						collections.map((collection) => (
 							<li class="pt-2">
-								<a href={collection.tag} class="hover:text-secondary">
-									{collection.name}
+								<a href={collection.tag} class="flex justify-between items-center hover:text-secondary">
+									<span>{collection.name}</span>
+									<span class="text-white/60 text-sm">{collection.itemCount}</span>
 								</a>
 							</li>
 						))

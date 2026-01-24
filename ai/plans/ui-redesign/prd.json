@@ -61,7 +61,7 @@
       "Count should be right-aligned and lighter/muted color",
       "Counts should reflect actual number of items in each collection"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Sidebar - Footer",
