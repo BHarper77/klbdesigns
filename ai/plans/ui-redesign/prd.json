@@ -254,7 +254,7 @@
       "Verify overlay gradient colors are defined",
       "Colors are consistent with teal brand palette"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Typography",

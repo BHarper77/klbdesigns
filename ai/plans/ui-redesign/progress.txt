@@ -22,3 +22,16 @@
 - Fields are now available as `image.medium`, `image.dimensions`, `image.year`
 - Note: Contentful content type must have corresponding fields for data to appear
 - Files modified: src/utils/contentful/types.ts, src/components/Gallery.astro
+
+## 2026-01-24: Styling - Tailwind Config Updated for Shadows and Overlays
+- Added custom boxShadow utilities in tailwind.config.mjs:
+  - `shadow-card`: subtle shadow for gallery image cards (0 2px 8px rgba(0,0,0,0.08))
+  - `shadow-card-hover`: enhanced shadow for hover state (0 4px 16px rgba(0,0,0,0.12))
+- Added backgroundImage gradients:
+  - `bg-overlay-gradient`: dark gradient for hover overlays on images
+  - `bg-overlay-teal`: teal-branded gradient variant
+- Added overlay colors (overlay-dark, overlay-light) for consistent opacity overlays
+- Extended color palette with main-dark, main-light variants for teal brand colors
+- Added full gray color scale (50-900) for text hierarchy and UI elements
+- Added white and black colors for explicit color usage
+- Files modified: tailwind.config.mjs
