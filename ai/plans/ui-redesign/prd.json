@@ -83,7 +83,7 @@
       "Verify piece count (e.g., '12 pieces') appears below title in smaller gray text",
       "Title should change to collection name when viewing a specific collection"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Gallery - Layout",

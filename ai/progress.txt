@@ -23,6 +23,18 @@
 - Note: Contentful content type must have corresponding fields for data to appear
 - Files modified: src/utils/contentful/types.ts, src/components/Gallery.astro
 
+## 2026-01-24: Gallery - Header Added
+- Added page title section above the gallery grid displaying collection name and piece count
+- Updated Gallery.astro component:
+  - Added optional `collectionName` prop
+  - Added header section with serif font title (font-serif text-3xl/4xl)
+  - Displays dynamic piece count below title in gray text
+  - Handles singular/plural "piece/pieces" correctly
+- Updated index.astro to pass collectionName="All Works"
+- Updated [tag].astro to pass the collection name from props
+- Title uses Playfair Display serif font for visual hierarchy
+- Files modified: src/components/Gallery.astro, src/pages/index.astro, src/pages/[tag].astro
+
 ## 2026-01-24: Styling - Tailwind Config Updated for Shadows and Overlays
 - Added custom boxShadow utilities in tailwind.config.mjs:
   - `shadow-card`: subtle shadow for gallery image cards (0 2px 8px rgba(0,0,0,0.08))
