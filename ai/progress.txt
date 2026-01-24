@@ -45,3 +45,13 @@
 - Added hover shadow enhancement with `hover:shadow-card-hover`
 - Added margin-bottom (`mb-4`) to image containers for proper spacing
 - Files modified: src/components/Gallery.astro
+
+## 2026-01-24: Gallery - Hover Overlay with Title and Medium
+- Added hover overlay to gallery images showing artwork title and medium
+- Overlay uses gradient from transparent to dark (`from-black/70 via-black/20 to-transparent`)
+- Title displayed in serif font (Playfair Display) with larger text and drop shadow
+- Medium displayed in smaller, semi-transparent white text below title
+- Overlay fades in smoothly on hover using existing transition utility
+- Reorganized social link icons (Etsy/Instagram) with proper z-indexing
+- Overlay uses `pointer-events-none` to allow clicks to pass through to image
+- Files modified: src/components/Gallery.astro

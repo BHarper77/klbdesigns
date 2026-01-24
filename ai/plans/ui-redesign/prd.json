@@ -127,7 +127,7 @@
       "Verify medium/category appears below title (smaller, lighter text)",
       "Overlay should fade in smoothly on hover"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Lightbox - Layout",
