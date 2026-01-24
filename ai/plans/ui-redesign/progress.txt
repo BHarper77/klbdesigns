@@ -179,3 +179,18 @@
   - Images are properly sized and visible on page load
 - Files modified: src/components/Sidebar.astro, src/components/Gallery.astro, ai/plans/ui-redesign/prd.json
 
+## 2026-01-24: Typography - Poppins as Default Font
+- Changed default font to Poppins across entire site using Tailwind utilities
+- Added `font-sans` class to body element in Layout.astro
+- Removed inline CSS `font-family: "Poppins"` from html element (now handled by Tailwind)
+- Poppins configured as default font-sans in tailwind.config.mjs (already existed)
+- Playfair Display (font-serif) still used for:
+  - Page titles (Gallery header)
+  - Artwork titles in hover overlays
+  - Artwork titles in lightbox details panel
+- All other text (navigation, body text, metadata, etc.) now uses Poppins by default
+- Verification:
+  - pnpm astro check: 0 errors, 0 warnings, 0 hints
+  - pnpm build: Successful build with 10 pages
+- Files modified: src/layouts/Layout.astro, ai/plans/ui-redesign/prd.json
+

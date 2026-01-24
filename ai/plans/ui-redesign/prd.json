@@ -352,6 +352,6 @@
       "Verify all text uses Poppins font",
       "Check headings, body text, and navigation links for consistency"
     ],
-    "passes": false
+    "passes": true
   }
 ]
