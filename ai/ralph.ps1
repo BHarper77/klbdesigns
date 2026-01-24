@@ -126,7 +126,6 @@ $copilotToolArgs = @()
 $copilotToolArgs += "--deny-tool"
 $copilotToolArgs += "shell(rm)"
 $copilotToolArgs += "--deny-tool"
-$copilotToolArgs += "shell(git push)"
 
 # Add profile-based tool permissions
 if ($AllowTools.Count -eq 0 -and $AllowProfile) {
