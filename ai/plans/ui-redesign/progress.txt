@@ -157,3 +157,25 @@
 - Screenshots captured: gallery-page-full.png, collections-dropdown.png, gallery-scrolled.png
 - Files modified: ai/plans/ui-redesign/prd.json
 
+## 2026-01-24: Bug Fix - Gallery Images Not Rendering
+- Fixed critical bug where gallery images were appearing as tiny thumbnails at bottom left
+- Root cause: Multiple CSS layout issues
+  1. Sidebar was using `sticky` positioning on desktop, staying in document flow
+  2. Gallery had `margin-left: 16rem` to account for sidebar
+  3. Image container divs were using `inline-block` display
+  4. Images lacked responsive sizing (`w-full h-auto`)
+- Solution applied:
+  1. Changed sidebar from `sticky` to `fixed` positioning on desktop (line 39 of Sidebar.astro)
+     - Removed `sm:sticky` and `sm:h-screen`, keeping `h-screen` for all viewports
+     - Now sidebar is removed from document flow like mobile, making margin-left work correctly
+  2. Changed image container divs from `inline-block` to `block` display (line 351 of Gallery.astro)
+     - Allows containers to fill column width properly
+  3. Added `w-full h-auto` classes to Image components (line 358 of Gallery.astro)
+     - Images now scale responsively to fill their containers
+- Verification:
+  - pnpm astro check: 0 errors, 0 warnings, 0 hints
+  - pnpm build: Successful build with 10 pages
+  - All 42 images now display correctly in 3-column masonry grid
+  - Images are properly sized and visible on page load
+- Files modified: src/components/Sidebar.astro, src/components/Gallery.astro, ai/plans/ui-redesign/prd.json
+
