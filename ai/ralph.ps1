@@ -86,7 +86,7 @@ function Trim-String {
 }
 
 # Default model if not provided via environment variable
-$MODEL = if ($env:MODEL) { $env:MODEL } else { "claude-opus-4.5" }
+$MODEL = if ($env:MODEL) { $env:MODEL } else { "claude-sonnet-4.5" }
 
 # Validate prompt file
 if (-not (Test-Path $Prompt -PathType Leaf)) {
