@@ -100,3 +100,12 @@
 - Metadata fields hide gracefully when empty
 - Prevents body scroll when lightbox is open
 - Files modified: src/components/Gallery.astro
+
+## 2026-01-24: Sidebar Navigation - Gallery Link and Separator Added
+- Added 'Gallery' as first navigation link in sidebar, linking to home page (/)
+- Reorganized navigation order: Gallery, About, Contact (all above separator)
+- Added horizontal separator line between main nav links and Collections dropdown
+- Separator uses semi-transparent white border (border-white/30) for subtle appearance
+- Adjusted spacing: main nav uses pt-6 for first item, pt-2 for subsequent items
+- Collections dropdown now starts with pt-2 after separator for balanced spacing
+- Files modified: src/components/Sidebar.astro

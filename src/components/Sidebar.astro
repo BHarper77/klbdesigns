@@ -44,6 +44,22 @@ const collections = await getTags()
 				</h1>
 			</li>
 
+			<!-- Main navigation links -->
+			<li class="pt-6">
+				<a class="hover:text-secondary" href="/">Gallery</a>
+			</li>
+			<li class="pt-2">
+				<a class="hover:text-secondary" href="/about">about</a>
+			</li>
+			<li class="pt-2">
+				<a class="hover:text-secondary" href="/contact">contact</a>
+			</li>
+
+			<!-- Separator line -->
+			<li class="pt-4 pb-2">
+				<hr class="border-white/30" />
+			</li>
+
 			<script is:inline>
 				function rotateSvg() {
 					const svg = document.getElementById("collections-dropdown-svg")
@@ -63,7 +79,7 @@ const collections = await getTags()
 			</style>
 
 			<!-- collections dropdown -->
-			<li class="pt-6">
+			<li class="pt-2">
 				<div class="group">
 					<button
 						type="button"
@@ -102,12 +118,6 @@ const collections = await getTags()
 						))
 					}
 				</ul>
-			</li>
-			<li class="pt-2">
-				<a class="hover:text-secondary" href="/about">about</a>
-			</li>
-			<li class="pt-2">
-				<a class="hover:text-secondary" href="/contact">contact</a>
 			</li>
 
 			<!-- social media links -->

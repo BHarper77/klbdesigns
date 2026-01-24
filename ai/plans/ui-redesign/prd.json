@@ -29,7 +29,7 @@
       "Clicking 'Gallery' navigates to the home page (gallery view)",
       "Link has hover state changing color"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Sidebar - Navigation",
@@ -39,7 +39,7 @@
       "Verify a subtle horizontal line separates the main links from Collections",
       "Line should be semi-transparent white or lighter teal color"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Sidebar - Collections",
