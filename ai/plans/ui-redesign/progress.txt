@@ -194,3 +194,18 @@
   - pnpm build: Successful build with 10 pages
 - Files modified: src/layouts/Layout.astro, ai/plans/ui-redesign/prd.json
 
+
+
+## 2026-01-24: Gallery - Hover Zoom Effect
+- Added smooth zoom-in effect to gallery images on hover
+- Implementation:
+  - Added 'overflow-hidden rounded-lg' to image container div to prevent zoom overflow
+  - Added 'transition-transform duration-300 group-hover:scale-105' to Image component
+  - Zoom scales image to 1.05x (105%) on hover with smooth 300ms transition
+  - Effect automatically reverts when hover ends
+- Enhances interactivity and provides visual feedback when users interact with artwork
+- Works seamlessly with existing hover overlay (title/medium) and shadow effects
+- Verification:
+  - pnpm astro check: 0 errors, 0 warnings, 0 hints
+  - pnpm build: Successful build with 10 pages
+- Files modified: src/components/Gallery.astro, ai/plans/ui-redesign/prd.json

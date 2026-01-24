@@ -348,14 +348,14 @@ const svgClassList = "fill-white z-10"
 			<div>
 				{images.map((image) => (
 					// relative block to display svg links on top of image
-					<div class="block relative group hover:cursor-pointer mb-4">
+					<div class="block relative group hover:cursor-pointer mb-4 overflow-hidden rounded-lg">
 						<Image
 							id="image"
 							src={image.src}
 							alt={image.alt}
 							width={image.width}
 							height={image.height}
-							class={`w-full h-auto rounded-lg shadow-card hover:shadow-card-hover ${transition("shadow")} ${image.etsyUrl ? "etsy" : ""} ${image.instagramUrl ? "instagram" : ""}`}
+							class={`w-full h-auto rounded-lg shadow-card hover:shadow-card-hover transition-transform duration-300 group-hover:scale-105 ${transition("shadow")} ${image.etsyUrl ? "etsy" : ""} ${image.instagramUrl ? "instagram" : ""}`}
 							loading="lazy"
 							about={`Uploaded on the ${image.friendlyDate}`}
 							data-title={image.title || ""}

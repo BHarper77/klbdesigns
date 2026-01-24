@@ -320,7 +320,7 @@
       "Verify the image slightly zooms in (scale up to 1.05)",
       "Zoom effect should be smooth and revert when hover ends"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "UI",
