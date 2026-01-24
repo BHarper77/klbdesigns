@@ -97,6 +97,20 @@ const svgClassList = "fill-white z-10"
 			blur 0.3s;
 	}
 	
+	/* Lightbox content animation */
+	#overlay-image-container {
+		transition:
+			transform 0.3s ease-out,
+			opacity 0.3s ease-out;
+		transform: scale(0.95);
+		opacity: 0;
+	}
+	
+	#overlay-container.open #overlay-image-container {
+		transform: scale(1);
+		opacity: 1;
+	}
+	
 	/* Fix gallery layout - add margin to push content right of sidebar */
 	@media (min-width: 640px) {
 		#container,
@@ -249,6 +263,7 @@ const svgClassList = "fill-white z-10"
 			showImage(index)
 			container.style.visibility = "visible"
 			container.style.opacity = "1"
+			container.classList.add("open")
 			document.body.style.overflow = "hidden"
 			closeBtn.focus()
 		}
@@ -256,6 +271,7 @@ const svgClassList = "fill-white z-10"
 		function closeLightbox() {
 			container.style.visibility = "hidden"
 			container.style.opacity = "0"
+			container.classList.remove("open")
 			document.body.style.overflow = ""
 		}
 

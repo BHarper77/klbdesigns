@@ -342,7 +342,7 @@
       "Verify a smooth animation occurs as the lightbox opens (e.g., fade-in or zoom effect)",
       "Animation should enhance user experience without causing delays"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "UI",

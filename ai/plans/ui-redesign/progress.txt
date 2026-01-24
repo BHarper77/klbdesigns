@@ -226,3 +226,20 @@
   - pnpm build: Successful build with 10 pages
 - Files modified: src/components/Sidebar.astro, ai/plans/ui-redesign/prd.json
 
+
+## 2026-01-24: UI - Lightbox Opening Animation
+- Added smooth scale + fade animation when clicking gallery images to open lightbox
+- Implementation:
+  - Added CSS transition on #overlay-image-container for transform and opacity (300ms ease-out)
+  - Initial state: transform: scale(0.95), opacity: 0
+  - When .open class is added to parent: transform: scale(1), opacity: 1
+  - JavaScript adds/removes 'open' class in openLightbox() and closeLightbox() functions
+- Animation creates a smooth zoom-in effect as lightbox content appears
+- Works in combination with existing backdrop fade-in (opacity + visibility on #overlay-container)
+- Total effect: background blurs and darkens while content zooms in from 95% to 100% scale
+- Enhances user experience with polished, smooth transition without causing delays
+- Verification:
+  - pnpm astro check: 0 errors, 0 warnings, 0 hints
+  - pnpm build: Successful build with 10 pages
+- Files modified: src/components/Gallery.astro, ai/plans/ui-redesign/prd.json
+
