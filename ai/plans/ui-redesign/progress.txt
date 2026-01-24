@@ -1,0 +1,8 @@
+## 2026-01-24: Typography - Serif Font Added
+- Added Playfair Display serif font via Google Fonts in Layout.astro
+- Updated tailwind.config.mjs with proper font families:
+  - font-sans now maps to Poppins (default body font)
+  - font-serif now maps to Playfair Display (for titles)
+- Usage: Apply font-serif class to page titles and artwork titles
+- Files modified: src/layouts/Layout.astro, tailwind.config.mjs
+
