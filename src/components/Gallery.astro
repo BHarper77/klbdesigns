@@ -64,7 +64,7 @@ const images = tags.items.map((item) => {
 
 type Image = (typeof images)[number]
 
-const columns = Array.from({ length: 4 }, () => ({ height: 0, images: [] as Image[] }))
+const columns = Array.from({ length: 3 }, () => ({ height: 0, images: [] as Image[] }))
 
 for (const image of images) {
 	// get column with lowest total height
@@ -175,23 +175,20 @@ const svgClassList = "fill-white z-10"
 </script>
 
 <!-- main gallery -->
-<div id="container" class="grid grid-cols-1 sm:grid-cols-4 p-5 sm:p-12 gap-4">
+<div id="container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-5 sm:p-12 gap-4">
 	{
 		imageArrays.map((images) => (
 			<div>
 				{images.map((image) => (
 					// relative block to display svg links on top of image
-					<div class="inline-block relative group hover:cursor-pointer">
+					<div class="inline-block relative group hover:cursor-pointer mb-4">
 						<Image
 							id="image"
 							src={image.src}
 							alt={image.alt}
 							width={image.width}
 							height={image.height}
-							class={
-								(image.etsyUrl || image.instagramUrl) &&
-								`group-hover:shadow-xl ${transition("shadow")} ${image.etsyUrl ? "etsy" : undefined} ${image.instagramUrl ? "instagram" : undefined}`
-							}
+							class={`rounded-lg shadow-card hover:shadow-card-hover ${transition("shadow")} ${image.etsyUrl ? "etsy" : ""} ${image.instagramUrl ? "instagram" : ""}`}
 							loading="lazy"
 							about={`Uploaded on the ${image.friendlyDate}`}
 						/>

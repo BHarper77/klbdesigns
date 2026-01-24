@@ -94,7 +94,7 @@
       "Images should maintain aspect ratio",
       "Columns should have consistent gap spacing"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Gallery - Image Cards",
@@ -104,7 +104,7 @@
       "Verify all images have rounded corners (approximately 8-12px radius)",
       "Corners should be consistent across all images"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Gallery - Image Cards",
@@ -114,7 +114,7 @@
       "Verify images have a subtle drop shadow creating a card-like appearance",
       "Shadow should be light gray and not overly prominent"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Gallery - Hover State",

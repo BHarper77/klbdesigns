@@ -1,0 +1,47 @@
+## 2026-01-24: Typography - Serif Font Added
+- Added Playfair Display serif font via Google Fonts in Layout.astro
+- Updated tailwind.config.mjs with proper font families:
+  - font-sans now maps to Poppins (default body font)
+  - font-serif now maps to Playfair Display (for titles)
+- Usage: Apply font-serif class to page titles and artwork titles
+- Files modified: src/layouts/Layout.astro, tailwind.config.mjs
+
+## 2026-01-24: Data Model - Artwork Title Field Added
+- Extended WebsiteContentModel type in types.ts with optional `title` field
+- Updated Gallery.astro to include title in the mapped images data structure
+- Title is now available as `image.title` for use in hover overlays and lightbox
+- Note: Contentful content type must have a 'title' field for data to appear
+- Files modified: src/utils/contentful/types.ts, src/components/Gallery.astro
+
+## 2026-01-24: Data Model - Medium, Dimensions, Year Fields Added
+- Extended WebsiteContentModel type in types.ts with optional fields:
+  - `medium?: string` - artwork medium (e.g., "Mixed Media", "Oil on Canvas")
+  - `dimensions?: string` - artwork dimensions (e.g., "30\" × 40\"")
+  - `year?: number` - year artwork was created
+- Updated Gallery.astro to include these fields in the mapped images data structure
+- Fields are now available as `image.medium`, `image.dimensions`, `image.year`
+- Note: Contentful content type must have corresponding fields for data to appear
+- Files modified: src/utils/contentful/types.ts, src/components/Gallery.astro
+
+## 2026-01-24: Styling - Tailwind Config Updated for Shadows and Overlays
+- Added custom boxShadow utilities in tailwind.config.mjs:
+  - `shadow-card`: subtle shadow for gallery image cards (0 2px 8px rgba(0,0,0,0.08))
+  - `shadow-card-hover`: enhanced shadow for hover state (0 4px 16px rgba(0,0,0,0.12))
+- Added backgroundImage gradients:
+  - `bg-overlay-gradient`: dark gradient for hover overlays on images
+  - `bg-overlay-teal`: teal-branded gradient variant
+- Added overlay colors (overlay-dark, overlay-light) for consistent opacity overlays
+- Extended color palette with main-dark, main-light variants for teal brand colors
+- Added full gray color scale (50-900) for text hierarchy and UI elements
+- Added white and black colors for explicit color usage
+- Files modified: tailwind.config.mjs
+
+## 2026-01-24: Gallery Layout and Image Card Styling
+- Changed gallery grid from 4 columns to 3 columns on desktop (lg breakpoint)
+  - Updated grid class from `sm:grid-cols-4` to `sm:grid-cols-2 lg:grid-cols-3`
+  - Updated column array creation from 4 to 3 columns for masonry distribution
+- Added rounded corners to all gallery images using `rounded-lg` class (~8px radius)
+- Added subtle card shadow effect using custom `shadow-card` class
+- Added hover shadow enhancement with `hover:shadow-card-hover`
+- Added margin-bottom (`mb-4`) to image containers for proper spacing
+- Files modified: src/components/Gallery.astro
