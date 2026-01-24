@@ -214,7 +214,7 @@
       "Verify medium is fetched and available in Gallery component",
       "Medium displays correctly in hover overlay and lightbox details"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Data Model",
@@ -224,7 +224,7 @@
       "Verify dimensions is fetched and available in Gallery component",
       "Dimensions display correctly in lightbox details panel"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Data Model",
@@ -234,7 +234,7 @@
       "Verify year is fetched and available in Gallery component",
       "Year displays correctly in lightbox details panel"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "API",

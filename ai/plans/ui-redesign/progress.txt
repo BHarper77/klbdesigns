@@ -12,3 +12,13 @@
 - Title is now available as `image.title` for use in hover overlays and lightbox
 - Note: Contentful content type must have a 'title' field for data to appear
 - Files modified: src/utils/contentful/types.ts, src/components/Gallery.astro
+
+## 2026-01-24: Data Model - Medium, Dimensions, Year Fields Added
+- Extended WebsiteContentModel type in types.ts with optional fields:
+  - `medium?: string` - artwork medium (e.g., "Mixed Media", "Oil on Canvas")
+  - `dimensions?: string` - artwork dimensions (e.g., "30\" × 40\"")
+  - `year?: number` - year artwork was created
+- Updated Gallery.astro to include these fields in the mapped images data structure
+- Fields are now available as `image.medium`, `image.dimensions`, `image.year`
+- Note: Contentful content type must have corresponding fields for data to appear
+- Files modified: src/utils/contentful/types.ts, src/components/Gallery.astro

@@ -8,6 +8,9 @@ type WebsiteContentModel = {
 	}
 	alt: string
 	title?: string
+	medium?: string
+	dimensions?: string
+	year?: number
 	instagramUrl?: string
 	etsyUrl?: string
 }
