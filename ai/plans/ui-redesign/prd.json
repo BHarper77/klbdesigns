@@ -286,6 +286,6 @@
       "Verify menu includes logo icon, tagline, Gallery link, and copyright",
       "Verify Collections dropdown shows counts"
     ],
-    "passes": false
+    "passes": true
   }
 ]
