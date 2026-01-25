@@ -1,508 +1,618 @@
 ---
-import { Image } from "astro:assets"
-import { queryTags } from "../utils/contentful/api"
-import { throwError } from "../utils/helpers"
-import Etsy from "./svgs/Etsy.astro"
-import Instagram from "./svgs/Instagram.astro"
+import { Image } from "astro:assets";
+import { queryTags } from "../utils/contentful/api";
+import { throwError } from "../utils/helpers";
+import Etsy from "./svgs/Etsy.astro";
+import Instagram from "./svgs/Instagram.astro";
 
 type Props = {
-	tag: string
-	collectionName?: string
-}
+  tag: string;
+  collectionName?: string;
+};
 
-const { tag, collectionName } = Astro.props
+const { tag, collectionName } = Astro.props;
 
-const tags = await queryTags(`metadata.tags.sys.id[all]=${tag}`)
+const tags = await queryTags(`metadata.tags.sys.id[all]=${tag}`);
 
 const images = tags.items.map((item) => {
-	// response returns alt and media metadata in different arrays
-	// match via media ID
-	const itemId = item.fields.media.sys.id
-	const asset =
-		tags.includes.Asset.find((asset) => asset.sys.id === itemId) ??
-		throwError(`Couldn't find corresponding asset for item ${itemId}`)
+  // response returns alt and media metadata in different arrays
+  // match via media ID
+  const itemId = item.fields.media.sys.id;
+  const asset =
+    tags.includes.Asset.find((asset) => asset.sys.id === itemId) ??
+    throwError(`Couldn't find corresponding asset for item ${itemId}`);
 
-	const date = new Date(item.sys.createdAt)
-	const day = date.toLocaleDateString("en-GB", {
-		day: "numeric",
-	})
+  const date = new Date(item.sys.createdAt);
+  const day = date.toLocaleDateString("en-GB", {
+    day: "numeric",
+  });
 
-	const monthYear = date.toLocaleDateString("en-GB", {
-		year: "numeric",
-		month: "long",
-	})
+  const monthYear = date.toLocaleDateString("en-GB", {
+    year: "numeric",
+    month: "long",
+  });
 
-	// add "nth" to end of day
-	const nth = ((day: number) => {
-		if (day > 3 && day < 21) return "th"
+  // add "nth" to end of day
+  const nth = ((day: number) => {
+    if (day > 3 && day < 21) return "th";
 
-		switch (day % 10) {
-			case 1:
-				return "st"
-			case 2:
-				return "nd"
-			case 3:
-				return "rd"
-			default:
-				return "th"
-		}
-	})(parseFloat(day))
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  })(parseFloat(day));
 
-	return {
-		alt: item.fields.alt,
-		title: item.fields.title,
-		medium: item.fields.medium,
-		dimensions: item.fields.dimensions,
-		year: item.fields.year,
-		src: asset.fields.file.url,
-		height: asset.fields.file.details.image.height,
-		width: asset.fields.file.details.image.width,
-		instagramUrl: item.fields.instagramUrl,
-		etsyUrl: item.fields.etsyUrl,
-		friendlyDate: `${day}${nth} of ${monthYear}`,
-	}
-})
+  return {
+    alt: item.fields.alt,
+    title: item.fields.title,
+    medium: item.fields.medium,
+    dimensions: item.fields.dimensions,
+    year: item.fields.year,
+    src: asset.fields.file.url,
+    height: asset.fields.file.details.image.height,
+    width: asset.fields.file.details.image.width,
+    instagramUrl: item.fields.instagramUrl,
+    etsyUrl: item.fields.etsyUrl,
+    friendlyDate: `${day}${nth} of ${monthYear}`,
+  };
+});
 
-type Image = (typeof images)[number]
+type Image = (typeof images)[number];
 
-const columns = Array.from({ length: 3 }, () => ({ height: 0, images: [] as Image[] }))
+const columns = Array.from({ length: 3 }, () => ({
+  height: 0,
+  images: [] as Image[],
+}));
 
 for (const image of images) {
-	// get column with lowest total height
-	const targetColumn = columns.sort((a, b) => a.height - b.height)[0] ?? throwError("Error getting target column")
+  // get column with lowest total height
+  const targetColumn =
+    columns.sort((a, b) => a.height - b.height)[0] ??
+    throwError("Error getting target column");
 
-	targetColumn.images.push(image)
-	targetColumn.height += image.height
+  targetColumn.images.push(image);
+  targetColumn.height += image.height;
 }
 
-const imageArrays = columns.map((column) => column.images).sort((a, b) => b.length - a.length)
+const imageArrays = columns
+  .map((column) => column.images)
+  .sort((a, b) => b.length - a.length);
 
-const svgSize = 30
+const svgSize = 30;
 
 /** Helper function for returning default Tailwind transition classes */
-function transition<T extends string>(prop: T): `transition-${T} ease-in-out duration-200` {
-	return `transition-${prop} ease-in-out duration-200`
+function transition<T extends string>(
+  prop: T,
+): `transition-${T} ease-in-out duration-200` {
+  return `transition-${prop} ease-in-out duration-200`;
 }
 
-const svgClassList = "fill-white z-10"
+const svgClassList = "fill-white z-10";
 ---
 
 <style>
-	/* can't add multiple custom transitions with tailwind */
-	#overlay-container {
-		transition:
+  /* can't add multiple custom transitions with tailwind */
+  #overlay-container {
+    transition:
 			/* delay visibility so opacity can transition */
-			visibility 0.3s,
-			opacity 0.3s,
-			blur 0.3s;
-	}
-	
-	/* Lightbox content animation */
-	#overlay-image-container {
-		transition:
-			transform 0.3s ease-out,
-			opacity 0.3s ease-out;
-		transform: scale(0.95);
-		opacity: 0;
-	}
-	
-	#overlay-container.open #overlay-image-container {
-		transform: scale(1);
-		opacity: 1;
-	}
-	
-	/* Fix gallery layout - add margin to push content right of sidebar */
-	@media (min-width: 640px) {
-		#container,
-		.gallery-header {
-			margin-left: 16rem; /* 256px = sidebar width */
-		}
-	}
+      visibility 0.3s,
+      opacity 0.3s,
+      blur 0.3s;
+  }
+
+  /* Lightbox content animation */
+  #overlay-image-container {
+    transition:
+      transform 0.3s ease-out,
+      opacity 0.3s ease-out;
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  #overlay-container.open #overlay-image-container {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  /* Fix gallery layout - add margin to push content right of sidebar */
+  @media (min-width: 640px) {
+    #container,
+    .gallery-header {
+      margin-left: 16rem; /* 256px = sidebar width */
+    }
+  }
 </style>
 
 <script>
-	;(() => {
-		const overlayContainer = document.getElementById("overlay-container")
+  (() => {
+    const overlayContainer = document.getElementById("overlay-container");
 
-		if (!overlayContainer) {
-			console.error("Error finding overlay container")
-			return
-		}
+    if (!overlayContainer) {
+      console.error("Error finding overlay container");
+      return;
+    }
 
-		// Store validated container reference
-		const container = overlayContainer
+    // Store validated container reference
+    const container = overlayContainer;
 
-		// Lightbox elements - use non-null assertion after validation
-		const overlayImage = overlayContainer.querySelector<HTMLImageElement>("#overlay-image")!
-		const overlayTitle = overlayContainer.querySelector<HTMLElement>("#overlay-title")!
-		const overlayCategory = overlayContainer.querySelector<HTMLElement>("#overlay-category")!
-		const overlayMedium = overlayContainer.querySelector<HTMLElement>("#overlay-medium")!
-		const overlayDimensions = overlayContainer.querySelector<HTMLElement>("#overlay-dimensions")!
-		const overlayYear = overlayContainer.querySelector<HTMLElement>("#overlay-year")!
-		const metaMedium = overlayContainer.querySelector<HTMLElement>("#meta-medium")!
-		const metaDimensions = overlayContainer.querySelector<HTMLElement>("#meta-dimensions")!
-		const metaYear = overlayContainer.querySelector<HTMLElement>("#meta-year")!
-		const overlayEtsy = overlayContainer.querySelector<HTMLAnchorElement>("#overlay-etsy")!
-		const overlayInsta = overlayContainer.querySelector<HTMLAnchorElement>("#overlay-insta")!
-		const closeBtn = overlayContainer.querySelector<HTMLButtonElement>("#lightbox-close")!
-		const prevBtn = overlayContainer.querySelector<HTMLButtonElement>("#lightbox-prev")!
-		const nextBtn = overlayContainer.querySelector<HTMLButtonElement>("#lightbox-next")!
-		const counterCurrent = overlayContainer.querySelector<HTMLElement>("#counter-current")!
-		const counterTotal = overlayContainer.querySelector<HTMLElement>("#counter-total")!
+    // Lightbox elements - use non-null assertion after validation
+    const overlayImage =
+      overlayContainer.querySelector<HTMLImageElement>("#overlay-image")!;
+    const overlayTitle =
+      overlayContainer.querySelector<HTMLElement>("#overlay-title")!;
+    const overlayCategory =
+      overlayContainer.querySelector<HTMLElement>("#overlay-category")!;
+    const overlayMedium =
+      overlayContainer.querySelector<HTMLElement>("#overlay-medium")!;
+    const overlayDimensions = overlayContainer.querySelector<HTMLElement>(
+      "#overlay-dimensions",
+    )!;
+    const overlayYear =
+      overlayContainer.querySelector<HTMLElement>("#overlay-year")!;
+    const metaMedium =
+      overlayContainer.querySelector<HTMLElement>("#meta-medium")!;
+    const metaDimensions =
+      overlayContainer.querySelector<HTMLElement>("#meta-dimensions")!;
+    const metaYear = overlayContainer.querySelector<HTMLElement>("#meta-year")!;
+    const overlayEtsy =
+      overlayContainer.querySelector<HTMLAnchorElement>("#overlay-etsy")!;
+    const overlayInsta =
+      overlayContainer.querySelector<HTMLAnchorElement>("#overlay-insta")!;
+    const closeBtn =
+      overlayContainer.querySelector<HTMLButtonElement>("#lightbox-close")!;
+    const prevBtn =
+      overlayContainer.querySelector<HTMLButtonElement>("#lightbox-prev")!;
+    const nextBtn =
+      overlayContainer.querySelector<HTMLButtonElement>("#lightbox-next")!;
+    const counterCurrent =
+      overlayContainer.querySelector<HTMLElement>("#counter-current")!;
+    const counterTotal =
+      overlayContainer.querySelector<HTMLElement>("#counter-total")!;
 
-		// Validate all elements exist
-		if (
-			!overlayImage ||
-			!overlayTitle ||
-			!overlayCategory ||
-			!overlayMedium ||
-			!overlayDimensions ||
-			!overlayYear ||
-			!metaMedium ||
-			!metaDimensions ||
-			!metaYear ||
-			!overlayEtsy ||
-			!overlayInsta ||
-			!closeBtn ||
-			!prevBtn ||
-			!nextBtn ||
-			!counterCurrent ||
-			!counterTotal
-		) {
-			console.error("Error finding lightbox elements")
-			return
-		}
+    // Validate all elements exist
+    if (
+      !overlayImage ||
+      !overlayTitle ||
+      !overlayCategory ||
+      !overlayMedium ||
+      !overlayDimensions ||
+      !overlayYear ||
+      !metaMedium ||
+      !metaDimensions ||
+      !metaYear ||
+      !overlayEtsy ||
+      !overlayInsta ||
+      !closeBtn ||
+      !prevBtn ||
+      !nextBtn ||
+      !counterCurrent ||
+      !counterTotal
+    ) {
+      console.error("Error finding lightbox elements");
+      return;
+    }
 
-		// Collect all gallery images with their data
-		interface ImageData {
-			src: string
-			title: string
-			medium: string
-			dimensions: string
-			year: string
-			category: string
-			etsyUrl: string
-			instaUrl: string
-		}
+    // Collect all gallery images with their data
+    interface ImageData {
+      src: string;
+      title: string;
+      medium: string;
+      dimensions: string;
+      year: string;
+      category: string;
+      etsyUrl: string;
+      instaUrl: string;
+    }
 
-		const galleryImages: ImageData[] = []
-		let currentIndex = 0
+    const galleryImages: ImageData[] = [];
+    let currentIndex = 0;
 
-		document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl) => {
-			const hasEtsy = imageEl.parentElement?.querySelector<HTMLAnchorElement>("#etsy-url")
-			const hasInsta = imageEl.parentElement?.querySelector<HTMLAnchorElement>("#insta-url")
+    document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl) => {
+      const hasEtsy =
+        imageEl.parentElement?.querySelector<HTMLAnchorElement>("#etsy-url");
+      const hasInsta =
+        imageEl.parentElement?.querySelector<HTMLAnchorElement>("#insta-url");
 
-			galleryImages.push({
-				src: imageEl.src,
-				title: imageEl.dataset.title || "",
-				medium: imageEl.dataset.medium || "",
-				dimensions: imageEl.dataset.dimensions || "",
-				year: imageEl.dataset.year || "",
-				category: imageEl.dataset.category || "",
-				etsyUrl: hasEtsy?.href || "",
-				instaUrl: hasInsta?.href || "",
-			})
-		})
+      galleryImages.push({
+        src: imageEl.src,
+        title: imageEl.dataset.title || "",
+        medium: imageEl.dataset.medium || "",
+        dimensions: imageEl.dataset.dimensions || "",
+        year: imageEl.dataset.year || "",
+        category: imageEl.dataset.category || "",
+        etsyUrl: hasEtsy?.href || "",
+        instaUrl: hasInsta?.href || "",
+      });
+    });
 
-		function showImage(index: number) {
-			if (index < 0 || index >= galleryImages.length) return
+    function showImage(index: number) {
+      if (index < 0 || index >= galleryImages.length) return;
 
-			currentIndex = index
-			const image = galleryImages[index]!
+      currentIndex = index;
+      const image = galleryImages[index]!;
 
-			// Update image
-			overlayImage.src = image.src
+      // Update image
+      overlayImage.src = image.src;
 
-			// Update title and category
-			overlayTitle.textContent = image.title || "Untitled"
-			overlayCategory.textContent = image.category || ""
+      // Update title and category
+      overlayTitle.textContent = image.title || "Untitled";
+      overlayCategory.textContent = image.category || "";
 
-			// Update metadata (hide if empty)
-			if (image.medium) {
-				overlayMedium.textContent = image.medium
-				metaMedium.style.display = "flex"
-			} else {
-				metaMedium.style.display = "none"
-			}
+      // Update metadata (hide if empty)
+      if (image.medium) {
+        overlayMedium.textContent = image.medium;
+        metaMedium.style.display = "flex";
+      } else {
+        metaMedium.style.display = "none";
+      }
 
-			if (image.dimensions) {
-				overlayDimensions.textContent = image.dimensions
-				metaDimensions.style.display = "flex"
-			} else {
-				metaDimensions.style.display = "none"
-			}
+      if (image.dimensions) {
+        overlayDimensions.textContent = image.dimensions;
+        metaDimensions.style.display = "flex";
+      } else {
+        metaDimensions.style.display = "none";
+      }
 
-			if (image.year) {
-				overlayYear.textContent = image.year
-				metaYear.style.display = "flex"
-			} else {
-				metaYear.style.display = "none"
-			}
+      if (image.year) {
+        overlayYear.textContent = image.year;
+        metaYear.style.display = "flex";
+      } else {
+        metaYear.style.display = "none";
+      }
 
-			// Update social links
-			if (image.etsyUrl) {
-				overlayEtsy.href = image.etsyUrl
-				overlayEtsy.style.display = "block"
-			} else {
-				overlayEtsy.style.display = "none"
-			}
+      // Update social links
+      if (image.etsyUrl) {
+        overlayEtsy.href = image.etsyUrl;
+        overlayEtsy.style.display = "block";
+      } else {
+        overlayEtsy.style.display = "none";
+      }
 
-			if (image.instaUrl) {
-				overlayInsta.href = image.instaUrl
-				overlayInsta.style.display = "block"
-			} else {
-				overlayInsta.style.display = "none"
-			}
+      if (image.instaUrl) {
+        overlayInsta.href = image.instaUrl;
+        overlayInsta.style.display = "block";
+      } else {
+        overlayInsta.style.display = "none";
+      }
 
-			// Update counter
-			counterCurrent.textContent = (index + 1).toString()
-			counterTotal.textContent = galleryImages.length.toString()
-		}
+      // Update counter
+      counterCurrent.textContent = (index + 1).toString();
+      counterTotal.textContent = galleryImages.length.toString();
+    }
 
-		function openLightbox(index: number) {
-			showImage(index)
-			container.style.visibility = "visible"
-			container.style.opacity = "1"
-			container.classList.add("open")
-			document.body.style.overflow = "hidden"
-			closeBtn.focus()
-		}
+    function openLightbox(index: number) {
+      showImage(index);
+      container.style.visibility = "visible";
+      container.style.opacity = "1";
+      container.classList.add("open");
+      document.body.style.overflow = "hidden";
+      closeBtn.focus();
+    }
 
-		function closeLightbox() {
-			container.style.visibility = "hidden"
-			container.style.opacity = "0"
-			container.classList.remove("open")
-			document.body.style.overflow = ""
-		}
+    function closeLightbox() {
+      container.style.visibility = "hidden";
+      container.style.opacity = "0";
+      container.classList.remove("open");
+      document.body.style.overflow = "";
+    }
 
-		function showPrev() {
-			const newIndex = currentIndex > 0 ? currentIndex - 1 : galleryImages.length - 1
-			showImage(newIndex)
-		}
+    function showPrev() {
+      const newIndex =
+        currentIndex > 0 ? currentIndex - 1 : galleryImages.length - 1;
+      showImage(newIndex);
+    }
 
-		function showNext() {
-			const newIndex = currentIndex < galleryImages.length - 1 ? currentIndex + 1 : 0
-			showImage(newIndex)
-		}
+    function showNext() {
+      const newIndex =
+        currentIndex < galleryImages.length - 1 ? currentIndex + 1 : 0;
+      showImage(newIndex);
+    }
 
-		// Click handlers for gallery images
-		document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl, index) => {
-			imageEl.addEventListener("click", () => openLightbox(index))
-		})
+    // Click handlers for gallery images
+    document
+      .querySelectorAll<HTMLImageElement>("#image")
+      .forEach((imageEl, index) => {
+        imageEl.addEventListener("click", () => openLightbox(index));
+      });
 
-		// Close button
-		closeBtn.addEventListener("click", closeLightbox)
+    // Close button
+    closeBtn.addEventListener("click", closeLightbox);
 
-		// Navigation buttons
-		prevBtn.addEventListener("click", (e) => {
-			e.stopPropagation()
-			showPrev()
-		})
+    // Navigation buttons
+    prevBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showPrev();
+    });
 
-		nextBtn.addEventListener("click", (e) => {
-			e.stopPropagation()
-			showNext()
-		})
+    nextBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showNext();
+    });
 
-		// Click outside to close
-		container.addEventListener("click", (event) => {
-			const imageContainer = document.getElementById("overlay-image-container")
-			const isNavButton = (event.target as Element).closest("#lightbox-prev, #lightbox-next, #lightbox-close")
+    // Click outside to close
+    container.addEventListener("click", (event) => {
+      const imageContainer = document.getElementById("overlay-image-container");
+      const isNavButton = (event.target as Element).closest(
+        "#lightbox-prev, #lightbox-next, #lightbox-close",
+      );
 
-			if (!imageContainer?.contains(event.target as Node) && !isNavButton) {
-				closeLightbox()
-			}
-		})
+      if (!imageContainer?.contains(event.target as Node) && !isNavButton) {
+        closeLightbox();
+      }
+    });
 
-		// Keyboard navigation
-		document.addEventListener("keydown", (event) => {
-			if (container.style.visibility !== "visible") return
+    // Keyboard navigation
+    document.addEventListener("keydown", (event) => {
+      if (container.style.visibility !== "visible") return;
 
-			switch (event.key) {
-				case "Escape":
-					closeLightbox()
-					break
-				case "ArrowLeft":
-					showPrev()
-					break
-				case "ArrowRight":
-					showNext()
-					break
-			}
-		})
+      switch (event.key) {
+        case "Escape":
+          closeLightbox();
+          break;
+        case "ArrowLeft":
+          showPrev();
+          break;
+        case "ArrowRight":
+          showNext();
+          break;
+      }
+    });
 
-		// Make gallery images focusable and keyboard accessible
-		document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl, index) => {
-			imageEl.setAttribute("tabindex", "0")
-			imageEl.setAttribute("role", "button")
-			imageEl.addEventListener("keydown", (e) => {
-				if (e.key === "Enter" || e.key === " ") {
-					e.preventDefault()
-					openLightbox(index)
-				}
-			})
-		})
-	})()
+    // Make gallery images focusable and keyboard accessible
+    document
+      .querySelectorAll<HTMLImageElement>("#image")
+      .forEach((imageEl, index) => {
+        imageEl.setAttribute("tabindex", "0");
+        imageEl.setAttribute("role", "button");
+        imageEl.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openLightbox(index);
+          }
+        });
+      });
+  })();
 </script>
 
 <!-- Gallery header -->
-{collectionName && (
-	<div class="px-5 sm:px-12 pt-5 sm:pt-8 gallery-header">
-		<h1 class="font-serif text-3xl sm:text-4xl text-gray-800">
-			{collectionName}
-		</h1>
-		<p class="text-gray-500 mt-1">
-			{images.length} {images.length === 1 ? 'piece' : 'pieces'}
-		</p>
-	</div>
-)}
+{
+  collectionName && (
+    <div class="px-5 sm:px-12 pt-5 sm:pt-8 gallery-header">
+      <h1 class="text-xl sm:text-4xl text-secondary">
+        {/* convert to first letter uppercase */}
+        {collectionName.charAt(0).toUpperCase() + collectionName.slice(1)}
+      </h1>
+      <p class="text-gray-500 mt-1">
+        {`${images.length} ${images.length === 1 ? "piece" : "pieces"}`}
+      </p>
+    </div>
+  )
+}
 
 <!-- main gallery -->
-<div id="container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-5 sm:p-12 gap-4">
-	{
-		imageArrays.map((images) => (
-			<div>
-				{images.map((image) => (
-					// relative block to display svg links on top of image
-					<div class="block relative group hover:cursor-pointer mb-4 overflow-hidden rounded-lg">
-						<Image
-							id="image"
-							src={image.src}
-							alt={image.alt}
-							width={image.width}
-							height={image.height}
-							class={`w-full h-auto rounded-lg shadow-card hover:shadow-card-hover transition-transform duration-300 group-hover:scale-105 ${transition("shadow")} ${image.etsyUrl ? "etsy" : ""} ${image.instagramUrl ? "instagram" : ""}`}
-							loading="lazy"
-							about={`Uploaded on the ${image.friendlyDate}`}
-							data-title={image.title || ""}
-							data-medium={image.medium || ""}
-							data-dimensions={image.dimensions || ""}
-							data-year={image.year?.toString() || ""}
-							data-category={collectionName || ""}
-						/>
-						{/* Hover overlay with gradient, title, and medium */}
-					<div
-						class={`absolute inset-0 rounded-lg bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 ${transition("opacity")} flex flex-col justify-end pointer-events-none`}
-					>
-						<div class="p-4 text-white">
-							{image.title && (
-								<h3 class="font-serif text-lg font-semibold leading-tight mb-1 drop-shadow-md">
-									{image.title}
-								</h3>
-							)}
-							{image.medium && (
-								<p class="text-sm text-white/80 drop-shadow-md">
-									{image.medium}
-								</p>
-							)}
-						</div>
-					</div>
-					{/* Social links overlay */}
-					<div
-						class={`flex absolute bottom-0 w-full p-1 opacity-0 group-hover:opacity-100 ${transition("opacity")} pointer-events-auto`}
-					>
-						{image.etsyUrl && (
-							<a href={image.etsyUrl} id="etsy-url" target="_blank" class="z-10">
-								<Etsy classList={svgClassList} width={svgSize} height={svgSize} />
-							</a>
-						)}
-						{image.instagramUrl && (
-							<a href={image.instagramUrl} id="insta-url" target="_blank" class="z-10">
-								<Instagram classList={svgClassList} width={svgSize} height={svgSize} />
-							</a>
-						)}
-					</div>
-					</div>
-				))}
-			</div>
-		))
-	}
+<div
+  id="container"
+  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-5 sm:px-12 sm:pt-5 gap-4"
+>
+  {
+    imageArrays.map((images) => (
+      <div>
+        {images.map((image) => (
+          // relative block to display svg links on top of image
+          <div class="block relative group hover:cursor-pointer mb-4 overflow-hidden rounded-lg">
+            <Image
+              id="image"
+              src={image.src}
+              alt={image.alt}
+              width={image.width}
+              height={image.height}
+              class={`w-full h-auto rounded-lg shadow-card hover:shadow-card-hover transition-transform duration-300 group-hover:scale-105 ${transition("shadow")} ${image.etsyUrl ? "etsy" : ""} ${image.instagramUrl ? "instagram" : ""}`}
+              loading="lazy"
+              about={`Uploaded on the ${image.friendlyDate}`}
+              data-title={image.title || ""}
+              data-medium={image.medium || ""}
+              data-dimensions={image.dimensions || ""}
+              data-year={image.year?.toString() || ""}
+              data-category={collectionName || ""}
+            />
+            {/* Hover overlay with gradient, title, and medium */}
+            <div
+              class={`absolute inset-0 rounded-lg bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 ${transition("opacity")} flex flex-col justify-end pointer-events-none`}
+            >
+              <div class="p-4 text-white">
+                {image.title && (
+                  <h3 class="font-serif text-lg font-semibold leading-tight mb-1 drop-shadow-md">
+                    {image.title}
+                  </h3>
+                )}
+                {image.medium && (
+                  <p class="text-sm text-white/80 drop-shadow-md">
+                    {image.medium}
+                  </p>
+                )}
+              </div>
+            </div>
+            {/* Social links overlay */}
+            <div
+              class={`flex absolute bottom-0 w-full p-1 opacity-0 group-hover:opacity-100 ${transition("opacity")} pointer-events-auto`}
+            >
+              {image.etsyUrl && (
+                <a
+                  href={image.etsyUrl}
+                  id="etsy-url"
+                  target="_blank"
+                  class="z-10"
+                >
+                  <Etsy
+                    classList={svgClassList}
+                    width={svgSize}
+                    height={svgSize}
+                  />
+                </a>
+              )}
+              {image.instagramUrl && (
+                <a
+                  href={image.instagramUrl}
+                  id="insta-url"
+                  target="_blank"
+                  class="z-10"
+                >
+                  <Instagram
+                    classList={svgClassList}
+                    width={svgSize}
+                    height={svgSize}
+                  />
+                </a>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    ))
+  }
 </div>
 
 <!-- image overlay / lightbox -->
 <!-- need z index 50 to be above mobile and desktop sidebars -->
 <div
-	id="overlay-container"
-	class="fixed inset-0 flex justify-center items-center bg-gray-900/70 z-50 invisible opacity-0 backdrop-blur-lg"
+  id="overlay-container"
+  class="fixed inset-0 flex justify-center items-center bg-gray-900/70 z-50 invisible opacity-0 backdrop-blur-lg"
 >
-	<!-- Close button -->
-	<button
-		id="lightbox-close"
-		class="absolute top-4 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
-		aria-label="Close lightbox"
-	>
-		<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-			<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-		</svg>
-	</button>
+  <!-- Close button -->
+  <button
+    id="lightbox-close"
+    class="absolute top-4 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
+    aria-label="Close lightbox"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-6 h-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
 
-	<!-- Previous arrow -->
-	<button
-		id="lightbox-prev"
-		class="absolute left-4 top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
-		aria-label="Previous image"
-	>
-		<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-			<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-		</svg>
-	</button>
+  <!-- Previous arrow -->
+  <button
+    id="lightbox-prev"
+    class="absolute left-4 top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
+    aria-label="Previous image"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-6 h-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"
+      ></path>
+    </svg>
+  </button>
 
-	<!-- Next arrow -->
-	<button
-		id="lightbox-next"
-		class="absolute right-4 top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
-		aria-label="Next image"
-	>
-		<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-			<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-		</svg>
-	</button>
+  <!-- Next arrow -->
+  <button
+    id="lightbox-next"
+    class="absolute right-4 top-1/2 -translate-y-1/2 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
+    aria-label="Next image"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-6 h-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"
+      ></path>
+    </svg>
+  </button>
 
-	<!-- Image counter -->
-	<div id="lightbox-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-sm z-50">
-		<span id="counter-current">1</span> / <span id="counter-total">1</span>
-	</div>
+  <!-- Image counter -->
+  <div
+    id="lightbox-counter"
+    class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-sm z-50"
+  >
+    <span id="counter-current">1</span> / <span id="counter-total">1</span>
+  </div>
 
-	<!-- Main lightbox content: image left, details right -->
-	<div id="overlay-image-container" class="flex flex-col lg:flex-row max-w-[90%] lg:max-w-[85%] max-h-[85%] mx-16">
-		<!-- Image section -->
-		<div class="flex-shrink-0 flex items-center justify-center lg:max-w-[65%]">
-			<img id="overlay-image" class="max-h-[70vh] lg:max-h-[80vh] w-auto object-contain rounded-lg shadow-2xl" />
-		</div>
+  <!-- Main lightbox content: image left, details right -->
+  <div
+    id="overlay-image-container"
+    class="flex flex-col lg:flex-row max-w-[90%] lg:max-w-[85%] max-h-[85%] mx-16"
+  >
+    <!-- Image section -->
+    <div class="flex-shrink-0 flex items-center justify-center lg:max-w-[65%]">
+      <img
+        id="overlay-image"
+        class="max-h-[70vh] lg:max-h-[80vh] w-auto object-contain rounded-lg shadow-2xl"
+      />
+    </div>
 
-		<!-- Details panel -->
-		<div id="details-panel" class="bg-white rounded-lg p-6 lg:ml-6 mt-4 lg:mt-0 lg:min-w-[280px] lg:max-w-[320px] flex flex-col overflow-y-auto max-h-[30vh] lg:max-h-[80vh]">
-			<!-- Title -->
-			<h2 id="overlay-title" class="font-serif text-2xl text-gray-800 mb-1"></h2>
-			
-			<!-- Category/Collection -->
-			<p id="overlay-category" class="text-gray-500 text-sm mb-4"></p>
+    <!-- Details panel -->
+    <div
+      id="details-panel"
+      class="bg-white rounded-lg p-6 lg:ml-6 mt-4 lg:mt-0 lg:min-w-[280px] lg:max-w-[320px] flex flex-col overflow-y-auto max-h-[30vh] lg:max-h-[80vh]"
+    >
+      <!-- Title -->
+      <h2 id="overlay-title" class="font-serif text-2xl text-gray-800 mb-1">
+      </h2>
 
-			<!-- Metadata section -->
-			<div class="border-t border-gray-200 pt-4 mt-auto space-y-3">
-				<div id="meta-medium" class="flex justify-between">
-					<span class="text-gray-500 text-sm">Medium</span>
-					<span id="overlay-medium" class="text-gray-800 text-sm font-medium"></span>
-				</div>
-				<div id="meta-dimensions" class="flex justify-between">
-					<span class="text-gray-500 text-sm">Dimensions</span>
-					<span id="overlay-dimensions" class="text-gray-800 text-sm font-medium"></span>
-				</div>
-				<div id="meta-year" class="flex justify-between">
-					<span class="text-gray-500 text-sm">Year</span>
-					<span id="overlay-year" class="text-gray-800 text-sm font-medium"></span>
-				</div>
-			</div>
+      <!-- Category/Collection -->
+      <p id="overlay-category" class="text-gray-500 text-sm mb-4"></p>
 
-			<!-- Social links -->
-			<div class="flex gap-3 mt-4 pt-4 border-t border-gray-200">
-				<a id="overlay-etsy" class="hidden" target="_blank">
-					<Etsy classList="fill-gray-600 hover:fill-main transition-colors" width={svgSize} height={svgSize} />
-				</a>
-				<a id="overlay-insta" class="hidden" target="_blank">
-					<Instagram classList="fill-gray-600 hover:fill-main transition-colors" width={svgSize} height={svgSize} />
-				</a>
-			</div>
-		</div>
-	</div>
+      <!-- Metadata section -->
+      <div class="border-t border-gray-200 pt-4 mt-auto space-y-3">
+        <div id="meta-medium" class="flex justify-between">
+          <span class="text-gray-500 text-sm">Medium</span>
+          <span id="overlay-medium" class="text-gray-800 text-sm font-medium"
+          ></span>
+        </div>
+        <div id="meta-dimensions" class="flex justify-between">
+          <span class="text-gray-500 text-sm">Dimensions</span>
+          <span
+            id="overlay-dimensions"
+            class="text-gray-800 text-sm font-medium"></span>
+        </div>
+        <div id="meta-year" class="flex justify-between">
+          <span class="text-gray-500 text-sm">Year</span>
+          <span id="overlay-year" class="text-gray-800 text-sm font-medium"
+          ></span>
+        </div>
+      </div>
+
+      <!-- Social links -->
+      <div class="flex gap-3 mt-4 pt-4 border-t border-gray-200">
+        <a id="overlay-etsy" class="hidden" target="_blank">
+          <Etsy
+            classList="fill-gray-600 hover:fill-main transition-colors"
+            width={svgSize}
+            height={svgSize}
+          />
+        </a>
+        <a id="overlay-insta" class="hidden" target="_blank">
+          <Instagram
+            classList="fill-gray-600 hover:fill-main transition-colors"
+            width={svgSize}
+            height={svgSize}
+          />
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
