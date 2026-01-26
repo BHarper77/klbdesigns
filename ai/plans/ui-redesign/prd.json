@@ -375,5 +375,50 @@
     ],
     "passes": true,
     "notes": "Generated titles for all 74 entries (35 previous + 39 new) using alt text as source. Titles are clean, properly capitalized, and meaningful. All entries updated and published successfully."
+  },
+  {
+    "category": "Mobile",
+    "description": "Add a scroll bar to the collections dropdown in the sidebar when viewed on mobile devices to improve usability when there are many collections.",
+    "steps_to_verify": [
+      "Open the website on a mobile device or use a mobile viewport in the browser",
+      "Open the sidebar and click on the Collections dropdown",
+      "Verify that if there are many collections, a scroll bar appears allowing users to scroll through the list",
+      "Ensure that the scroll bar is functional and provides a smooth scrolling experience"
+    ],
+    "passes": false
+  },
+  {
+    "category": "Mobile",
+    "description": "Improve the responsiveness of the details panel in the lightbox on mobile devices by adding a collapsible section for artwork metadata.",
+    "steps_to_verify": [
+      "Open the website on a mobile device or use a mobile viewport in the browser",
+      "Click on any gallery image to open the lightbox",
+      "Verify that the details panel has a collapsible section for artwork metadata (Medium, Dimensions, Year)",
+      "Ensure that users can easily expand and collapse this section to view or hide metadata",
+      "Check that the overall layout remains user-friendly and visually appealing on mobile"
+    ],
+    "passes": false
+  },
+  {
+    "category": "Mobile",
+    "description": "Add swipe support for navigating between images in the lightbox on mobile devices",
+    "steps_to_verify": [
+      "Open the website on a mobile device or use a mobile viewport in the browser",
+      "Click on any gallery image to open the lightbox",
+      "Swipe left and right on the image to navigate between images",
+      "Verify that the swipe gestures work smoothly and transition to the next or previous image as expected"
+    ],
+    "passes": false
+  },
+  {
+    "category": "Mobile",
+    "description": "Ensure the lightbox controls are sized responsively when viewed on mobile",
+    "steps_to_verify": [
+      "Open the website on a mobile device or use a mobile viewport in the browser",
+      "Click on any gallery image to open the lightbox",
+      "Verify that the left/right navigation arrows and close button are appropriately sized for touch interaction",
+      "Ensure that buttons are easy to tap without accidentally hitting other controls"
+    ],
+    "passes": true
   }
 ]
