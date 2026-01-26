@@ -199,7 +199,7 @@ const svgClassList = "fill-white z-10";
     }
 
     // Collect all gallery images with their data
-    interface ImageData {
+    type ImageData = {
       src: string;
       title: string;
       medium: string;
@@ -208,7 +208,7 @@ const svgClassList = "fill-white z-10";
       category: string;
       etsyUrl: string;
       instaUrl: string;
-    }
+    };
 
     const galleryImages: ImageData[] = [];
     let currentIndex = 0;
