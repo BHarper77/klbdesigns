@@ -3,7 +3,7 @@ import type { TagsQueryResponse, TagsResponse } from "./types";
 
 export type CollectionWithCount = {
   name: string;
-  tag: string;
+  id: string;
   itemCount: number;
 };
 
@@ -23,14 +23,14 @@ export async function getTags(): Promise<CollectionWithCount[]> {
   // Fetch item counts for each tag in parallel
   const tagsWithCounts = await Promise.all(
     filteredTags.map(async (item) => {
-      const tagId = toCamelCase(item.name);
+      const tagId = item.sys.id;
       const count = await getTagItemCount(tagId);
       return {
         name: item.name,
-        tag: tagId,
+        id: tagId,
         itemCount: count,
       };
-    })
+    }),
   );
 
   return tagsWithCounts;
@@ -52,15 +52,6 @@ async function getTagItemCount(tagId: string): Promise<number> {
 
   const data = (await response.json()) as { total: number };
   return data.total;
-}
-
-/** Convert tags to `camelCase` for API request, and ensure first character is lower case */
-function toCamelCase(string: string) {
-  const camelCase = string
-    .toLowerCase()
-    .replace(/[^a-zA-Z0-9]+(.)/g, (_, chr) => chr.toUpperCase());
-
-  return camelCase.charAt(0).toLowerCase() + camelCase.slice(1);
 }
 
 export async function queryTags(query: string) {

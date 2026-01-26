@@ -6,13 +6,13 @@ import Etsy from "./svgs/Etsy.astro";
 import Instagram from "./svgs/Instagram.astro";
 
 type Props = {
-  tag: string;
-  collectionName?: string;
+  tagId: string;
+  tagName?: string;
 };
 
-const { tag, collectionName } = Astro.props;
+const { tagId, tagName } = Astro.props;
 
-const tags = await queryTags(`metadata.tags.sys.id[all]=${tag}`);
+const tags = await queryTags(`metadata.tags.sys.id[all]=${tagId}`);
 
 const images = tags.items.map((item) => {
   // response returns alt and media metadata in different arrays
@@ -382,11 +382,11 @@ const svgClassList = "fill-white z-10";
 
 <!-- Gallery header -->
 {
-  collectionName && (
+  tagName && (
     <div class="px-5 sm:px-12 pt-5 sm:pt-8 gallery-header">
       <h1 class="text-xl sm:text-4xl text-secondary">
         {/* convert to first letter uppercase */}
-        {collectionName.charAt(0).toUpperCase() + collectionName.slice(1)}
+        {tagName.charAt(0).toUpperCase() + tagName.slice(1)}
       </h1>
       <p class="text-gray-500 mt-1">
         {`${images.length} ${images.length === 1 ? "piece" : "pieces"}`}
@@ -419,7 +419,7 @@ const svgClassList = "fill-white z-10";
               data-medium={image.medium || ""}
               data-dimensions={image.dimensions || ""}
               data-year={image.year?.toString() || ""}
-              data-category={collectionName || ""}
+              data-category={tagName || ""}
             />
             {/* Hover overlay with gradient, title, and medium */}
             <div
