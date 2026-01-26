@@ -168,6 +168,12 @@ function transition<T extends string>(
       overlayContainer.querySelector<HTMLAnchorElement>("#overlay-etsy")!;
     const overlayInsta =
       overlayContainer.querySelector<HTMLAnchorElement>("#overlay-insta")!;
+    const metadataContainer = overlayContainer.querySelector<HTMLElement>(
+      "#metadata-container",
+    )!;
+    const socialLinksContainer = overlayContainer.querySelector<HTMLElement>(
+      "#social-links-container",
+    )!;
     const closeBtn =
       overlayContainer.querySelector<HTMLButtonElement>("#lightbox-close")!;
     const prevBtn =
@@ -191,6 +197,8 @@ function transition<T extends string>(
       !metaYear ||
       !overlayEtsy ||
       !overlayInsta ||
+      !metadataContainer ||
+      !socialLinksContainer ||
       !closeBtn ||
       !prevBtn ||
       !nextBtn ||
@@ -282,6 +290,13 @@ function transition<T extends string>(
         metaYear.style.display = "none";
       }
 
+      // Hide metadata container if no metadata
+      if (!image.dimensions && !image.year) {
+        metadataContainer.style.display = "none";
+      } else {
+        metadataContainer.style.display = "block";
+      }
+
       // Update social links
       if (image.etsyUrl) {
         overlayEtsy.href = image.etsyUrl;
@@ -295,6 +310,18 @@ function transition<T extends string>(
         overlayInsta.style.display = "block";
       } else {
         overlayInsta.style.display = "none";
+      }
+
+      // Hide social links container if no links
+      const socialLinksContainer = document.getElementById(
+        "social-links-container",
+      );
+      if (socialLinksContainer) {
+        if (!image.etsyUrl && !image.instaUrl) {
+          socialLinksContainer.style.display = "none";
+        } else {
+          socialLinksContainer.style.display = "flex";
+        }
       }
     }
 
@@ -539,7 +566,6 @@ function transition<T extends string>(
     </div>
 
     <!-- Details panel -->
-    <!-- only show details panel if there are details to show -->
     <div
       id="details-panel"
       class="bg-white rounded-lg p-6 lg:ml-6 mt-4 lg:mt-0 lg:min-w-[280px] lg:max-w-[320px] flex flex-col overflow-y-auto max-h-[30vh] lg:max-h-[80vh]"
@@ -551,7 +577,10 @@ function transition<T extends string>(
       <p id="overlay-category" class="text-gray-500 text-sm mb-4"></p>
 
       <!-- Metadata section -->
-      <div class="border-t border-gray-200 pt-4 mt-auto space-y-3">
+      <div
+        id="metadata-container"
+        class="border-t border-gray-200 pt-4 mt-auto space-y-3"
+      >
         <div id="meta-dimensions" class="flex justify-between">
           <span class="text-gray-500 text-sm">Dimensions</span>
           <span
@@ -566,7 +595,10 @@ function transition<T extends string>(
       </div>
 
       <!-- Social links -->
-      <div class="flex gap-3 mt-4 pt-4 border-t border-gray-200">
+      <div
+        id="social-links-container"
+        class="flex gap-3 mt-4 pt-4 border-t border-gray-200"
+      >
         <a id="overlay-etsy" class="hidden" target="_blank">
           <Etsy
             classList="fill-gray-600 hover:fill-main transition-colors"
