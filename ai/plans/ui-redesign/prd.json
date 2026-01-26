@@ -385,7 +385,7 @@
       "Verify that if there are many collections, a scroll bar appears allowing users to scroll through the list",
       "Ensure that the scroll bar is functional and provides a smooth scrolling experience"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "Mobile",

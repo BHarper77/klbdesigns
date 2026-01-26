@@ -326,3 +326,21 @@
   - pnpm build: Successful build with 10 pages
 - Files modified: src/components/Gallery.astro, ai/plans/ui-redesign/prd.json, ai/plans/ui-redesign/progress.txt
 - PRD status: Mobile responsive controls feature now marked as complete (passes: true)
+
+
+
+## 2026-01-26: Mobile - Collections Dropdown Scroll Bar
+- Added scrollable dropdown for collections on mobile to handle many collections gracefully
+- Implementation:
+  - Added max-h-60 (max-height: 15rem) on mobile viewports only
+  - Added overflow-y-auto for automatic vertical scrolling when content exceeds max height
+  - Removed max-height constraint on desktop (sm:max-h-none) to allow full dropdown
+  - Smooth scrolling enabled by default with overflow-y-auto
+- Collections dropdown now scrolls smoothly on mobile when there are many collections
+- Desktop experience unchanged - collections list expands freely without scrolling
+- Enhances mobile usability and prevents dropdown from extending beyond viewport
+- Verification:
+  - pnpm astro check: 0 errors, 0 warnings, 0 hints
+  - pnpm build: Successful build with 10 pages
+- Files modified: src/components/Sidebar.astro, ai/plans/ui-redesign/prd.json, ai/plans/ui-redesign/progress.txt
+- PRD status: Mobile collections scroll bar feature now marked as complete (passes: true)
