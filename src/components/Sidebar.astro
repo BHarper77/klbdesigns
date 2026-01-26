@@ -55,14 +55,23 @@ collections.forEach((collection) => {
       </li>
 
       <!-- Main navigation links -->
-      <li class="pt-6">
-        <a class="hover:text-secondary" href="/">Gallery</a>
+      <li class="pt-4">
+        <a
+          class="block py-2 px-3 rounded-lg hover:bg-white/10 hover:text-secondary transition-colors duration-200"
+          href="/">Gallery</a
+        >
       </li>
-      <li class="pt-2">
-        <a class="hover:text-secondary" href="/about">About</a>
+      <li class="pt-1">
+        <a
+          class="block py-2 px-3 rounded-lg hover:bg-white/10 hover:text-secondary transition-colors duration-200"
+          href="/about">About</a
+        >
       </li>
-      <li class="pt-2">
-        <a class="hover:text-secondary" href="/contact">Contact</a>
+      <li class="pt-1">
+        <a
+          class="block py-2 px-3 rounded-lg hover:bg-white/10 hover:text-secondary transition-colors duration-200"
+          href="/contact">Contact</a
+        >
       </li>
 
       <!-- Separator line -->
@@ -73,11 +82,24 @@ collections.forEach((collection) => {
       <script is:inline>
         function rotateSvg() {
           const svg = document.getElementById("collections-dropdown-svg");
+          const dropdown = document.getElementById("collections-dropdown");
 
           if (svg.classList.contains("rotate-svg")) {
+            console.log("closing");
             svg.classList.remove("rotate-svg");
+            dropdown.classList.remove("opacity-100");
+            dropdown.classList.add("opacity-0");
+            setTimeout(() => {
+              dropdown.classList.add("hidden");
+            }, 300);
           } else {
+            console.log("opening");
             svg.classList.add("rotate-svg");
+            dropdown.classList.remove("hidden");
+            setTimeout(() => {
+              dropdown.classList.remove("opacity-0");
+              dropdown.classList.add("opacity-100");
+            }, 10);
           }
         }
       </script>
@@ -92,11 +114,11 @@ collections.forEach((collection) => {
       </style>
 
       <!-- collections dropdown -->
-      <li class="pt-2">
+      <li class="pt-1">
         <div class="group">
           <button
             type="button"
-            class="flex items-center justify-between w-full group-hover:text-secondary"
+            class="flex items-center justify-between w-full py-2 px-3 rounded-lg hover:bg-white/10 group-hover:text-secondary transition-colors duration-200"
             aria-controls="collections-dropdown"
             data-collapse-toggle="collections-dropdown"
             onclick="rotateSvg()"
@@ -120,8 +142,11 @@ collections.forEach((collection) => {
             </svg>
           </button>
         </div>
-        <ul id="collections-dropdown" class="hidden pl-5">
-          <li class="pt-2">
+        <ul
+          id="collections-dropdown"
+          class="hidden pl-5 opacity-0 transition-opacity duration-300"
+        >
+          <li class="pt-1">
             <a
               href="/"
               class="flex justify-between items-center hover:text-secondary"
@@ -131,7 +156,7 @@ collections.forEach((collection) => {
           </li>
           {
             collections.map((collection) => (
-              <li class="pt-2">
+              <li class="pt-1">
                 <a
                   href={collection.id}
                   class="flex justify-between items-center hover:text-secondary"
