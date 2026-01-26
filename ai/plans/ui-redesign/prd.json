@@ -353,5 +353,26 @@
       "Check headings, body text, and navigation links for consistency"
     ],
     "passes": true
+  },
+  {
+    "category": "Content",
+    "description": "Update the `Website` content model to include a `title` field in code and in Contentful",
+    "steps_to_verify": [
+      "Check that the `Website` content model in Contentful includes a `title` field",
+      "Verify that the `title` field is correctly defined in the codebase",
+      "Ensure that the `title` field can be populated and retrieved as expected"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Content",
+    "description": "Generate titles for existing pieces of content in Contentful based on their metadata (fields, tags etc)",
+    "steps_to_verify": [
+      "Review existing pieces of content in Contentful",
+      "Verify that each piece has a generated title based on its metadata",
+      "Check that titles are meaningful and accurately reflect the content",
+      "Ensure that the titles are displayed correctly in the lightbox and gallery hover overlays"
+    ],
+    "passes": false
   }
 ]

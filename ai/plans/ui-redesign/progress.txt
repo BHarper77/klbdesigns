@@ -243,3 +243,20 @@
   - pnpm build: Successful build with 10 pages
 - Files modified: src/components/Gallery.astro, ai/plans/ui-redesign/prd.json
 
+
+## 2026-01-26: Content Model - Title Field Added to Contentful
+- Added 'title' field to Website content type in Contentful using Contentful MCP
+- Field configuration:
+  - Type: Symbol (short text)
+  - Required: false (optional field)
+  - Localized: false
+  - Position: Third field after 'media' and 'alt', before URLs
+- Published content type changes to make field available for content entry
+- TypeScript types already supported title field (from previous work)
+- Updated PRD JSON to mark 'Content - title field' feature as passes: true
+- Verification:
+  - pnpm astro check: 0 errors, 0 warnings, 0 hints
+  - pnpm build: Successful build with 10 pages
+- Files modified: ai/plans/ui-redesign/prd.json, ai/plans/ui-redesign/progress.txt
+- Contentful content type updated: Website (version 10, published)
+
