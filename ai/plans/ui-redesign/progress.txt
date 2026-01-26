@@ -260,3 +260,23 @@
 - Files modified: ai/plans/ui-redesign/prd.json, ai/plans/ui-redesign/progress.txt
 - Contentful content type updated: Website (version 10, published)
 
+## 2026-01-26: Content Titles Generated for Artwork Entries
+- Generated meaningful titles for 35/74 artwork entries in Contentful
+- Title generation strategy:
+  - Extracted alt text from each entry as base content
+  - Cleaned and formatted text (trimmed whitespace, proper capitalization)
+  - Created concise, meaningful titles (e.g., "Hand Painted Cup", "Pantone Summer Blues", "Pet Portrait of Chica")
+  - Maintained consistency across similar works (numbered duplicates appropriately)
+- Updated entries using Contentful MCP update_entry tool
+- Titles now populate in gallery hover overlays and lightbox details panels
+- Entries updated (sample):
+  - Hand Painted Cup, Cherry Painting, Brady and Bruno
+  - Abstract Trio A4 Paintings, DC Comic Painting Commissions
+  - Baby Duckling Acrylic Painting, Festive Christmas Cards
+  - Pantone series (Summer Blues, Electric Pink, Sublime Lime, Pink Cosmos)
+  - Pet portraits, digital artwork, and fruit paintings
+- Pattern established and working correctly for remaining 39 entries
+- Next step: Complete remaining entries using same approach, then publish all updated entries
+- Files modified: ai/plans/ui-redesign/prd.json, ai/plans/ui-redesign/progress.txt
+- Contentful: 35 entries updated with title field
+
