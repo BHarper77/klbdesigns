@@ -1,59 +1,92 @@
 ---
-import Layout from "../layouts/Layout.astro"
+import Layout from "../layouts/Layout.astro";
 ---
 
+<style>
+  /* Fix layout - add margin to push content right of sidebar */
+  @media (min-width: 640px) {
+    .content-wrapper {
+      margin-left: 16rem; /* 256px = sidebar width */
+    }
+  }
+</style>
+
 <Layout title="k.l.b designs - contact">
-	<div class="flex flex-col p-4 sm:pt-8 sm:pl-16">
-		<h3 class="text-xl font-bold py-4">Contact</h3>
-		<p class="pb-4">Commisions, general inquiries and orders - kirstybaird8@gmail.com</p>
-		<div>
-			<form id="contact-form" class="w-3/4 sm:h-full sm:w-full" action="mailto:kirstybaird8@gmail.com">
-				<div class="grid gap-6 mb-6">
-					<div>
-						<label for="name" class="block text-sm">Name</label>
-						<input
-							name="name"
-							type="text"
-							id="name"
-							class="my-2 w-full sm:w-1/2 text-sm block rounded"
-							required
-						/>
-					</div>
-					<div>
-						<label for="email" class="block text-sm">Email</label>
-						<input
-							name="email"
-							type="email"
-							id="email"
-							class="my-2 w-full sm:w-1/2 text-sm block rounded"
-							required
-						/>
-					</div>
-					<div>
-						<label for="subject" class="block text-sm">Subject</label>
-						<input
-							name="subject"
-							type="text"
-							id="subject"
-							class="my-2 w-full sm:w-1/2 text-sm block rounded"
-							required
-						/>
-					</div>
-					<div>
-						<label for="body" class="block text-sm">Message</label>
-						<input
-							name="body"
-							type="text"
-							id="body"
-							class="my-2 w-full sm:w-1/2 pb-32 text-sm block rounded"
-							required
-						/>
-					</div>
-				</div>
-				<button type="submit" class="text-center text-white bg-main text-sm px-5 py-2.5 rounded w-full sm:w-1/2"
-					>Send</button
-				>
-			</form>
-		</div>
-	</div>
+  <div class="content-wrapper p-5 sm:p-12">
+    <h1 class="text-xl sm:text-4xl text-secondary mb-6">Contact</h1>
+    <p class="pb-6 text-gray-700">
+      Commisions, general inquiries and orders - <a
+        href="mailto:kirstybaird8@gmail.com"
+        class="text-main hover:underline">kirstybaird8@gmail.com</a
+      >
+    </p>
+    <div class="max-w-2xl">
+      <form
+        id="contact-form"
+        class="w-full"
+        action="mailto:kirstybaird8@gmail.com"
+      >
+        <div class="space-y-6 mb-6">
+          <div>
+            <label
+              for="name"
+              class="block text-sm font-medium text-gray-700 mb-2">Name</label
+            >
+            <input
+              name="name"
+              type="text"
+              id="name"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-transparent"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="email"
+              class="block text-sm font-medium text-gray-700 mb-2">Email</label
+            >
+            <input
+              name="email"
+              type="email"
+              id="email"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-transparent"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="subject"
+              class="block text-sm font-medium text-gray-700 mb-2"
+              >Subject</label
+            >
+            <input
+              name="subject"
+              type="text"
+              id="subject"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-transparent"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="body"
+              class="block text-sm font-medium text-gray-700 mb-2"
+              >Message</label
+            >
+            <textarea
+              name="body"
+              id="body"
+              rows="6"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-main focus:border-transparent resize-vertical"
+              required></textarea>
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="w-full text-white bg-main hover:bg-main/90 transition-colors px-6 py-3 rounded-lg font-medium"
+          >Send Message</button
+        >
+      </form>
+    </div>
+  </div>
 </Layout>

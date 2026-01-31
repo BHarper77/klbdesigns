@@ -1,24 +1,45 @@
 ---
-import { Image } from "astro:assets"
-import AboutImage from "../assets/about.webp"
-import Layout from "../layouts/Layout.astro"
+import { Image } from "astro:assets";
+import AboutImage from "../assets/about.webp";
+import Layout from "../layouts/Layout.astro";
 ---
 
+<style>
+  /* Fix layout - add margin to push content right of sidebar */
+  @media (min-width: 640px) {
+    .content-wrapper {
+      margin-left: 16rem; /* 256px = sidebar width */
+    }
+  }
+</style>
+
 <Layout title="k.l.b designs - about">
-	<div class="sm:flex sm:flex-row sm:pr-56 sm:gap-x-12 p-4 sm:pt-8 sm:pl-16">
-		<div>
-			<h1 class="text-2xl font-bold sm:pb-4">Kirsty Baird</h1>
-			<h3 class="text-xl font-bold py-4">About</h3>
-			<p>
-				Recent graduate from <a href="https://www.dundee.ac.uk/djcad">Duncan of Jordanstone</a> (Dundee University)
-				in Textile design. I spent 4 years specialising in using domestic knitting machine and Dubied machines. I
-				was able to create many samples and finished garments during my time, experimenting with different yarns
-				such as lambswool, mohair, synthetic yarns. I spent alot of my last year at university using the linking
-				machine to put my garments together and creating channels for my garments to be able to be altered in size.
-			</p>
-		</div>
-		<div class="pt-4 sm:pt-0">
-			<Image src={AboutImage} height="2200" width="2200" alt="An image of the artist, Kirsty Baird" />
-		</div>
-	</div>
+  <div class="content-wrapper p-5 sm:p-12">
+    <h1 class="text-xl sm:text-4xl text-secondary mb-6">About</h1>
+    <div class="sm:flex sm:flex-row sm:gap-x-12">
+      <div class="flex-1">
+        <h2 class="text-2xl font-bold mb-4">Kirsty Baird</h2>
+        <p class="text-gray-700 leading-relaxed">
+          Recent graduate from <a
+            href="https://www.dundee.ac.uk/djcad"
+            class="text-main hover:underline">Duncan of Jordanstone</a
+          > (Dundee University) in Textile design. I spent 4 years specialising in
+          using domestic knitting machine and Dubied machines. I was able to create
+          many samples and finished garments during my time, experimenting with different
+          yarns such as lambswool, mohair, synthetic yarns. I spent a lot of my last
+          year at university using the linking machine to put my garments together
+          and creating channels for my garments to be able to be altered in size.
+        </p>
+      </div>
+      <div class="flex-shrink-0 mt-6 sm:mt-0 sm:max-w-md">
+        <Image
+          src={AboutImage}
+          height="2200"
+          width="2200"
+          alt="An image of the artist, Kirsty Baird"
+          class="rounded-lg shadow-card"
+        />
+      </div>
+    </div>
+  </div>
 </Layout>

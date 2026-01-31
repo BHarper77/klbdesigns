@@ -1,0 +1,424 @@
+[
+  {
+    "category": "Sidebar - Branding",
+    "description": "Add a palette logo icon to the left of the 'k.l.b designs' text in the sidebar header",
+    "steps_to_verify": [
+      "Navigate to any page on the site",
+      "Verify a palette SVG icon appears to the left of 'k.l.b designs' in the sidebar",
+      "Icon should be white and approximately 24-32px in size"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Sidebar - Branding",
+    "description": "Add 'FINE ART' tagline below the 'k.l.b designs' brand name in smaller, lighter text",
+    "steps_to_verify": [
+      "Navigate to any page on the site",
+      "Verify 'FINE ART' text appears below 'k.l.b designs'",
+      "Text should be smaller font size and lighter weight than the brand name",
+      "Text should be white/light colored"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Sidebar - Navigation",
+    "description": "Add 'Gallery' as the first navigation link in the sidebar, linking to the home/gallery page",
+    "steps_to_verify": [
+      "Navigate to any page on the site",
+      "Verify 'Gallery' link appears as first item below the brand section",
+      "Clicking 'Gallery' navigates to the home page (gallery view)",
+      "Link has hover state changing color"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Sidebar - Navigation",
+    "description": "Add horizontal separator line between main nav links (Gallery, About, Contact) and Collections dropdown",
+    "steps_to_verify": [
+      "Navigate to any page on the site",
+      "Verify a subtle horizontal line separates the main links from Collections",
+      "Line should be semi-transparent white or lighter teal color"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Sidebar - Collections",
+    "description": "Add 'All Works' as the first option in the Collections dropdown menu with highlighted/selected state",
+    "steps_to_verify": [
+      "Open the Collections dropdown in the sidebar",
+      "Verify 'All Works' appears as first option",
+      "When on the main gallery, 'All Works' should have a highlighted background (darker teal)",
+      "Clicking 'All Works' navigates to the main gallery page"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Sidebar - Collections",
+    "description": "Display piece count next to each collection name in the Collections dropdown",
+    "steps_to_verify": [
+      "Open the Collections dropdown in the sidebar",
+      "Each collection should show a number count on the right side (e.g., 'Abstract Series 5')",
+      "Count should be right-aligned and lighter/muted color",
+      "Counts should reflect actual number of items in each collection"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Sidebar - Footer",
+    "description": "Add copyright text '© 2024 k.l.b designs' at the bottom of the sidebar",
+    "steps_to_verify": [
+      "Navigate to any page on the site",
+      "Verify copyright text appears at very bottom of sidebar",
+      "Text should be small, muted/light colored",
+      "Year should be dynamic or use current year"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Gallery - Header",
+    "description": "Add page title section above gallery grid with collection name and piece count",
+    "steps_to_verify": [
+      "Navigate to the main gallery page",
+      "Verify 'All Works' title appears at top in large serif font",
+      "Verify piece count (e.g., '12 pieces') appears below title in smaller gray text",
+      "Title should change to collection name when viewing a specific collection"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Gallery - Layout",
+    "description": "Change gallery grid from 4 columns to 3 columns on desktop",
+    "steps_to_verify": [
+      "Navigate to the gallery page on desktop (>1024px width)",
+      "Verify images are displayed in a 3-column masonry grid",
+      "Images should maintain aspect ratio",
+      "Columns should have consistent gap spacing"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Gallery - Image Cards",
+    "description": "Add rounded corners to all gallery images",
+    "steps_to_verify": [
+      "Navigate to the gallery page",
+      "Verify all images have rounded corners (approximately 8-12px radius)",
+      "Corners should be consistent across all images"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Gallery - Image Cards",
+    "description": "Add subtle shadow/card effect to gallery images",
+    "steps_to_verify": [
+      "Navigate to the gallery page",
+      "Verify images have a subtle drop shadow creating a card-like appearance",
+      "Shadow should be light gray and not overly prominent"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Gallery - Hover State",
+    "description": "Add hover overlay to gallery images showing artwork title and medium",
+    "steps_to_verify": [
+      "Navigate to the gallery page",
+      "Hover over any image",
+      "Verify a gradient overlay appears at bottom of image",
+      "Verify artwork title appears in white text (larger)",
+      "Verify medium/category appears below title (smaller, lighter text)",
+      "Overlay should fade in smoothly on hover"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Lightbox - Layout",
+    "description": "Redesign lightbox to display image on left and details panel on right",
+    "steps_to_verify": [
+      "Click any gallery image to open lightbox",
+      "Verify image appears on the left side of the modal",
+      "Verify a white details panel appears on the right side",
+      "Background should be blurred and dimmed"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Lightbox - Details Panel",
+    "description": "Add artwork title and category to the lightbox details panel",
+    "steps_to_verify": [
+      "Click any gallery image to open lightbox",
+      "Verify artwork title appears at top of details panel in large serif font",
+      "Verify category/collection name appears below title in gray text"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Lightbox - Details Panel",
+    "description": "Add artwork metadata (Medium, Dimensions, Year) to lightbox details panel",
+    "steps_to_verify": [
+      "Click any gallery image to open lightbox",
+      "Verify 'Medium' label with value appears (e.g., 'Mixed Media')",
+      "Verify 'Dimensions' label with value appears (e.g., '30\" × 40\"')",
+      "Verify 'Year' label with value appears (e.g., '2024')",
+      "Labels should be left-aligned, values right-aligned"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Lightbox - Navigation",
+    "description": "Add left and right arrow buttons to navigate between images in lightbox",
+    "steps_to_verify": [
+      "Click any gallery image to open lightbox",
+      "Verify left arrow button appears on left side of lightbox",
+      "Verify right arrow button appears on right side of lightbox",
+      "Clicking arrows navigates to previous/next image",
+      "Arrows should have circular background and be positioned outside image area"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Lightbox - Navigation",
+    "description": "Add image counter showing current position (e.g., '3 / 12') to lightbox",
+    "steps_to_verify": [
+      "Click any gallery image to open lightbox",
+      "Verify image counter appears at bottom center (e.g., '3 / 12')",
+      "Counter should update when navigating between images",
+      "Text should be white and centered"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Lightbox - Close Button",
+    "description": "Add X close button to top-right corner of lightbox",
+    "steps_to_verify": [
+      "Click any gallery image to open lightbox",
+      "Verify X icon appears in top-right corner",
+      "Clicking X closes the lightbox",
+      "Icon should be white and clearly visible"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Data Model",
+    "description": "Extend Contentful data model to include artwork title field",
+    "steps_to_verify": [
+      "Check Contentful content type includes 'title' field",
+      "Verify title is fetched and available in Gallery component",
+      "Title displays correctly in hover overlay and lightbox"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Data Model",
+    "description": "Extend Contentful data model to include artwork medium field",
+    "steps_to_verify": [
+      "Check Contentful content type includes 'medium' field",
+      "Verify medium is fetched and available in Gallery component",
+      "Medium displays correctly in hover overlay and lightbox details"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Data Model",
+    "description": "Extend Contentful data model to include artwork dimensions field",
+    "steps_to_verify": [
+      "Check Contentful content type includes 'dimensions' field",
+      "Verify dimensions is fetched and available in Gallery component",
+      "Dimensions display correctly in lightbox details panel"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Data Model",
+    "description": "Extend Contentful data model to include artwork year field",
+    "steps_to_verify": [
+      "Check Contentful content type includes 'year' field",
+      "Verify year is fetched and available in Gallery component",
+      "Year displays correctly in lightbox details panel"
+    ],
+    "passes": true
+  },
+  {
+    "category": "API",
+    "description": "Update API to fetch and return collection item counts",
+    "steps_to_verify": [
+      "Call getTags() function",
+      "Verify each collection object includes an 'itemCount' or 'count' property",
+      "Count reflects actual number of items tagged with that collection"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Styling",
+    "description": "Update Tailwind config to add new colors for card shadows and overlays",
+    "steps_to_verify": [
+      "Check tailwind.config.mjs includes appropriate shadow utilities",
+      "Verify overlay gradient colors are defined",
+      "Colors are consistent with teal brand palette"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Typography",
+    "description": "Add serif font family for page titles and artwork titles (e.g., Playfair Display)",
+    "steps_to_verify": [
+      "Check Layout.astro includes Google Fonts link for serif font",
+      "Verify tailwind.config.mjs has serif font family defined",
+      "Page titles 'All Works' and artwork titles use serif font"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Accessibility",
+    "description": "Ensure lightbox navigation is keyboard accessible",
+    "steps_to_verify": [
+      "Open lightbox using Enter/Space key on gallery image",
+      "Use left/right arrow keys to navigate images",
+      "Use Escape key to close lightbox",
+      "Focus is trapped within lightbox when open"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Mobile",
+    "description": "Update mobile hamburger menu to match new sidebar design",
+    "steps_to_verify": [
+      "View site on mobile device or narrow viewport",
+      "Open hamburger menu",
+      "Verify menu includes logo icon, tagline, Gallery link, and copyright",
+      "Verify Collections dropdown shows counts"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Testing",
+    "description": "Use the Playwright MCP server to test that the re-design has been implemented correctly. Ensure that it meets all the specified requirements in the PRD and visually appears as intended.",
+    "steps_to_verify": [
+      "Set up the Playwright MCP server with the latest build of the redesigned UI",
+      "Run automated tests to verify each feature and design element specified in the PRD",
+      "Manually review key pages (sidebar, gallery, lightbox) to ensure visual fidelity",
+      "For any discrepancies or issues found, add a new item to the PRD to fix"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Bug Fix - Gallery",
+    "description": "Fix critical bug where gallery images are not rendering in the main grid. Images are present in the DOM but not visible. Only small thumbnails appear at bottom left of viewport.",
+    "steps_to_verify": [
+      "Navigate to the gallery page (localhost:4321/)",
+      "Verify all 42 images display in a 3-column masonry grid",
+      "Images should be visible, not just present in DOM",
+      "Check for CSS conflicts or z-index issues preventing image visibility",
+      "Test with different browsers if needed"
+    ],
+    "passes": true
+  },
+  {
+    "category": "UI",
+    "description": "Add a slight zoom when hovering over gallery images to enhance interactivity.",
+    "steps_to_verify": [
+      "Navigate to the gallery page",
+      "Hover over any gallery image",
+      "Verify the image slightly zooms in (scale up to 1.05)",
+      "Zoom effect should be smooth and revert when hover ends"
+    ],
+    "passes": true
+  },
+  {
+    "category": "UI",
+    "description": "Add a small animation to the Collections dropdown icon when clicked.",
+    "steps_to_verify": [
+      "Navigate to the sidebar",
+      "Click on the Collections dropdown icon",
+      "Verify the icon animates smoothly (e.g., rotates or changes color)",
+      "Animation should reset when dropdown is closed"
+    ],
+    "passes": true
+  },
+  {
+    "category": "UI",
+    "description": "Add a small animation when clicking on a gallery image to open the lightbox to improve the smoothness of the user experience.",
+    "steps_to_verify": [
+      "Navigate to the gallery page",
+      "Click on any gallery image",
+      "Verify a smooth animation occurs as the lightbox opens (e.g., fade-in or zoom effect)",
+      "Animation should enhance user experience without causing delays"
+    ],
+    "passes": true
+  },
+  {
+    "category": "UI",
+    "description": "Change all font on the site to Poppins by default",
+    "steps_to_verify": [
+      "Navigate to any page on the site",
+      "Verify all text uses Poppins font",
+      "Check headings, body text, and navigation links for consistency"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Content",
+    "description": "Update the `Website` content model to include a `title` field in code and in Contentful",
+    "steps_to_verify": [
+      "Check that the `Website` content model in Contentful includes a `title` field",
+      "Verify that the `title` field is correctly defined in the codebase",
+      "Ensure that the `title` field can be populated and retrieved as expected"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Content",
+    "description": "Generate titles for existing pieces of content in Contentful based on their metadata (fields, tags etc)",
+    "steps_to_verify": [
+      "Review existing pieces of content in Contentful",
+      "Verify that each piece has a generated title based on its metadata",
+      "Check that titles are meaningful and accurately reflect the content",
+      "Ensure that the titles are displayed correctly in the lightbox and gallery hover overlays"
+    ],
+    "passes": true,
+    "notes": "Generated titles for all 74 entries (35 previous + 39 new) using alt text as source. Titles are clean, properly capitalized, and meaningful. All entries updated and published successfully."
+  },
+  {
+    "category": "Mobile",
+    "description": "Add a scroll bar to the collections dropdown in the sidebar when viewed on mobile devices to improve usability when there are many collections.",
+    "steps_to_verify": [
+      "Open the website on a mobile device or use a mobile viewport in the browser",
+      "Open the sidebar and click on the Collections dropdown",
+      "Verify that if there are many collections, a scroll bar appears allowing users to scroll through the list",
+      "Ensure that the scroll bar is functional and provides a smooth scrolling experience"
+    ],
+    "passes": true
+  },
+  {
+    "category": "Mobile",
+    "description": "Improve the responsiveness of the details panel in the lightbox on mobile devices by adding a collapsible section for artwork metadata.",
+    "steps_to_verify": [
+      "Open the website on a mobile device or use a mobile viewport in the browser",
+      "Click on any gallery image to open the lightbox",
+      "Verify that the details panel has a collapsible section for artwork metadata (Medium, Dimensions, Year)",
+      "Ensure that users can easily expand and collapse this section to view or hide metadata",
+      "Check that the overall layout remains user-friendly and visually appealing on mobile"
+    ],
+    "passes": false
+  },
+  {
+    "category": "Mobile",
+    "description": "Add swipe support for navigating between images in the lightbox on mobile devices",
+    "steps_to_verify": [
+      "Open the website on a mobile device or use a mobile viewport in the browser",
+      "Click on any gallery image to open the lightbox",
+      "Swipe left and right on the image to navigate between images",
+      "Verify that the swipe gestures work smoothly and transition to the next or previous image as expected"
+    ],
+    "passes": false
+  },
+  {
+    "category": "Mobile",
+    "description": "Ensure the lightbox controls are sized responsively when viewed on mobile",
+    "steps_to_verify": [
+      "Open the website on a mobile device or use a mobile viewport in the browser",
+      "Click on any gallery image to open the lightbox",
+      "Verify that the left/right navigation arrows and close button are appropriately sized for touch interaction",
+      "Ensure that buttons are easy to tap without accidentally hitting other controls"
+    ],
+    "passes": true
+  }
+]

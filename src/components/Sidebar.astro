@@ -1,133 +1,221 @@
 ---
-import { getTags } from "../utils/contentful/api"
-import Etsy from "./svgs/Etsy.astro"
-import Instagram from "./svgs/Instagram.astro"
-import LinkedIn from "./svgs/LinkedIn.astro"
+import { getTags } from "../utils/contentful/api";
+import Etsy from "./svgs/Etsy.astro";
+import Instagram from "./svgs/Instagram.astro";
+import LinkedIn from "./svgs/LinkedIn.astro";
 
-const collections = await getTags()
+const collections = await getTags();
+
+// convert all collections to uppercase first letter
+collections.forEach((collection) => {
+  collection.name =
+    collection.name.charAt(0).toUpperCase() + collection.name.slice(1);
+});
 ---
 
 <div class="sticky top-0 sm:hidden z-10">
-	<button
-		data-drawer-target="sidebar-multi-level-sidebar"
-		data-drawer-toggle="sidebar-multi-level-sidebar"
-		aria-controls="sidebar-multi-level-sidebar"
-		type="button"
-		class="inline-flex items-center p-4 text-white w-full bg-main"
-	>
-		<svg
-			class="w-6 h-6"
-			aria-hidden="true"
-			fill="currentColor"
-			viewBox="0 0 20 20"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path
-				clip-rule="evenodd"
-				fill-rule="evenodd"
-				d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-			></path>
-		</svg>
-		<h1 class="pl-4 text-xl hover:text-secondary">k.l.b designs</h1>
-	</button>
+  <button
+    data-drawer-target="sidebar-multi-level-sidebar"
+    data-drawer-toggle="sidebar-multi-level-sidebar"
+    aria-controls="sidebar-multi-level-sidebar"
+    type="button"
+    class="inline-flex items-center p-4 text-white w-full bg-main"
+  >
+    <svg
+      class="w-6 h-6"
+      aria-hidden="true"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        clip-rule="evenodd"
+        fill-rule="evenodd"
+        d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+      ></path>
+    </svg>
+    <h1 class="pl-2 text-xl hover:text-secondary">k.l.b designs</h1>
+  </button>
 </div>
 
 <div
-	id="sidebar-multi-level-sidebar"
-	class="fixed left-0 top-0 z-40 w-64 h-full sm:h-screen transition-transform -translate-x-full sm:sticky sm:translate-x-0"
+  id="sidebar-multi-level-sidebar"
+  class="fixed left-0 top-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
 >
-	<nav class="bg-main p-4 sm:p-8 whitespace-nowrap h-full">
-		<ul class="list-none font-light text-white">
-			<li>
-				<h1 class="text-3xl hover:text-secondary">
-					<a href="/.">k.l.b designs</a>
-				</h1>
-			</li>
+  <nav class="bg-main p-4 sm:p-8 whitespace-nowrap h-full">
+    <ul class="list-none font-light text-white">
+      <li>
+        <div class="flex items-center gap-2">
+          <div>
+            <h1 class="text-3xl hover:text-secondary">
+              <a href="/.">k.l.b designs</a>
+            </h1>
+          </div>
+        </div>
+      </li>
 
-			<script is:inline>
-				function rotateSvg() {
-					const svg = document.getElementById("collections-dropdown-svg")
+      <!-- Main navigation links -->
+      <li class="pt-4">
+        <a
+          class="block py-2 px-3 rounded-lg hover:bg-white/10 hover:text-secondary transition-colors duration-200"
+          href="/">Gallery</a
+        >
+      </li>
+      <li class="pt-1">
+        <a
+          class="block py-2 px-3 rounded-lg hover:bg-white/10 hover:text-secondary transition-colors duration-200"
+          href="/about">About</a
+        >
+      </li>
+      <li class="pt-1">
+        <a
+          class="block py-2 px-3 rounded-lg hover:bg-white/10 hover:text-secondary transition-colors duration-200"
+          href="/contact">Contact</a
+        >
+      </li>
 
-					if (svg.classList.contains("rotate-svg")) {
-						svg.classList.remove("rotate-svg")
-					} else {
-						svg.classList.add("rotate-svg")
-					}
-				}
-			</script>
+      <!-- Separator line -->
+      <li class="pt-4 pb-2">
+        <hr class="border-white/30" />
+      </li>
 
-			<style>
-				.rotate-svg {
-					transform: rotate(-90deg);
-				}
-			</style>
+      <script is:inline>
+        function rotateSvg() {
+          const svg = document.getElementById("collections-dropdown-svg");
+          const dropdown = document.getElementById("collections-dropdown");
 
-			<!-- collections dropdown -->
-			<li class="pt-6">
-				<div class="group">
-					<button
-						type="button"
-						class="flex items-center justify-between w-full group-hover:text-secondary"
-						aria-controls="collections-dropdown"
-						data-collapse-toggle="collections-dropdown"
-						onclick="rotateSvg()"
-					>
-						<span class="align-self-start">collections</span>
-						<svg
-							id="collections-dropdown-svg"
-							class="w-3 h-3 align-self-end"
-							aria-hidden="true"
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 10 6"
-						>
-							<path
-								class="group-hover:stroke-secondary"
-								stroke="white"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="m1 1 4 4 4-4"></path>
-						</svg>
-					</button>
-				</div>
-				<ul id="collections-dropdown" class="hidden pl-5">
-					{
-						collections.map((collection) => (
-							<li class="pt-2">
-								<a href={collection.tag} class="hover:text-secondary">
-									{collection.name}
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</li>
-			<li class="pt-2">
-				<a class="hover:text-secondary" href="/about">about</a>
-			</li>
-			<li class="pt-2">
-				<a class="hover:text-secondary" href="/contact">contact</a>
-			</li>
+          if (svg.classList.contains("rotate-svg")) {
+            console.log("closing");
+            svg.classList.remove("rotate-svg");
+            dropdown.classList.remove("opacity-100");
+            dropdown.classList.add("opacity-0");
+            setTimeout(() => {
+              dropdown.classList.add("hidden");
+            }, 300);
+          } else {
+            console.log("opening");
+            svg.classList.add("rotate-svg");
+            dropdown.classList.remove("hidden");
+            setTimeout(() => {
+              dropdown.classList.remove("opacity-0");
+              dropdown.classList.add("opacity-100");
+            }, 10);
+          }
+        }
+      </script>
 
-			<!-- social media links -->
-			<div class="absolute bottom-4 flex gap-2">
-				<li>
-					<a href="https://www.instagram.com/k.l.b_designs/?hl=en" target="_blank">
-						<Instagram classList="fill-white hover:fill-secondary" width={30} height={30} />
-					</a>
-				</li>
-				<li>
-					<a href="https://www.linkedin.com/in/kirsty-baird-60b03123b/" target="_blank">
-						<LinkedIn classList="fill-white hover:fill-secondary" width={30} height={30} />
-					</a>
-				</li>
-				<li>
-					<a href="https://www.etsy.com/uk/shop/KLBDesignsGoods" target="_blank">
-						<Etsy classList="fill-white hover:fill-secondary" width={30} height={30} />
-					</a>
-				</li>
-			</div>
-		</ul>
-	</nav>
+      <style>
+        #collections-dropdown-svg {
+          transition: transform 150ms ease-in-out;
+        }
+        .rotate-svg {
+          transform: rotate(-180deg);
+        }
+      </style>
+
+      <!-- collections dropdown -->
+      <li class="pt-1">
+        <div class="group">
+          <button
+            type="button"
+            class="flex items-center justify-between w-full py-2 px-3 rounded-lg hover:bg-white/10 group-hover:text-secondary transition-colors duration-200"
+            aria-controls="collections-dropdown"
+            data-collapse-toggle="collections-dropdown"
+            onclick="rotateSvg()"
+          >
+            <span class="align-self-start">Collections</span>
+            <svg
+              id="collections-dropdown-svg"
+              class="w-3 h-3 align-self-end"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                class="group-hover:stroke-secondary"
+                stroke="white"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 1 4 4 4-4"></path>
+            </svg>
+          </button>
+        </div>
+        <ul
+          id="collections-dropdown"
+          class="hidden pl-5 opacity-0 transition-opacity duration-300 max-h-60 sm:max-h-none overflow-y-auto"
+        >
+          <li class="pt-1">
+            <a
+              href="/"
+              class="flex justify-between items-center hover:text-secondary"
+            >
+              <span>All works</span>
+            </a>
+          </li>
+          {
+            collections.map((collection) => (
+              <li class="pt-1">
+                <a
+                  href={collection.id}
+                  class="flex justify-between items-center hover:text-secondary"
+                >
+                  <span>{collection.name}</span>
+                  <span class="text-white/60 text-sm">
+                    {collection.itemCount}
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </li>
+
+      <!-- social media links -->
+      <div class="absolute bottom-14 flex gap-2">
+        <li>
+          <a
+            href="https://www.instagram.com/k.l.b_designs/?hl=en"
+            target="_blank"
+          >
+            <Instagram
+              classList="fill-white hover:fill-secondary"
+              width={30}
+              height={30}
+            />
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://www.linkedin.com/in/kirsty-baird-60b03123b/"
+            target="_blank"
+          >
+            <LinkedIn
+              classList="fill-white hover:fill-secondary"
+              width={30}
+              height={30}
+            />
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://www.etsy.com/uk/shop/KLBDesignsGoods"
+            target="_blank"
+          >
+            <Etsy
+              classList="fill-white hover:fill-secondary"
+              width={30}
+              height={30}
+            />
+          </a>
+        </li>
+      </div>
+
+      <!-- copyright -->
+      <div class="absolute bottom-4 text-xs text-white/60">
+        <p>© 2024 - {new Date().getFullYear()} Kirsty Baird</p>
+      </div>
+    </ul>
+  </nav>
 </div>

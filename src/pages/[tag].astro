@@ -1,25 +1,25 @@
 ---
-import Gallery from "../components/Gallery.astro"
-import Layout from "../layouts/Layout.astro"
-import { getTags } from "../utils/contentful/api"
+import Gallery from "../components/Gallery.astro";
+import Layout from "../layouts/Layout.astro";
+import { getTags } from "../utils/contentful/api";
 
 export async function getStaticPaths() {
-	const params = (await getTags()).map((tag) => ({
-		params: {
-			tag: tag.tag,
-		},
-		props: {
-			name: tag.name,
-		},
-	}))
+  const params = (await getTags()).map((tag) => ({
+    params: {
+      tag: tag.name,
+    },
+    props: {
+      name: tag.name,
+      id: tag.id,
+    },
+  }));
 
-	return params
+  return params;
 }
 
-const { tag } = Astro.params
-const { name } = Astro.props
+const { name, id } = Astro.props;
 ---
 
 <Layout title={`k.l.b designs - ${name}`}>
-	<Gallery tag={tag} />
+  <Gallery tagId={id} tagName={name} />
 </Layout>
