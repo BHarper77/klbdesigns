@@ -325,11 +325,20 @@ function transition<T extends string>(
       }
     }
 
+    let unlockScrollTimeout: number | undefined;
+
     function openLightbox(index: number) {
+      clearTimeout(unlockScrollTimeout);
       showImage(index);
       container.style.visibility = "visible";
       container.style.opacity = "1";
       container.classList.add("open");
+      // Reserve the space the scrollbar occupied so locking scroll doesn't
+      // shift the layout
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
       document.body.style.overflow = "hidden";
       closeBtn.focus();
     }
@@ -338,7 +347,13 @@ function transition<T extends string>(
       container.style.visibility = "hidden";
       container.style.opacity = "0";
       container.classList.remove("open");
-      document.body.style.overflow = "";
+      // Wait for the fade-out to finish before restoring the scrollbar,
+      // otherwise the reflow is visible through the overlay
+      clearTimeout(unlockScrollTimeout);
+      unlockScrollTimeout = window.setTimeout(() => {
+        document.body.style.overflow = "";
+        document.body.style.paddingRight = "";
+      }, 300);
     }
 
     function showPrev() {
