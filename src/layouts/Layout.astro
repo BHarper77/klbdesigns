@@ -1,6 +1,7 @@
 ---
 import Sidebar from "../components/Sidebar.astro"
 import Posthog from "../components/Posthog.astro"
+import AnnouncementBar from "../components/AnnouncementBar.astro"
 
 interface Props {
 	title: string
@@ -45,6 +46,7 @@ const { title } = Astro.props
 
 	<body class="font-sans">
 		<Sidebar />
+		<AnnouncementBar />
 		<slot />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
 		<style is:global>
