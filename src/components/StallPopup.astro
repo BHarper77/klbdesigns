@@ -123,10 +123,21 @@ const asset = item
       window.posthog?.capture("stall_popup_click", { button });
     }
 
-    // Let PostHog capture the $pageview with the UTMs before stripping them.
-    setTimeout(() => {
+    // PostHog captures the initial $pageview just after loading, so strip the UTMs after that
+    // Fallback covers PostHog being blocked
+    if (window.posthog?.__loaded) {
       stripUtms();
-    }, 500);
+    } else {
+      const fallback = setTimeout(stripUtms, 10000);
+      window.addEventListener(
+        "posthog:loaded",
+        () => {
+          clearTimeout(fallback);
+          setTimeout(stripUtms, 100);
+        },
+        { once: true },
+      );
+    }
 
     showPopup();
 

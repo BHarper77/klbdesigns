@@ -8,6 +8,7 @@ interface ImportMetaEnv {
 
 interface Window {
 	posthog?: {
+		__loaded?: boolean
 		capture: (event: string, properties?: Record<string, unknown>) => void
 	}
 }

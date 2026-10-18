@@ -6,7 +6,8 @@
 	posthog.init(
 	  'phc_mc91mm3BCWDQaR2R7NLWp3vXBF8rXf5xVMqy3XaHa4l',
 	  {
-		api_host:"https://eu.i.posthog.com"
+		api_host:"https://eu.i.posthog.com",
+		loaded: () => window.dispatchEvent(new Event("posthog:loaded"))
 	  }
 	)
   </script>
