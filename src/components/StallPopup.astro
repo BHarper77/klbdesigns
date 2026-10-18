@@ -102,9 +102,24 @@ const asset = item
     const params = new URLSearchParams(window.location.search);
     if (params.get("utm_source") !== "stall") return;
 
-    if (sessionStorage.getItem("stall_popup_shown")) {
+    if (hasSeenPopup()) {
       stripUtms();
       return;
+    }
+
+    // sessionStorage throws when storage is blocked
+    function hasSeenPopup() {
+      try {
+        return sessionStorage.getItem("stall_popup_shown") !== null;
+      } catch {
+        return false;
+      }
+    }
+
+    function markPopupSeen() {
+      try {
+        sessionStorage.setItem("stall_popup_shown", "1");
+      } catch {}
     }
 
     function stripUtms() {
@@ -117,7 +132,7 @@ const asset = item
 
     function showPopup() {
       popup!.classList.remove("hidden");
-      sessionStorage.setItem("stall_popup_shown", "1");
+      markPopupSeen();
       document.body.style.overflow = "hidden";
       document.addEventListener("keydown", onKeydown);
       document.getElementById("stall-popup-browse")?.focus();
