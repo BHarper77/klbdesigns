@@ -1,0 +1,150 @@
+---
+import { Image } from "astro:assets";
+import { queryTags } from "../utils/contentful/api";
+
+const ETSY_URL = "https://www.etsy.com/uk/shop/KLBDesignsGoods";
+
+const tags = await queryTags(
+  `metadata.tags.sys.id[all]=featured&limit=1`,
+);
+const item = tags.items[0];
+const asset = item
+  ? tags.includes.Asset.find((a) => a.sys.id === item.fields.media.sys.id)
+  : undefined;
+---
+
+<div
+  id="stall-popup"
+  class="hidden fixed inset-0 flex justify-center items-center bg-gray-900/70 z-[60] p-4"
+>
+  <div
+    class="relative bg-white rounded-lg overflow-hidden max-w-md w-full shadow-2xl"
+  >
+    <button
+      id="stall-popup-close"
+      class="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
+      aria-label="Close"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    {
+      asset && (
+        <Image
+          src={asset.fields.file.url}
+          alt={item?.fields.alt ?? ""}
+          width={asset.fields.file.details.image.width}
+          height={asset.fields.file.details.image.height}
+          class="w-full h-48 object-cover"
+        />
+      )
+    }
+
+    <div class="p-6">
+      <p class="text-sm text-gray-500 mb-1">Scanned at the stall?</p>
+      <h2 class="text-xl font-semibold text-gray-800 mb-2">
+        Welcome to k.l.b designs
+      </h2>
+      <p class="text-gray-600 mb-5">
+        Thanks for stopping by! Have a browse of the gallery, find out more
+        about Kirsty, or head straight to the Etsy shop.
+      </p>
+      <div class="flex flex-col gap-2">
+        <button
+          id="stall-popup-browse"
+          class="bg-main text-white rounded-md py-2 px-4 hover:opacity-90 transition-opacity"
+        >
+          Start browsing
+        </button>
+        <a
+          id="stall-popup-about"
+          href="/about"
+          class="text-center border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-50 transition-colors"
+        >
+          Meet Kirsty
+        </a>
+        <a
+          id="stall-popup-etsy"
+          href={ETSY_URL}
+          target="_blank"
+          class="text-center border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-50 transition-colors"
+        >
+          Etsy shop
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const popup = document.getElementById("stall-popup");
+    if (!popup) return;
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("utm_source") !== "stall") return;
+
+    if (sessionStorage.getItem("stall_popup_shown")) {
+      stripUtms();
+      return;
+    }
+
+    function stripUtms() {
+      const url = new URL(window.location.href);
+      ["utm_source", "utm_medium", "utm_campaign"].forEach((key) =>
+        url.searchParams.delete(key),
+      );
+      window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+    }
+
+    function showPopup() {
+      popup!.classList.remove("hidden");
+      sessionStorage.setItem("stall_popup_shown", "1");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closePopup(button: string) {
+      popup!.classList.add("hidden");
+      document.body.style.overflow = "";
+      window.posthog?.capture("stall_popup_click", { button });
+    }
+
+    // Let PostHog capture the $pageview with the UTMs before stripping them.
+    setTimeout(() => {
+      stripUtms();
+    }, 500);
+
+    showPopup();
+
+    document
+      .getElementById("stall-popup-close")
+      ?.addEventListener("click", () => {
+        popup!.classList.add("hidden");
+        document.body.style.overflow = "";
+      });
+
+    document
+      .getElementById("stall-popup-browse")
+      ?.addEventListener("click", () => closePopup("browse"));
+
+    document
+      .getElementById("stall-popup-about")
+      ?.addEventListener("click", () => closePopup("about"));
+
+    document
+      .getElementById("stall-popup-etsy")
+      ?.addEventListener("click", () => closePopup("etsy"));
+  })();
+</script>
