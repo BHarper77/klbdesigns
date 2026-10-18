@@ -61,6 +61,17 @@ const isHomepage = Astro.url.pathname === "/"
 					location: el.dataset.outboundLocation,
 				})
 			})
+			document.addEventListener("click", (e) => {
+				const el = (e.target as Element)?.closest<HTMLElement>(
+					"[data-image-id]",
+				)
+				if (!el) return
+				window.posthog?.capture("image_click", {
+					image_title: el.dataset.imageTitle,
+					image_id: el.dataset.imageId,
+					location: el.dataset.imageLocation,
+				})
+			})
 		</script>
 		<style is:global>
 			:root {

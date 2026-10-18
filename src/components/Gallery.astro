@@ -49,6 +49,7 @@ const images = tags.items.map((item) => {
   })(parseFloat(day));
 
   return {
+    id: item.sys.id,
     alt: item.fields.alt,
     title: item.fields.title,
     dimensions: item.fields.dimensions,
@@ -469,6 +470,9 @@ function transition<T extends string>(
               loading="lazy"
               about={`Uploaded on the ${image.friendlyDate}`}
               data-title={image.title || ""}
+              data-image-id={image.id}
+              data-image-title={image.title || "Untitled"}
+              data-image-location={tagName || ""}
               data-dimensions={image.dimensions || ""}
               data-year={image.year?.toString() || ""}
               data-category={tagName || ""}
