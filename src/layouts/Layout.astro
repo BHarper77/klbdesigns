@@ -8,6 +8,7 @@ interface Props {
 }
 
 const { title } = Astro.props
+const isHomepage = Astro.url.pathname === "/"
 ---
 
 <!doctype html>
@@ -46,7 +47,7 @@ const { title } = Astro.props
 
 	<body class="font-sans">
 		<Sidebar />
-		<AnnouncementBar />
+		{isHomepage && <AnnouncementBar />}
 		<slot />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
 		<style is:global>
