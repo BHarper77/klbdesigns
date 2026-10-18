@@ -49,6 +49,18 @@ const { title } = Astro.props
 		<AnnouncementBar />
 		<slot />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
+		<script>
+			document.addEventListener("click", (e) => {
+				const el = (e.target as Element)?.closest<HTMLElement>(
+					"[data-outbound-destination]",
+				)
+				if (!el) return
+				window.posthog?.capture("outbound_click", {
+					destination: el.dataset.outboundDestination,
+					location: el.dataset.outboundLocation,
+				})
+			})
+		</script>
 		<style is:global>
 			:root {
 				--accent: 136, 58, 234;
