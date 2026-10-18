@@ -1,0 +1,89 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<style>
+  @media (min-width: 640px) {
+    .content-wrapper {
+      margin-left: 16rem; /* 256px = sidebar width */
+    }
+  }
+</style>
+
+<Layout title="k.l.b designs - privacy">
+  <div class="content-wrapper p-5 sm:p-12 max-w-2xl">
+    <h1 class="text-xl sm:text-4xl text-secondary mb-6">Privacy</h1>
+    <div class="text-gray-700 leading-relaxed space-y-4">
+      <p>
+        We use PostHog to see which pages people visit and which links they
+        click, so we can make the site better. It's anonymous: we don't know
+        who you are, we don't record your screen, and we don't use it for
+        advertising.
+      </p>
+      <p>
+        PostHog stores a small identifier in your browser and keeps the data
+        on servers in the EU on our behalf.
+      </p>
+      <p>
+        You can turn this off with the button below. Questions? Email <a
+          href="mailto:kirstybaird8@gmail.com"
+          class="text-main hover:underline">kirstybaird8@gmail.com</a
+        >.
+      </p>
+      <div class="flex items-center gap-3 pt-2">
+        <button
+          id="analytics-toggle"
+          type="button"
+          disabled
+          class="px-4 py-2 rounded-lg bg-main text-white hover:bg-secondary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Loading…
+        </button>
+        <span id="analytics-status" class="text-sm text-gray-600"></span>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+  const toggle = document.getElementById("analytics-toggle");
+  const status = document.getElementById("analytics-status");
+
+  function renderAnalyticsStatus() {
+    const optedOut = window.posthog.has_opted_out_capturing();
+    toggle.disabled = false;
+    toggle.textContent = optedOut ? "Turn analytics on" : "Turn analytics off";
+    status.textContent = optedOut ? "Analytics are off" : "Analytics are on";
+  }
+
+  function renderBlocked() {
+    toggle.hidden = true;
+    status.textContent =
+      "Analytics are blocked by your browser, so nothing is being collected";
+  }
+
+  toggle.addEventListener("click", () => {
+    if (window.posthog.has_opted_out_capturing()) {
+      window.posthog.opt_in_capturing();
+    } else {
+      window.posthog.opt_out_capturing();
+    }
+    renderAnalyticsStatus();
+  });
+
+  // Stub returns undefined until PostHog loads, so the button stays disabled until then
+  // Fallback covers PostHog being blocked
+  if (window.posthog?.__loaded) {
+    renderAnalyticsStatus();
+  } else {
+    const fallback = setTimeout(renderBlocked, 5000);
+    window.addEventListener(
+      "posthog:loaded",
+      () => {
+        clearTimeout(fallback);
+        renderAnalyticsStatus();
+      },
+      { once: true },
+    );
+  }
+</script>
