@@ -61,7 +61,7 @@ const isHomepage = Astro.url.pathname === "/"
 					location: el.dataset.outboundLocation,
 				})
 			})
-			document.addEventListener("click", (e) => {
+			const trackImageOpen = (e: Event) => {
 				const el = (e.target as Element)?.closest<HTMLElement>(
 					"[data-image-id]",
 				)
@@ -71,6 +71,11 @@ const isHomepage = Astro.url.pathname === "/"
 					image_id: el.dataset.imageId,
 					location: el.dataset.imageLocation,
 				})
+			}
+			document.addEventListener("click", trackImageOpen)
+			// gallery imgs are role=button w/ preventDefault'd keydown; no click dispatched
+			document.addEventListener("keydown", (e) => {
+				if (e.key === "Enter" || e.key === " ") trackImageOpen(e)
 			})
 		</script>
 		<style is:global>
