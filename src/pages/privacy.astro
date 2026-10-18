@@ -64,5 +64,12 @@ import Layout from "../layouts/Layout.astro";
       renderAnalyticsStatus();
     });
 
-  renderAnalyticsStatus();
+  // Stub returns undefined until PostHog loads
+  if (window.posthog?.__loaded) {
+    renderAnalyticsStatus();
+  } else {
+    window.addEventListener("posthog:loaded", renderAnalyticsStatus, {
+      once: true,
+    });
+  }
 </script>
