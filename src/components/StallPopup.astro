@@ -18,6 +18,9 @@ const asset = item
   class="hidden fixed inset-0 flex justify-center items-center bg-gray-900/70 z-[60] p-4"
 >
   <div
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="stall-popup-title"
     class="relative bg-white rounded-lg overflow-hidden max-w-md w-full shadow-2xl"
   >
     <button
@@ -54,7 +57,7 @@ const asset = item
 
     <div class="p-6">
       <p class="text-sm text-gray-500 mb-1">Scanned at the stall?</p>
-      <h2 class="text-xl font-semibold text-gray-800 mb-2">
+      <h2 id="stall-popup-title" class="text-xl font-semibold text-gray-800 mb-2">
         Welcome to k.l.b designs
       </h2>
       <p class="text-gray-600 mb-5">
@@ -116,12 +119,40 @@ const asset = item
       popup!.classList.remove("hidden");
       sessionStorage.setItem("stall_popup_shown", "1");
       document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", onKeydown);
+      document.getElementById("stall-popup-browse")?.focus();
+    }
+
+    function dismissPopup() {
+      popup!.classList.add("hidden");
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKeydown);
     }
 
     function closePopup(button: string) {
-      popup!.classList.add("hidden");
-      document.body.style.overflow = "";
+      dismissPopup();
       window.posthog?.capture("stall_popup_click", { button });
+    }
+
+    // Escape closes, Tab stays inside the popup
+    function onKeydown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        dismissPopup();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = popup!.querySelectorAll<HTMLElement>("button, a[href]");
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
 
     // PostHog captures the initial $pageview just after loading, so strip the UTMs after that
@@ -144,10 +175,7 @@ const asset = item
 
     document
       .getElementById("stall-popup-close")
-      ?.addEventListener("click", () => {
-        popup!.classList.add("hidden");
-        document.body.style.overflow = "";
-      });
+      ?.addEventListener("click", dismissPopup);
 
     document
       .getElementById("stall-popup-browse")
