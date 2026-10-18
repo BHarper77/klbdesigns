@@ -1,0 +1,68 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<style>
+  @media (min-width: 640px) {
+    .content-wrapper {
+      margin-left: 16rem; /* 256px = sidebar width */
+    }
+  }
+</style>
+
+<Layout title="k.l.b designs - privacy">
+  <div class="content-wrapper p-5 sm:p-12 max-w-2xl">
+    <h1 class="text-xl sm:text-4xl text-secondary mb-6">Privacy</h1>
+    <div class="text-gray-700 leading-relaxed space-y-4">
+      <p>
+        This site uses PostHog to collect aggregate, anonymous usage
+        statistics - things like which pages are viewed and which links are
+        clicked - so we can understand how visitors use the site and improve
+        it. Data is stored as a first-party cookie/localStorage value
+        (<code>ph_*</code>) and processed by PostHog EU on our behalf as a
+        data processor. We do not record session replays, and we don't use
+        the data for advertising or identify you personally.
+      </p>
+      <p>
+        To object to this collection, use the toggle below. If you'd rather
+        contact us directly about this, email <a
+          href="mailto:kirstybaird8@gmail.com"
+          class="text-main hover:underline">kirstybaird8@gmail.com</a
+        >.
+      </p>
+      <div class="flex items-center gap-3 pt-2">
+        <button
+          id="analytics-toggle"
+          type="button"
+          class="px-4 py-2 rounded-lg bg-main text-white hover:bg-secondary transition-colors duration-200"
+        >
+          Toggle analytics
+        </button>
+        <span id="analytics-status" class="text-sm text-gray-600"></span>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+  function renderAnalyticsStatus() {
+    const status = document.getElementById("analytics-status");
+    const optedOut = window.posthog?.has_opted_out_capturing?.();
+    status.textContent = optedOut
+      ? "Analytics are currently off."
+      : "Analytics are currently on.";
+  }
+
+  document
+    .getElementById("analytics-toggle")
+    .addEventListener("click", () => {
+      if (window.posthog?.has_opted_out_capturing?.()) {
+        window.posthog.opt_in_capturing();
+      } else {
+        window.posthog?.opt_out_capturing();
+      }
+      renderAnalyticsStatus();
+    });
+
+  renderAnalyticsStatus();
+</script>
