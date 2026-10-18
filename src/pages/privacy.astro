@@ -15,17 +15,17 @@ import Layout from "../layouts/Layout.astro";
     <h1 class="text-xl sm:text-4xl text-secondary mb-6">Privacy</h1>
     <div class="text-gray-700 leading-relaxed space-y-4">
       <p>
-        This site uses PostHog to collect aggregate, anonymous usage
-        statistics - things like which pages are viewed and which links are
-        clicked - so we can understand how visitors use the site and improve
-        it. Data is stored as a first-party cookie/localStorage value
-        (<code>ph_*</code>) and processed by PostHog EU on our behalf as a
-        data processor. We do not record session replays, and we don't use
-        the data for advertising or identify you personally.
+        We use PostHog to see which pages people visit and which links they
+        click, so we can make the site better. It's anonymous: we don't know
+        who you are, we don't record your screen, and we don't use it for
+        advertising.
       </p>
       <p>
-        To object to this collection, use the toggle below. If you'd rather
-        contact us directly about this, email <a
+        PostHog stores a small identifier in your browser and keeps the data
+        on servers in the EU on our behalf.
+      </p>
+      <p>
+        You can turn this off with the button below. Questions? Email <a
           href="mailto:kirstybaird8@gmail.com"
           class="text-main hover:underline">kirstybaird8@gmail.com</a
         >.
@@ -34,9 +34,10 @@ import Layout from "../layouts/Layout.astro";
         <button
           id="analytics-toggle"
           type="button"
-          class="px-4 py-2 rounded-lg bg-main text-white hover:bg-secondary transition-colors duration-200"
+          disabled
+          class="px-4 py-2 rounded-lg bg-main text-white hover:bg-secondary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Toggle analytics
+          Loading…
         </button>
         <span id="analytics-status" class="text-sm text-gray-600"></span>
       </div>
@@ -45,31 +46,44 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 
 <script is:inline>
+  const toggle = document.getElementById("analytics-toggle");
+  const status = document.getElementById("analytics-status");
+
   function renderAnalyticsStatus() {
-    const status = document.getElementById("analytics-status");
-    const optedOut = window.posthog?.has_opted_out_capturing?.();
-    status.textContent = optedOut
-      ? "Analytics are currently off."
-      : "Analytics are currently on.";
+    const optedOut = window.posthog.has_opted_out_capturing();
+    toggle.disabled = false;
+    toggle.textContent = optedOut ? "Turn analytics on" : "Turn analytics off";
+    status.textContent = optedOut ? "Analytics are off" : "Analytics are on";
   }
 
-  document
-    .getElementById("analytics-toggle")
-    .addEventListener("click", () => {
-      if (window.posthog?.has_opted_out_capturing?.()) {
-        window.posthog.opt_in_capturing();
-      } else {
-        window.posthog?.opt_out_capturing();
-      }
-      renderAnalyticsStatus();
-    });
+  function renderBlocked() {
+    toggle.hidden = true;
+    status.textContent =
+      "Analytics are blocked by your browser, so nothing is being collected";
+  }
 
-  // Stub returns undefined until PostHog loads
+  toggle.addEventListener("click", () => {
+    if (window.posthog.has_opted_out_capturing()) {
+      window.posthog.opt_in_capturing();
+    } else {
+      window.posthog.opt_out_capturing();
+    }
+    renderAnalyticsStatus();
+  });
+
+  // Stub returns undefined until PostHog loads, so the button stays disabled until then
+  // Fallback covers PostHog being blocked
   if (window.posthog?.__loaded) {
     renderAnalyticsStatus();
   } else {
-    window.addEventListener("posthog:loaded", renderAnalyticsStatus, {
-      once: true,
-    });
+    const fallback = setTimeout(renderBlocked, 5000);
+    window.addEventListener(
+      "posthog:loaded",
+      () => {
+        clearTimeout(fallback);
+        renderAnalyticsStatus();
+      },
+      { once: true },
+    );
   }
 </script>
