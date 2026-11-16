@@ -1,16 +1,10 @@
 ---
-import { queryTags } from "../utils/contentful/api";
+import { getPopupEntry } from "../utils/contentful/popup-entry";
 import { contentfulImage } from "../utils/contentful/image";
 
 const ETSY_URL = "https://www.etsy.com/uk/shop/KLBDesignsGoods";
 
-const tags = await queryTags(
-  `metadata.tags.sys.id[all]=featured&limit=1`,
-);
-const item = tags.items[0];
-const asset = item
-  ? tags.includes.Asset.find((a) => a.sys.id === item.fields.media.sys.id)
-  : undefined;
+const entry = await getPopupEntry();
 ---
 
 <div
@@ -25,7 +19,7 @@ const asset = item
   >
     <button
       id="stall-popup-close"
-      class="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
+      class="absolute top-3 right-3 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
       aria-label="Close"
     >
       <svg
@@ -44,15 +38,12 @@ const asset = item
     </button>
 
     {
-      asset && (
+      entry && (
         <img
-          src={contentfulImage(asset.fields.file.url, {
-            w: 900,
-            max: asset.fields.file.details.image.width,
-          })}
-          alt={item?.fields.alt ?? ""}
-          width={asset.fields.file.details.image.width}
-          height={asset.fields.file.details.image.height}
+          src={contentfulImage(entry.url, { w: 900, max: entry.width })}
+          alt={entry.alt}
+          width={entry.width}
+          height={entry.height}
           loading="eager"
           decoding="async"
           class="w-full h-48 object-cover"
@@ -196,6 +187,11 @@ const asset = item
     document
       .getElementById("stall-popup-close")
       ?.addEventListener("click", dismissPopup);
+
+    // click on the dark backdrop (outside the dialog) dismisses
+    popup.addEventListener("click", (e) => {
+      if (e.target === popup) dismissPopup();
+    });
 
     document
       .getElementById("stall-popup-browse")

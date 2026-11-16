@@ -51,7 +51,8 @@ const images = tags.items.map((item) => {
   return {
     id: item.sys.id,
     alt: item.fields.alt,
-    title: item.fields.title,
+    // no entry has a title yet, fall back to alt text
+    title: item.fields.title?.trim() || item.fields.alt.trim(),
     dimensions: item.fields.dimensions,
     year: item.fields.year,
     src: contentfulImage(asset.fields.file.url, {
@@ -131,6 +132,39 @@ function transition<T extends string>(
   #overlay-container.open #overlay-image-container {
     transform: scale(1);
     opacity: 1;
+  }
+
+  /* Lightbox image loading state */
+  #overlay-image {
+    transition: opacity 0.2s ease-out;
+  }
+
+  #overlay-image-container.is-loading #overlay-image {
+    opacity: 0;
+  }
+
+  #overlay-spinner {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2rem;
+    height: 2rem;
+    margin: -1rem 0 0 -1rem;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 9999px;
+    animation: lightbox-spin 0.8s linear infinite;
+  }
+
+  #overlay-image-container.is-loading #overlay-spinner {
+    display: block;
+  }
+
+  @keyframes lightbox-spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   /* Fix gallery layout - add margin to push content right of sidebar */
@@ -262,8 +296,18 @@ function transition<T extends string>(
       currentIndex = index;
       const image = galleryImages[index]!;
 
-      // Update image
+      // Update image; fade out until the new one has loaded
+      const imageContainer = document.getElementById("overlay-image-container");
+      const done = () => imageContainer?.classList.remove("is-loading");
+      imageContainer?.classList.add("is-loading");
+      overlayImage.onload = done;
+      overlayImage.onerror = done;
       overlayImage.src = image.src;
+      if (overlayImage.complete && overlayImage.naturalWidth > 0) done();
+
+      // Preload the next image
+      const next = galleryImages[(index + 1) % galleryImages.length];
+      if (next) new Image().src = next.src;
 
       // Update counter
       counterCurrent.textContent = (index + 1).toString();
@@ -417,6 +461,34 @@ function transition<T extends string>(
       }
     });
 
+    // Swipe left/right to navigate
+    let touchStartX = 0;
+    let touchStartY = 0;
+    container.addEventListener(
+      "touchstart",
+      (e) => {
+        const t = e.changedTouches[0];
+        if (!t) return;
+        touchStartX = t.clientX;
+        touchStartY = t.clientY;
+      },
+      { passive: true },
+    );
+    container.addEventListener(
+      "touchend",
+      (e) => {
+        const t = e.changedTouches[0];
+        if (!t) return;
+        const dx = t.clientX - touchStartX;
+        const dy = t.clientY - touchStartY;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          if (dx < 0) showNext();
+          else showPrev();
+        }
+      },
+      { passive: true },
+    );
+
     // Keyboard navigation
     document.addEventListener("keydown", (event) => {
       if (container.style.visibility !== "visible") return;
@@ -454,7 +526,7 @@ function transition<T extends string>(
 {
   tagName && (
     <div class="px-5 sm:px-12 pt-5 sm:pt-8 gallery-header">
-      <h1 class="text-xl sm:text-4xl text-secondary">
+      <h1 class="text-2xl sm:text-4xl text-secondary">
         {/* convert to first letter uppercase */}
         {tagName.charAt(0).toUpperCase() + tagName.slice(1)}
       </h1>
@@ -491,7 +563,7 @@ function transition<T extends string>(
               about={`Uploaded on the ${image.friendlyDate}`}
               data-title={image.title || ""}
               data-image-id={image.id}
-              data-image-title={image.title || "Untitled"}
+              data-image-title={image.title}
               data-image-location={tagName || ""}
               data-dimensions={image.dimensions || ""}
               data-year={image.year?.toString() || ""}
@@ -546,7 +618,7 @@ function transition<T extends string>(
   <!-- Previous arrow -->
   <button
     id="lightbox-prev"
-    class="absolute left-4 top-1/2 -translate-y-1/2 z-50 w-14 h-14 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
+    class="absolute left-4 top-1/2 -translate-y-1/2 z-50 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
     aria-label="Previous image"
   >
     <svg
@@ -565,7 +637,7 @@ function transition<T extends string>(
   <!-- Next arrow -->
   <button
     id="lightbox-next"
-    class="absolute right-4 top-1/2 -translate-y-1/2 z-50 w-14 h-14 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
+    class="absolute right-4 top-1/2 -translate-y-1/2 z-50 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
     aria-label="Next image"
   >
     <svg
@@ -592,33 +664,34 @@ function transition<T extends string>(
   <!-- Main lightbox content: image left, details right -->
   <div
     id="overlay-image-container"
-    class="flex flex-col lg:flex-row max-w-[90%] lg:max-w-[85%] max-h-[85%] mx-16"
+    class="flex flex-col lg:flex-row max-w-[96%] lg:max-w-[85%] max-h-[90%] lg:max-h-[85%] mx-2 lg:mx-16"
   >
     <!-- Image section -->
     <div
-      class="image-section flex-shrink-0 flex items-center justify-center lg:max-w-[65%]"
+      class="image-section relative flex-shrink-0 flex items-center justify-center lg:max-w-[65%]"
     >
+      <div id="overlay-spinner" aria-hidden="true"></div>
       <img
         id="overlay-image"
-        class="max-h-[70vh] lg:max-h-[80vh] w-auto object-contain rounded-lg shadow-2xl"
+        class="max-h-[72vh] max-w-full lg:max-h-[80vh] w-auto object-contain rounded-lg shadow-2xl"
       />
     </div>
 
     <!-- Details panel -->
     <div
       id="details-panel"
-      class="bg-white rounded-lg p-6 lg:ml-6 mt-4 lg:mt-0 lg:min-w-[280px] lg:max-w-[320px] flex flex-col overflow-y-auto max-h-[30vh] lg:max-h-[80vh]"
+      class="bg-white rounded-lg p-3 lg:p-6 lg:ml-6 mt-2 lg:mt-0 lg:min-w-[280px] lg:max-w-[320px] flex flex-col overflow-y-auto max-h-[18vh] lg:max-h-[80vh]"
     >
       <!-- Title -->
-      <h2 id="overlay-title" class="text-2xl text-gray-800 mb-1"></h2>
+      <h2 id="overlay-title" class="text-base lg:text-2xl text-gray-800 mb-1"></h2>
 
       <!-- Category/Collection -->
-      <p id="overlay-category" class="text-gray-500 text-sm mb-4"></p>
+      <p id="overlay-category" class="text-gray-500 text-sm mb-1 lg:mb-4"></p>
 
       <!-- Metadata section -->
       <div
         id="metadata-container"
-        class="border-t border-gray-200 pt-4 mt-auto space-y-3"
+        class="border-t border-gray-200 pt-2 lg:pt-4 mt-auto space-y-3"
       >
         <div id="meta-dimensions" class="flex justify-between">
           <span class="text-gray-500 text-sm">Dimensions</span>
@@ -636,7 +709,7 @@ function transition<T extends string>(
       <!-- Social links -->
       <div
         id="social-links-container"
-        class="flex gap-3 mt-4 pt-4 border-t border-gray-200"
+        class="flex gap-3 mt-2 lg:mt-4 pt-2 lg:pt-4 border-t border-gray-200"
       >
         <a id="overlay-etsy" class="hidden" target="_blank">
           <Etsy
