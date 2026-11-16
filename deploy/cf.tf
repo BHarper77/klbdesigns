@@ -27,6 +27,7 @@ resource "aws_cloudfront_distribution" "klbdesigns" {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "klbdesigns"
+    compress         = true
 
     forwarded_values {
       query_string = false
@@ -36,10 +37,25 @@ resource "aws_cloudfront_distribution" "klbdesigns" {
       }
     }
 
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
+  }
+
+  # S3 + OAC returns 403 for missing keys
+  custom_error_response {
+    error_code            = 403
+    response_code         = 404
+    response_page_path    = "/404.html"
+    error_caching_min_ttl = 60
+  }
+
+  custom_error_response {
+    error_code            = 404
+    response_code         = 404
+    response_page_path    = "/404.html"
+    error_caching_min_ttl = 60
   }
 
   restrictions {
