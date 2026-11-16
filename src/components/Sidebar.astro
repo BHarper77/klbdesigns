@@ -4,13 +4,19 @@ import Etsy from "./svgs/Etsy.astro";
 import Instagram from "./svgs/Instagram.astro";
 import LinkedIn from "./svgs/LinkedIn.astro";
 
-const collections = await getTags();
+const collections = (await getTags()).map((collection) => ({
+  ...collection,
+  // convert to uppercase first letter
+  name: collection.name.charAt(0).toUpperCase() + collection.name.slice(1),
+}));
 
-// convert all collections to uppercase first letter
-collections.forEach((collection) => {
-  collection.name =
-    collection.name.charAt(0).toUpperCase() + collection.name.slice(1);
-});
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isCollectionPage = collections.some((c) => path === `/${c.id}`);
+
+const linkClass =
+  "block py-2 px-3 rounded-lg hover:bg-white/10 hover:text-secondary transition-colors duration-200";
+const active = (href: string) => (path === href ? "bg-white/15" : "");
+const current = (href: string) => (path === href ? "page" : undefined);
 ---
 
 <div class="sticky top-0 sm:hidden z-10">
@@ -42,91 +48,62 @@ collections.forEach((collection) => {
   id="sidebar-multi-level-sidebar"
   class="fixed left-0 top-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
 >
-  <nav class="bg-main p-4 sm:p-8 whitespace-nowrap h-full">
-    <ul class="list-none font-light text-white">
-      <li>
-        <div class="flex items-center gap-2">
-          <div>
-            <h1 class="text-3xl hover:text-secondary">
-              <a href="/.">k.l.b designs</a>
-            </h1>
-          </div>
-        </div>
-      </li>
+  <nav
+    class="bg-main p-4 sm:p-8 whitespace-nowrap h-full flex flex-col font-light text-white"
+  >
+    <div class="shrink-0">
+      <h1 class="text-3xl hover:text-secondary">
+        <a href="/">k.l.b designs</a>
+      </h1>
+    </div>
 
+    <!-- scrolls if taller than the viewport -->
+    <ul class="list-none pt-4 flex-1 min-h-0 overflow-y-auto">
       <!-- Main navigation links -->
-      <li class="pt-4">
+      <li>
         <a
-          class="block py-2 px-3 rounded-lg hover:bg-white/10 hover:text-secondary transition-colors duration-200"
-          href="/">Gallery</a
+          class={`${linkClass} ${active("/")}`}
+          href="/"
+          aria-current={current("/")}>Gallery</a
         >
       </li>
       <li class="pt-1">
         <a
-          class="block py-2 px-3 rounded-lg hover:bg-white/10 hover:text-secondary transition-colors duration-200"
-          href="/about">About</a
+          class={`${linkClass} ${active("/about")}`}
+          href="/about"
+          aria-current={current("/about")}>About</a
         >
       </li>
       <li class="pt-1">
         <a
-          class="block py-2 px-3 rounded-lg hover:bg-white/10 hover:text-secondary transition-colors duration-200"
-          href="/contact">Contact</a
+          class={`${linkClass} ${active("/contact")}`}
+          href="/contact"
+          aria-current={current("/contact")}>Contact</a
         >
       </li>
 
       <!-- Separator line -->
-      <li class="pt-4 pb-2">
+      <li class="pt-4 pb-2" role="separator">
         <hr class="border-white/30" />
       </li>
-
-      <script is:inline>
-        function rotateSvg() {
-          const svg = document.getElementById("collections-dropdown-svg");
-          const dropdown = document.getElementById("collections-dropdown");
-
-          if (svg.classList.contains("rotate-svg")) {
-            console.log("closing");
-            svg.classList.remove("rotate-svg");
-            dropdown.classList.remove("opacity-100");
-            dropdown.classList.add("opacity-0");
-            setTimeout(() => {
-              dropdown.classList.add("hidden");
-            }, 300);
-          } else {
-            console.log("opening");
-            svg.classList.add("rotate-svg");
-            dropdown.classList.remove("hidden");
-            setTimeout(() => {
-              dropdown.classList.remove("opacity-0");
-              dropdown.classList.add("opacity-100");
-            }, 10);
-          }
-        }
-      </script>
-
-      <style>
-        #collections-dropdown-svg {
-          transition: transform 150ms ease-in-out;
-        }
-        .rotate-svg {
-          transform: rotate(-180deg);
-        }
-      </style>
 
       <!-- collections dropdown -->
       <li class="pt-1">
         <div class="group">
           <button
+            id="collections-toggle"
             type="button"
             class="flex items-center justify-between w-full py-2 px-3 rounded-lg hover:bg-white/10 group-hover:text-secondary transition-colors duration-200"
             aria-controls="collections-dropdown"
-            data-collapse-toggle="collections-dropdown"
-            onclick="rotateSvg()"
+            aria-expanded={isCollectionPage ? "true" : "false"}
           >
             <span class="align-self-start">Collections</span>
             <svg
               id="collections-dropdown-svg"
-              class="w-3 h-3 align-self-end"
+              class:list={[
+                "w-3 h-3 align-self-end transition-transform duration-150 ease-in-out",
+                { "rotate-180": isCollectionPage },
+              ]}
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -144,22 +121,15 @@ collections.forEach((collection) => {
         </div>
         <ul
           id="collections-dropdown"
-          class="hidden pl-5 opacity-0 transition-opacity duration-300 max-h-60 sm:max-h-none overflow-y-auto"
+          class:list={["pl-5", { hidden: !isCollectionPage }]}
         >
-          <li class="pt-1">
-            <a
-              href="/"
-              class="flex justify-between items-center hover:text-secondary"
-            >
-              <span>All works</span>
-            </a>
-          </li>
           {
             collections.map((collection) => (
               <li class="pt-1">
                 <a
                   href={`/${collection.id}`}
-                  class="flex justify-between items-center hover:text-secondary"
+                  aria-current={current(`/${collection.id}`)}
+                  class={`flex justify-between items-center rounded-md px-2 -mx-2 py-0.5 hover:text-secondary ${active(`/${collection.id}`)}`}
                 >
                   <span>{collection.name}</span>
                   <span class="text-white/60 text-sm">
@@ -171,9 +141,11 @@ collections.forEach((collection) => {
           }
         </ul>
       </li>
+    </ul>
 
+    <div class="mt-auto pt-4 shrink-0">
       <!-- social media links -->
-      <div class="absolute bottom-14 flex gap-2">
+      <ul class="list-none flex gap-2">
         <li>
           <a
             href="https://www.instagram.com/k.l.b_designs/?hl=en"
@@ -216,17 +188,29 @@ collections.forEach((collection) => {
             />
           </a>
         </li>
-      </div>
+      </ul>
 
       <!-- copyright -->
-      <div class="absolute bottom-4 text-xs text-white/60">
-        <p>
-          © 2024 - {new Date().getFullYear()} Kirsty Baird ·{" "}
-          <a href="/privacy" class="hover:text-secondary hover:underline"
-            >Privacy</a
-          >
-        </p>
-      </div>
-    </ul>
+      <p class="mt-3 text-xs text-white/60">
+        © 2024 - {new Date().getFullYear()} Kirsty Baird ·{" "}
+        <a href="/privacy" class="hover:text-secondary hover:underline"
+          >Privacy</a
+        >
+      </p>
+    </div>
   </nav>
 </div>
+
+<script>
+  const toggle = document.getElementById("collections-toggle");
+  const dropdown = document.getElementById("collections-dropdown");
+  const chevron = document.getElementById("collections-dropdown-svg");
+
+  toggle?.addEventListener("click", () => {
+    if (!dropdown) return;
+    const open = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!open));
+    dropdown.classList.toggle("hidden", open);
+    chevron?.classList.toggle("rotate-180", !open);
+  });
+</script>
