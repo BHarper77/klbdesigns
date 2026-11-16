@@ -6,7 +6,7 @@ import { getTags } from "../utils/contentful/api";
 export async function getStaticPaths() {
   const params = (await getTags()).map((tag) => ({
     params: {
-      tag: tag.name,
+      tag: tag.id,
     },
     props: {
       name: tag.name,

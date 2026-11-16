@@ -33,7 +33,8 @@ export async function getTags(): Promise<CollectionWithCount[]> {
     }),
   );
 
-  return tagsWithCounts;
+  // empty collections get no nav entry or page
+  return tagsWithCounts.filter((tag) => tag.itemCount > 0);
 }
 
 /** Get the count of items for a specific tag */
