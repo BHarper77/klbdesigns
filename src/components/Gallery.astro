@@ -4,6 +4,8 @@ import { throwError } from "../utils/helpers";
 import { contentfulImage, contentfulSrcset } from "../utils/contentful/image";
 import Etsy from "./svgs/Etsy.astro";
 import Instagram from "./svgs/Instagram.astro";
+// PROTOTYPE — remove with src/components/prototype
+import LightboxPrototype from "./prototype/LightboxPrototype.astro";
 
 type Props = {
   tagId: string;
@@ -765,3 +767,6 @@ function transition<T extends string>(
     </div>
   </div>
 </div>
+
+{/* PROTOTYPE — dev only, see src/components/prototype */}
+{import.meta.env.DEV && <LightboxPrototype />}
