@@ -4,8 +4,6 @@ import { throwError } from "../utils/helpers";
 import { contentfulImage, contentfulSrcset } from "../utils/contentful/image";
 import Etsy from "./svgs/Etsy.astro";
 import Instagram from "./svgs/Instagram.astro";
-// PROTOTYPE — remove with src/components/prototype
-import LightboxPrototype from "./prototype/LightboxPrototype.astro";
 
 type Props = {
   tagId: string;
@@ -102,7 +100,10 @@ const imageArrays = columns
 
 const firstId = imageArrays[0]?.[0]?.id;
 
-const svgSize = 30;
+const svgSize = 20;
+
+const socialButton =
+  "flex items-center justify-center w-11 h-11 rounded-full border border-white/60 text-white hover:bg-white hover:text-secondary transition-colors";
 
 /** Helper function for returning default Tailwind transition classes */
 function transition<T extends string>(
@@ -175,15 +176,6 @@ function transition<T extends string>(
     .gallery-header {
       margin-left: 16rem; /* 256px = sidebar width */
     }
-  }
-
-  /* When details panel is hidden, center the image and remove max-width constraint */
-  #overlay-image-container.no-details {
-    justify-content: center;
-  }
-
-  #overlay-image-container.no-details .image-section {
-    max-width: none;
   }
 </style>
 
@@ -685,57 +677,44 @@ function transition<T extends string>(
     <span id="counter-current">1</span> / <span id="counter-total">1</span>
   </div>
 
-  <!-- Main lightbox content: image left, details right -->
+  <!-- Main lightbox content: image with caption beneath -->
   <div
     id="overlay-image-container"
-    class="flex flex-col lg:flex-row max-w-[96%] lg:max-w-[85%] max-h-[90%] lg:max-h-[85%] mx-2 lg:mx-16"
+    class="flex flex-col max-w-[96%] lg:max-w-[85%] max-h-[90%] mx-2 lg:mx-16"
   >
     <!-- Image section -->
     <div
-      class="image-section relative flex-shrink-0 flex items-center justify-center lg:max-w-[65%]"
+      class="image-section relative flex-shrink-0 flex items-center justify-center"
     >
       <div id="overlay-spinner" aria-hidden="true"></div>
       <img
         id="overlay-image"
-        class="max-h-[72vh] max-w-full lg:max-h-[80vh] w-auto object-contain rounded-lg shadow-2xl"
+        class="max-h-[70vh] sm:max-h-[74vh] max-w-full w-auto object-contain rounded-lg shadow-2xl"
       />
     </div>
 
-    <!-- Details panel -->
+    <!-- Caption: details left, social links right -->
     <div
       id="details-panel"
-      class="bg-white rounded-lg p-3 lg:p-6 lg:ml-6 mt-2 lg:mt-0 lg:min-w-[280px] lg:max-w-[320px] flex flex-col overflow-y-auto max-h-[18vh] lg:max-h-[80vh]"
+      class="flex items-center justify-between gap-4 pt-3 px-1"
     >
-      <!-- Title -->
-      <h2 id="overlay-title" class="text-base lg:text-2xl text-gray-800 mb-1"></h2>
-
-      <!-- Category/Collection -->
-      <p id="overlay-category" class="text-gray-500 text-sm mb-1 lg:mb-4"></p>
-
-      <!-- Metadata + social links, pinned to the bottom of the panel -->
-      <div class="mt-auto">
-      <div
-        id="metadata-container"
-        class="border-t border-gray-200 pt-2 lg:pt-4 space-y-3"
-      >
-        <div id="meta-dimensions" class="flex justify-between">
-          <span class="text-gray-500 text-sm">Dimensions</span>
-          <span
-            id="overlay-dimensions"
-            class="text-gray-800 text-sm font-medium"></span>
-        </div>
-        <div id="meta-year" class="flex justify-between">
-          <span class="text-gray-500 text-sm">Year</span>
-          <span id="overlay-year" class="text-gray-800 text-sm font-medium"
-          ></span>
+      <div class="min-w-0">
+        <h2 id="overlay-title" class="text-lg leading-snug text-white"></h2>
+        <p id="overlay-category" class="text-sm text-gray-300"></p>
+        <div id="metadata-container" class="mt-1 text-sm text-gray-300">
+          <div id="meta-dimensions" class="flex gap-2">
+            <span>Dimensions</span>
+            <span id="overlay-dimensions" class="text-white"></span>
+          </div>
+          <div id="meta-year" class="flex gap-2">
+            <span>Year</span>
+            <span id="overlay-year" class="text-white"></span>
+          </div>
         </div>
       </div>
 
       <!-- Social links -->
-      <div
-        id="social-links-container"
-        class="flex gap-3 mt-2 lg:mt-4 pt-2 lg:pt-4 border-t border-gray-200"
-      >
+      <div id="social-links-container" class="flex flex-shrink-0 gap-2">
         <a
           id="overlay-etsy"
           class="hidden"
@@ -743,11 +722,9 @@ function transition<T extends string>(
           rel="noopener noreferrer"
           aria-label="View on Etsy"
         >
-          <Etsy
-            classList="fill-gray-600 hover:fill-main transition-colors"
-            width={svgSize}
-            height={svgSize}
-          />
+          <span class={socialButton}>
+            <Etsy classList="fill-current" width={svgSize} height={svgSize} />
+          </span>
         </a>
         <a
           id="overlay-insta"
@@ -756,17 +733,15 @@ function transition<T extends string>(
           rel="noopener noreferrer"
           aria-label="View on Instagram"
         >
-          <Instagram
-            classList="fill-gray-600 hover:fill-main transition-colors"
-            width={svgSize}
-            height={svgSize}
-          />
+          <span class={socialButton}>
+            <Instagram
+              classList="fill-current"
+              width={svgSize}
+              height={svgSize}
+            />
+          </span>
         </a>
-      </div>
       </div>
     </div>
   </div>
 </div>
-
-{/* PROTOTYPE — dev only, see src/components/prototype */}
-{import.meta.env.DEV && <LightboxPrototype />}
