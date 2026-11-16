@@ -14,7 +14,6 @@ export default {
 		},
 		fontFamily: {
 			sans: ['Poppins', 'sans-serif'],
-			serif: ['Playfair Display', 'Georgia', 'serif']
 		},
 		colors: {
 			"main": "#5da399",

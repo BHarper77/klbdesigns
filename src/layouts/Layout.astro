@@ -1,14 +1,23 @@
 ---
 import Sidebar from "../components/Sidebar.astro"
 import Posthog from "../components/Posthog.astro"
-import AnnouncementBar from "../components/AnnouncementBar.astro"
+import { getPopupEntry, ogImageUrl } from "../utils/contentful/popup-entry"
 
 interface Props {
 	title: string
+	description?: string
 }
 
-const { title } = Astro.props
-const isHomepage = Astro.url.pathname === "/"
+const DEFAULT_DESCRIPTION =
+	"k.l.b designs - Kirsty Baird's art portfolio site. Commission work available. Explore now!"
+
+const { title, description = DEFAULT_DESCRIPTION } = Astro.props
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/"
+const canonical = new URL(path, Astro.site).href
+
+const popupEntry = await getPopupEntry()
+const ogImage = popupEntry ? ogImageUrl(popupEntry) : undefined
 ---
 
 <!doctype html>
@@ -16,38 +25,42 @@ const isHomepage = Astro.url.pathname === "/"
 	<head>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
 		<link
 			rel="preload"
-			href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&family=Playfair+Display:wght@400;500;600;700&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap"
 			as="style"
 			onload="this.onload=null;this.rel='stylesheet'"
 		/>
 		<noscript>
 			<link
-				href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&family=Playfair+Display:wght@400;500;600;700&display=swap"
+				href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap"
 				rel="stylesheet"
 				type="text/css"
 			/>
 		</noscript>
 
 		<meta charset="UTF-8" />
-		<meta
-			name="description"
-			content="k.l.b designs - Kirsty Baird's art portfolio site. Commission work available. Explore now!"
-		/>
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/png" href="/favicon.png" />
+		<meta name="description" content={description} />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="canonical" href={canonical} />
+		<link rel="icon" type="image/png" sizes="48x48" href="/favicon.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonical} />
+		{ogImage && <meta property="og:image" content={ogImage} />}
+		<meta name="twitter:card" content="summary_large_image" />
+
 		<Posthog />
 	</head>
 
 	<body class="font-sans">
 		<Sidebar />
-		{isHomepage && <AnnouncementBar />}
 		<slot />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
 		<script>

@@ -18,8 +18,9 @@ export async function getStaticPaths() {
 }
 
 const { name, id } = Astro.props;
+const displayName = name.charAt(0).toUpperCase() + name.slice(1);
 ---
 
-<Layout title={`k.l.b designs - ${name}`}>
+<Layout title={`${displayName} · k.l.b designs`}>
   <Gallery tagId={id} tagName={name} />
 </Layout>
