@@ -7,6 +7,11 @@ on:
   repository_dispatch:
     types: [publish-event]
 
+# one deploy at a time; terraform state has no lock
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
