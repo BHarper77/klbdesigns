@@ -8,8 +8,6 @@ function handler(event) {
 	var request = event.request;
 	var uri = request.uri;
 
-	console.log({ uri })
-
 	if (SHORT_PATHS[uri]) {
 		return {
 			statusCode: 302,
