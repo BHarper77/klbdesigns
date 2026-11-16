@@ -710,10 +710,11 @@ function transition<T extends string>(
       <!-- Category/Collection -->
       <p id="overlay-category" class="text-gray-500 text-sm mb-1 lg:mb-4"></p>
 
-      <!-- Metadata section -->
+      <!-- Metadata + social links, pinned to the bottom of the panel -->
+      <div class="mt-auto">
       <div
         id="metadata-container"
-        class="border-t border-gray-200 pt-2 lg:pt-4 mt-auto space-y-3"
+        class="border-t border-gray-200 pt-2 lg:pt-4 space-y-3"
       >
         <div id="meta-dimensions" class="flex justify-between">
           <span class="text-gray-500 text-sm">Dimensions</span>
@@ -759,6 +760,7 @@ function transition<T extends string>(
             height={svgSize}
           />
         </a>
+      </div>
       </div>
     </div>
   </div>
