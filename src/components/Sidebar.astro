@@ -25,6 +25,7 @@ const current = (href: string) => (path === href ? "page" : undefined);
     data-drawer-toggle="sidebar-multi-level-sidebar"
     aria-controls="sidebar-multi-level-sidebar"
     type="button"
+    aria-label="Open menu"
     class="inline-flex items-center p-4 text-white w-full bg-main"
   >
     <svg
@@ -40,7 +41,7 @@ const current = (href: string) => (path === href ? "page" : undefined);
         d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
       ></path>
     </svg>
-    <h1 class="pl-2 text-xl hover:text-secondary">k.l.b designs</h1>
+    <span class="pl-2 text-xl hover:text-secondary">k.l.b designs</span>
   </button>
 </div>
 
@@ -52,13 +53,13 @@ const current = (href: string) => (path === href ? "page" : undefined);
     class="bg-main p-4 sm:p-8 whitespace-nowrap h-full flex flex-col font-light text-white"
   >
     <div class="shrink-0">
-      <h1 class="text-3xl hover:text-secondary">
+      <span class="block text-3xl hover:text-secondary">
         <a href="/">k.l.b designs</a>
-      </h1>
+      </span>
     </div>
 
     <!-- scrolls if taller than the viewport -->
-    <ul class="list-none pt-4 flex-1 min-h-0 overflow-y-auto">
+    <ul class="list-none pt-4 pr-2 -mr-2 flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
       <!-- Main navigation links -->
       <li>
         <a
@@ -149,7 +150,9 @@ const current = (href: string) => (path === href ? "page" : undefined);
         <li>
           <a
             href="https://www.instagram.com/k.l.b_designs/?hl=en"
+            aria-label="Instagram"
             target="_blank"
+            rel="noopener noreferrer"
             data-outbound-destination="instagram"
             data-outbound-location="sidebar"
           >
@@ -163,7 +166,9 @@ const current = (href: string) => (path === href ? "page" : undefined);
         <li>
           <a
             href="https://www.linkedin.com/in/kirsty-baird-60b03123b/"
+            aria-label="LinkedIn"
             target="_blank"
+            rel="noopener noreferrer"
             data-outbound-destination="linkedin"
             data-outbound-location="sidebar"
           >
@@ -177,7 +182,9 @@ const current = (href: string) => (path === href ? "page" : undefined);
         <li>
           <a
             href="https://www.etsy.com/uk/shop/KLBDesignsGoods"
+            aria-label="Etsy shop"
             target="_blank"
+            rel="noopener noreferrer"
             data-outbound-destination="etsy"
             data-outbound-location="sidebar"
           >

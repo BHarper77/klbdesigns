@@ -28,13 +28,13 @@ const ogImage = popupEntry ? ogImageUrl(popupEntry) : undefined
 
 		<link
 			rel="preload"
-			href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
 			as="style"
 			onload="this.onload=null;this.rel='stylesheet'"
 		/>
 		<noscript>
 			<link
-				href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap"
+				href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
 				rel="stylesheet"
 				type="text/css"
 			/>
@@ -44,7 +44,7 @@ const ogImage = popupEntry ? ogImageUrl(popupEntry) : undefined
 		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="canonical" href={canonical} />
-		<link rel="icon" type="image/png" sizes="48x48" href="/favicon.png" />
+		<link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
@@ -62,8 +62,8 @@ const ogImage = popupEntry ? ogImageUrl(popupEntry) : undefined
 	<body class="font-sans">
 		<Sidebar />
 		<slot />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
 		<script>
+			import "flowbite"
 			document.addEventListener("click", (e) => {
 				const el = (e.target as Element)?.closest<HTMLElement>(
 					"[data-outbound-destination]",
@@ -86,18 +86,6 @@ const ogImage = popupEntry ? ogImageUrl(popupEntry) : undefined
 				})
 			}
 			document.addEventListener("click", trackImageOpen)
-			// gallery imgs are role=button w/ preventDefault'd keydown; no click dispatched
-			document.addEventListener("keydown", (e) => {
-				if (e.key === "Enter" || e.key === " ") trackImageOpen(e)
-			})
 		</script>
-		<style is:global>
-			:root {
-				--accent: 136, 58, 234;
-				--accent-light: 224, 204, 250;
-				--accent-dark: 49, 10, 101;
-				--accent-gradient: linear-gradient(45deg, rgb(var(--accent)), rgb(var(--accent-light)) 30%, white 60%);
-			}
-		</style>
 	</body>
 </html>
