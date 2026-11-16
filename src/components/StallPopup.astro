@@ -1,6 +1,6 @@
 ---
-import { Image } from "astro:assets";
 import { queryTags } from "../utils/contentful/api";
+import { contentfulImage } from "../utils/contentful/image";
 
 const ETSY_URL = "https://www.etsy.com/uk/shop/KLBDesignsGoods";
 
@@ -45,11 +45,16 @@ const asset = item
 
     {
       asset && (
-        <Image
-          src={asset.fields.file.url}
+        <img
+          src={contentfulImage(asset.fields.file.url, {
+            w: 900,
+            max: asset.fields.file.details.image.width,
+          })}
           alt={item?.fields.alt ?? ""}
           width={asset.fields.file.details.image.width}
           height={asset.fields.file.details.image.height}
+          loading="eager"
+          decoding="async"
           class="w-full h-48 object-cover"
         />
       )

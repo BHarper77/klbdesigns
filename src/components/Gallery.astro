@@ -1,7 +1,7 @@
 ---
-import { Image } from "astro:assets";
 import { queryTags } from "../utils/contentful/api";
 import { throwError } from "../utils/helpers";
+import { contentfulImage, contentfulSrcset } from "../utils/contentful/image";
 import Etsy from "./svgs/Etsy.astro";
 import Instagram from "./svgs/Instagram.astro";
 
@@ -54,7 +54,20 @@ const images = tags.items.map((item) => {
     title: item.fields.title,
     dimensions: item.fields.dimensions,
     year: item.fields.year,
-    src: asset.fields.file.url,
+    src: contentfulImage(asset.fields.file.url, {
+      w: 800,
+      max: asset.fields.file.details.image.width,
+    }),
+    srcset: contentfulSrcset(
+      asset.fields.file.url,
+      [400, 800, 1200],
+      asset.fields.file.details.image.width,
+    ),
+    full: contentfulImage(asset.fields.file.url, {
+      w: 1600,
+      q: 80,
+      max: asset.fields.file.details.image.width,
+    }),
     height: asset.fields.file.details.image.height,
     width: asset.fields.file.details.image.width,
     instagramUrl: item.fields.instagramUrl,
@@ -83,6 +96,8 @@ for (const image of images) {
 const imageArrays = columns
   .map((column) => column.images)
   .sort((a, b) => b.length - a.length);
+
+const firstId = imageArrays[0]?.[0]?.id;
 
 const svgSize = 30;
 
@@ -231,7 +246,7 @@ function transition<T extends string>(
         imageEl.parentElement?.querySelector<HTMLAnchorElement>("#insta-url");
 
       galleryImages.push({
-        src: imageEl.src,
+        src: imageEl.dataset.full || imageEl.src,
         title: imageEl.dataset.title || "",
         dimensions: imageEl.dataset.dimensions || "",
         year: imageEl.dataset.year || "",
@@ -460,14 +475,19 @@ function transition<T extends string>(
       <div>
         {images.map((image) => (
           <div class="block relative group hover:cursor-pointer mb-4 overflow-hidden rounded-lg">
-            <Image
+            <img
               id="image"
               src={image.src}
+              srcset={image.srcset}
+              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+              data-full={image.full}
               alt={image.alt}
               width={image.width}
               height={image.height}
               class={`w-full h-auto rounded-lg shadow-card hover:shadow-card-hover transition-transform duration-300 group-hover:scale-105 ${transition("shadow")} ${image.etsyUrl ? "etsy" : ""} ${image.instagramUrl ? "instagram" : ""}`}
-              loading="lazy"
+              loading={image.id === firstId ? "eager" : "lazy"}
+              fetchpriority={image.id === firstId ? "high" : undefined}
+              decoding="async"
               about={`Uploaded on the ${image.friendlyDate}`}
               data-title={image.title || ""}
               data-image-id={image.id}
