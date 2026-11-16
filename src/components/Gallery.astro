@@ -268,25 +268,26 @@ function transition<T extends string>(
       category: string;
       etsyUrl: string;
       instaUrl: string;
+      alt: string;
     };
 
     const galleryImages: ImageData[] = [];
     let currentIndex = 0;
+    let lastTrigger: HTMLElement | null = null;
 
-    document.querySelectorAll<HTMLImageElement>("#image").forEach((imageEl) => {
-      const hasEtsy =
-        imageEl.parentElement?.querySelector<HTMLAnchorElement>("#etsy-url");
-      const hasInsta =
-        imageEl.parentElement?.querySelector<HTMLAnchorElement>("#insta-url");
+    const items = document.querySelectorAll<HTMLButtonElement>(".gallery-item");
 
+    items.forEach((item) => {
+      const img = item.querySelector("img");
       galleryImages.push({
-        src: imageEl.dataset.full || imageEl.src,
-        title: imageEl.dataset.title || "",
-        dimensions: imageEl.dataset.dimensions || "",
-        year: imageEl.dataset.year || "",
-        category: imageEl.dataset.category || "",
-        etsyUrl: hasEtsy?.href || "",
-        instaUrl: hasInsta?.href || "",
+        src: item.dataset.full || img?.src || "",
+        title: item.dataset.title || "",
+        dimensions: item.dataset.dimensions || "",
+        year: item.dataset.year || "",
+        category: item.dataset.category || "",
+        etsyUrl: item.dataset.etsyUrl || "",
+        instaUrl: item.dataset.instaUrl || "",
+        alt: img?.alt || "",
       });
     });
 
@@ -302,6 +303,7 @@ function transition<T extends string>(
       imageContainer?.classList.add("is-loading");
       overlayImage.onload = done;
       overlayImage.onerror = done;
+      overlayImage.alt = image.alt;
       overlayImage.src = image.src;
       if (overlayImage.complete && overlayImage.naturalWidth > 0) done();
 
@@ -387,7 +389,8 @@ function transition<T extends string>(
 
     let unlockScrollTimeout: number | undefined;
 
-    function openLightbox(index: number) {
+    function openLightbox(index: number, trigger?: HTMLElement) {
+      lastTrigger = trigger ?? null;
       clearTimeout(unlockScrollTimeout);
       showImage(index);
       container.style.visibility = "visible";
@@ -404,6 +407,8 @@ function transition<T extends string>(
     }
 
     function closeLightbox() {
+      lastTrigger?.focus();
+      lastTrigger = null;
       container.style.visibility = "hidden";
       container.style.opacity = "0";
       container.classList.remove("open");
@@ -429,11 +434,9 @@ function transition<T extends string>(
     }
 
     // Click handlers for gallery images
-    document
-      .querySelectorAll<HTMLImageElement>("#image")
-      .forEach((imageEl, index) => {
-        imageEl.addEventListener("click", () => openLightbox(index));
-      });
+    items.forEach((item, index) => {
+      item.addEventListener("click", () => openLightbox(index, item));
+    });
 
     // Close button
     closeBtn.addEventListener("click", closeLightbox);
@@ -493,6 +496,28 @@ function transition<T extends string>(
     document.addEventListener("keydown", (event) => {
       if (container.style.visibility !== "visible") return;
 
+      if (event.key === "Tab") {
+        // keep focus inside the dialog
+        const focusable = Array.from(
+          container.querySelectorAll<HTMLElement>("button, a[href]"),
+        ).filter((el) => el.getClientRects().length > 0);
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!first || !last) return;
+        const active = document.activeElement;
+        if (!container.contains(active)) {
+          event.preventDefault();
+          first.focus();
+        } else if (event.shiftKey && active === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        }
+        return;
+      }
+
       switch (event.key) {
         case "Escape":
           closeLightbox();
@@ -505,20 +530,6 @@ function transition<T extends string>(
           break;
       }
     });
-
-    // Make gallery images focusable and keyboard accessible
-    document
-      .querySelectorAll<HTMLImageElement>("#image")
-      .forEach((imageEl, index) => {
-        imageEl.setAttribute("tabindex", "0");
-        imageEl.setAttribute("role", "button");
-        imageEl.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            openLightbox(index);
-          }
-        });
-      });
   })();
 </script>
 
@@ -547,20 +558,10 @@ function transition<T extends string>(
       <div>
         {images.map((image) => (
           <div class="block relative group hover:cursor-pointer mb-4 overflow-hidden rounded-lg">
-            <img
-              id="image"
-              src={image.src}
-              srcset={image.srcset}
-              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+            <button
+              type="button"
+              class="gallery-item block w-full rounded-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-main"
               data-full={image.full}
-              alt={image.alt}
-              width={image.width}
-              height={image.height}
-              class={`w-full h-auto rounded-lg shadow-card hover:shadow-card-hover transition-transform duration-300 group-hover:scale-105 ${transition("shadow")} ${image.etsyUrl ? "etsy" : ""} ${image.instagramUrl ? "instagram" : ""}`}
-              loading={image.id === firstId ? "eager" : "lazy"}
-              fetchpriority={image.id === firstId ? "high" : undefined}
-              decoding="async"
-              about={`Uploaded on the ${image.friendlyDate}`}
               data-title={image.title || ""}
               data-image-id={image.id}
               data-image-title={image.title}
@@ -568,7 +569,22 @@ function transition<T extends string>(
               data-dimensions={image.dimensions || ""}
               data-year={image.year?.toString() || ""}
               data-category={tagName || ""}
-            />
+              data-etsy-url={image.etsyUrl || ""}
+              data-insta-url={image.instagramUrl || ""}
+            >
+              <img
+                src={image.src}
+                srcset={image.srcset}
+                sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+                alt={image.alt}
+                width={image.width}
+                height={image.height}
+                class={`w-full h-auto rounded-lg shadow-card hover:shadow-card-hover transition-transform duration-300 group-hover:scale-105 ${transition("shadow")}`}
+                loading={image.id === firstId ? "eager" : "lazy"}
+                fetchpriority={image.id === firstId ? "high" : undefined}
+                decoding="async"
+              />
+            </button>
             {/* Hover overlay with gradient and title */}
             <div
               class={`absolute inset-0 rounded-lg bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 ${transition("opacity")} flex flex-col justify-end pointer-events-none`}
@@ -592,11 +608,15 @@ function transition<T extends string>(
 <!-- need z index 50 to be above mobile and desktop sidebars -->
 <div
   id="overlay-container"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Image viewer"
   class="fixed inset-0 flex justify-center items-center bg-gray-900/70 z-50 invisible opacity-0 backdrop-blur-lg"
 >
   <!-- Close button -->
   <button
     id="lightbox-close"
+    type="button"
     class="absolute top-4 right-4 z-50 w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
     aria-label="Close lightbox"
   >
@@ -618,6 +638,7 @@ function transition<T extends string>(
   <!-- Previous arrow -->
   <button
     id="lightbox-prev"
+    type="button"
     class="absolute left-4 top-1/2 -translate-y-1/2 z-50 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
     aria-label="Previous image"
   >
@@ -637,6 +658,7 @@ function transition<T extends string>(
   <!-- Next arrow -->
   <button
     id="lightbox-next"
+    type="button"
     class="absolute right-4 top-1/2 -translate-y-1/2 z-50 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 transition-colors text-white"
     aria-label="Next image"
   >
@@ -711,14 +733,26 @@ function transition<T extends string>(
         id="social-links-container"
         class="flex gap-3 mt-2 lg:mt-4 pt-2 lg:pt-4 border-t border-gray-200"
       >
-        <a id="overlay-etsy" class="hidden" target="_blank">
+        <a
+          id="overlay-etsy"
+          class="hidden"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View on Etsy"
+        >
           <Etsy
             classList="fill-gray-600 hover:fill-main transition-colors"
             width={svgSize}
             height={svgSize}
           />
         </a>
-        <a id="overlay-insta" class="hidden" target="_blank">
+        <a
+          id="overlay-insta"
+          class="hidden"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View on Instagram"
+        >
           <Instagram
             classList="fill-gray-600 hover:fill-main transition-colors"
             width={svgSize}
