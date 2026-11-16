@@ -8,6 +8,28 @@ function handler(event) {
 	var request = event.request;
 	var uri = request.uri;
 
+	if (request.headers.host && request.headers.host.value === 'www.klbdesigns.art') {
+		var parts = [];
+		var qs = request.querystring || {};
+		Object.keys(qs).forEach(function (key) {
+			var entry = qs[key];
+			var values = entry.multiValue
+				? entry.multiValue.map(function (v) { return v.value; })
+				: [entry.value];
+			values.forEach(function (value) {
+				parts.push(key + '=' + value);
+			});
+		});
+
+		return {
+			statusCode: 301,
+			statusDescription: 'Moved Permanently',
+			headers: {
+				location: { value: 'https://klbdesigns.art' + uri + (parts.length ? '?' + parts.join('&') : '') },
+			},
+		};
+	}
+
 	console.log({ uri })
 
 	if (SHORT_PATHS[uri]) {

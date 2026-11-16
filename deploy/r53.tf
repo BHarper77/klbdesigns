@@ -52,3 +52,27 @@ resource "aws_route53_record" "klbdesigns_soa" {
     "ns-951.awsdns-54.net. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
   ]
 }
+
+resource "aws_route53_record" "www_ipv4" {
+  zone_id = aws_route53_zone.klbdesigns.zone_id
+  name    = "www.klbdesigns.art"
+  type    = "A"
+
+  alias {
+    evaluate_target_health = false
+    name                   = aws_cloudfront_distribution.klbdesigns.domain_name
+    zone_id                = aws_cloudfront_distribution.klbdesigns.hosted_zone_id
+  }
+}
+
+resource "aws_route53_record" "www_ipv6" {
+  zone_id = aws_route53_zone.klbdesigns.zone_id
+  name    = "www.klbdesigns.art"
+  type    = "AAAA"
+
+  alias {
+    evaluate_target_health = false
+    name                   = aws_cloudfront_distribution.klbdesigns.domain_name
+    zone_id                = aws_cloudfront_distribution.klbdesigns.hosted_zone_id
+  }
+}

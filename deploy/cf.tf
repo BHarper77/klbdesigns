@@ -6,7 +6,7 @@ resource "aws_cloudfront_origin_access_control" "klbdesigns" {
 }
 
 resource "aws_cloudfront_distribution" "klbdesigns" {
-  aliases = ["klbdesigns.art"]
+  aliases = ["klbdesigns.art", "www.klbdesigns.art"]
 
   origin {
     domain_name              = aws_s3_bucket.klbdesigns.bucket_regional_domain_name
@@ -50,7 +50,7 @@ resource "aws_cloudfront_distribution" "klbdesigns" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = "arn:aws:acm:us-east-1:592367451035:certificate/861a34b1-bfcb-446f-add5-edf40771e171"
+    acm_certificate_arn      = aws_acm_certificate_validation.klbdesigns.certificate_arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
